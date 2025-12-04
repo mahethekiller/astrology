@@ -3,10 +3,17 @@
         <div class="row  g-5">
             <div class="col-lg-5">
                 <div class="ftitle">Newsletter</div>
-                <form class="newsletter">
-                    <input type="email" placeholder="Enter Email Address">
+                <form class="newsletter" action="{{ route('newsletter.subscribe') }}" method="POST">
+                    @csrf
+                    @if(session('success'))
+                        <div class="alert alert-success" style="color: green; margin-bottom: 10px;">{{ session('success') }}</div>
+                    @endif
+                    @error('email')
+                        <div class="alert alert-danger" style="color: red; margin-bottom: 10px;">{{ $message }}</div>
+                    @enderror
+                    <input type="email" name="email" placeholder="Enter Email Address" required>
                     <small>We don't spam. Unsubscription any time.</small>
-                    <button type="button" class="fsubmitbtn" value="submit"><img
+                    <button type="submit" class="fsubmitbtn" value="submit"><img
                             src="{{ asset('frontend/images/newsletterbtn.png') }}" /></button>
                 </form>
                 <img src="{{ asset('frontend/images/flogo.png') }}" />

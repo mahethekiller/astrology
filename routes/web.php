@@ -8,10 +8,17 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\NewsletterController;
+use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
+use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\BlogController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'store'])->name('newsletter.subscribe');
+Route::get('/blog', [App\Http\Controllers\Frontend\BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [App\Http\Controllers\Frontend\BlogController::class, 'show'])->name('blog.show');
 
 
 
@@ -54,6 +61,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // sliders
     Route::resource('sliders', SliderController::class);
     Route::patch('sliders/{slider}/toggle-status', [SliderController::class, 'toggleStatus'])->name('sliders.toggle-status');
+
+    // Newsletters
+    Route::resource('newsletters', AdminNewsletterController::class)->only(['index', 'destroy']);
+
+    // Testimonials
+    Route::resource('testimonials', TestimonialController::class);
+
+    // Blogs
+    Route::resource('blogs', BlogController::class);
 
 
 
@@ -113,4 +129,4 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tables', [TablesController::class, 'index'])->name('tables');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

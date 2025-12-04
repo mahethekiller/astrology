@@ -224,88 +224,38 @@
     <div class="row pt40">
       <div class="col-lg-12">
         <div class="blogStyle owl-carousel">
-            <div class="item">
-              <div class="blogBox">
-                <div class="blogImg"><a href="#"><img src="{{ asset('frontend/images/blog1.jpg') }}" alt="" /></a></div>
-                <div class="dateandAstroaura">
-<div class="blogDate"><img src="{{ asset('frontend/images/date.png') }}" /> Wed, Oct 22, 2025</div>
-<div class="astroaura"><img src="{{ asset('frontend/images/astroicon.png') }}" /> Astroaura</div>
-                </div>
-                <div class="blogTitle">
-                 <a href="#">Bhai Dooj Story and Rituals You Should Know</a>
-                </div>
-                <div class="blogreadmorebtn">
-                 <a href="#"><img src="{{ asset('frontend/images/readmorearrow.png') }}" /></a>
-                </div>
+          @foreach($blogs as $blog)
+          <div class="item">
+            <div class="blogBox">
+              <div class="blogImg">
+                  <a href="{{ route('blog.show', $blog->slug) }}">
+                      @if($blog->image)
+                          <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->image_alt ?? $blog->title }}" />
+                      @else
+                          <img src="{{ asset('frontend/images/blog1.jpg') }}" alt="Blog" />
+                      @endif
+                  </a>
+              </div>
+              <div class="dateandAstroaura">
+                <div class="blogDate"><img src="{{ asset('frontend/images/date.png') }}" /> {{ $blog->published_at ? $blog->published_at->format('D, M d, Y') : '' }}</div>
+                <div class="astroaura"><img src="{{ asset('frontend/images/astroicon.png') }}" /> {{ $blog->author }}</div>
+              </div>
+              <div class="blogTitle">
+                <a href="{{ route('blog.show', $blog->slug) }}">{{ $blog->title }}</a>
+              </div>
+              <div class="blogreadmorebtn">
+                <a href="{{ route('blog.show', $blog->slug) }}"><img src="{{ asset('frontend/images/readmorearrow.png') }}" /></a>
               </div>
             </div>
-            <div class="item">
-              <div class="blogBox">
-                <div class="blogImg"><a href="#"><img src="{{ asset('frontend/images/blog1.jpg') }}" alt="" /></a></div>
-                <div class="dateandAstroaura">
-<div class="blogDate"><img src="{{ asset('frontend/images/date.png') }}" /> Wed, Oct 22, 2025</div>
-<div class="astroaura"><img src="{{ asset('frontend/images/astroicon.png') }}" /> Astroaura</div>
-                </div>
-                <div class="blogTitle">
-                 <a href="#">Bhai Dooj Story and Rituals You Should Know</a>
-                </div>
-                <div class="blogreadmorebtn">
-                 <a href="#"><img src="{{ asset('frontend/images/readmorearrow.png') }}" /></a>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="blogBox">
-                <div class="blogImg"><a href="#"><img src="{{ asset('frontend/images/blog1.jpg') }}" alt="" /></a></div>
-                <div class="dateandAstroaura">
-<div class="blogDate"><img src="{{ asset('frontend/images/date.png') }}" /> Wed, Oct 22, 2025</div>
-<div class="astroaura"><img src="{{ asset('frontend/images/astroicon.png') }}" /> Astroaura</div>
-                </div>
-                <div class="blogTitle">
-                 <a href="#">Bhai Dooj Story and Rituals You Should Know</a>
-                </div>
-                <div class="blogreadmorebtn">
-                 <a href="#"><img src="{{ asset('frontend/images/readmorearrow.png') }}" /></a>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="blogBox">
-                <div class="blogImg"><a href="#"><img src="{{ asset('frontend/images/blog1.jpg') }}" alt="" /></a></div>
-                <div class="dateandAstroaura">
-<div class="blogDate"><img src="{{ asset('frontend/images/date.png') }}" /> Wed, Oct 22, 2025</div>
-<div class="astroaura"><img src="{{ asset('frontend/images/astroicon.png') }}" /> Astroaura</div>
-                </div>
-                <div class="blogTitle">
-                 <a href="#">Bhai Dooj Story and Rituals You Should Know</a>
-                </div>
-                <div class="blogreadmorebtn">
-                 <a href="#"><img src="{{ asset('frontend/images/readmorearrow.png') }}" /></a>
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="blogBox">
-                <div class="blogImg"><a href="#"><img src="{{ asset('frontend/images/blog1.jpg') }}" alt="" /></a></div>
-                <div class="dateandAstroaura">
-<div class="blogDate"><img src="{{ asset('frontend/images/date.png') }}" /> Wed, Oct 22, 2025</div>
-<div class="astroaura"><img src="{{ asset('frontend/images/astroicon.png') }}" /> Astroaura</div>
-                </div>
-                <div class="blogTitle">
-                 <a href="#">Bhai Dooj Story and Rituals You Should Know</a>
-                </div>
-                <div class="blogreadmorebtn">
-                 <a href="#"><img src="{{ asset('frontend/images/readmorearrow.png') }}" /></a>
-                </div>
-              </div>
-            </div>
-
           </div>
+          @endforeach
+        </div>
       </div>
 
     </div>
     <div class="viewAllBlog">
-      <a class="customBtn" href="#">VIEW ALL BLOGS <img src="{{ asset('frontend/images/readmorearrowwhite.png') }}" /></a>
+      <a class="customBtn" href="{{ route('blog.index') }}">VIEW ALL BLOGS <img
+          src="{{ asset('frontend/images/readmorearrowwhite.png') }}" /></a>
     </div>
   </div>
 </div>
@@ -317,61 +267,25 @@
      <div class="row pt40">
       <div class="col-lg-12">
         <div class="testimonials owl-carousel">
+            @foreach($testimonials as $testimonial)
             <div class="item">
               <div class="testimonialBox">
-                <div class="testimonialImg"><img src="{{ asset('frontend/images/testimonial-icon.png') }}" alt="" /></div>
+                <div class="testimonialImg">
+                    @if($testimonial->image)
+                        <img src="{{ asset('storage/' . $testimonial->image) }}" alt="{{ $testimonial->name }}" />
+                    @else
+                        <img src="{{ asset('frontend/images/testimonial-icon.png') }}" alt="" />
+                    @endif
+                </div>
                 <div class="testimonialText">
-                  He is a very thoughtful and patient person and listens to your concerns carefully and is quite prompt in his valuable suggestions. I had a very good experience consulting with him, I would recommend everyone to have their charts read from him.
+                  {{ $testimonial->content }}
                 </div>
                 <div class="testimonialName">
-                 Raju Shrivastav
+                 {{ $testimonial->name }}
                 </div>
               </div>
             </div>
-            <div class="item">
-              <div class="testimonialBox">
-                <div class="testimonialImg"><img src="{{ asset('frontend/images/testimonial-icon.png') }}" alt="" /></div>
-                <div class="testimonialText">
-                  He is a very thoughtful and patient person and listens to your concerns carefully and is quite prompt in his valuable suggestions. I had a very good experience consulting with him, I would recommend everyone to have their charts read from him.
-                </div>
-                <div class="testimonialName">
-                 Raju Shrivastav
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="testimonialBox">
-                <div class="testimonialImg"><img src="{{ asset('frontend/images/testimonial-icon.png') }}" alt="" /></div>
-                <div class="testimonialText">
-                  He is a very thoughtful and patient person and listens to your concerns carefully and is quite prompt in his valuable suggestions. I had a very good experience consulting with him, I would recommend everyone to have their charts read from him.
-                </div>
-                <div class="testimonialName">
-                 Raju Shrivastav
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="testimonialBox">
-                <div class="testimonialImg"><img src="{{ asset('frontend/images/testimonial-icon.png') }}" alt="" /></div>
-                <div class="testimonialText">
-                  He is a very thoughtful and patient person and listens to your concerns carefully and is quite prompt in his valuable suggestions. I had a very good experience consulting with him, I would recommend everyone to have their charts read from him.
-                </div>
-                <div class="testimonialName">
-                 Raju Shrivastav
-                </div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="testimonialBox">
-                <div class="testimonialImg"><img src="{{ asset('frontend/images/testimonial-icon.png') }}" alt="" /></div>
-                <div class="testimonialText">
-                  He is a very thoughtful and patient person and listens to your concerns carefully and is quite prompt in his valuable suggestions. I had a very good experience consulting with him, I would recommend everyone to have their charts read from him.
-                </div>
-                <div class="testimonialName">
-                 Raju Shrivastav
-                </div>
-              </div>
-            </div>
+            @endforeach
           </div>
       </div>
 
