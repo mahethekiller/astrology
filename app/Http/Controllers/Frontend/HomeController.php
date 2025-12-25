@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\AstrologerProfile;
 use Illuminate\Http\Request;
 
 use App\Models\Testimonial;
@@ -14,6 +15,9 @@ class HomeController extends Controller
     {
         $testimonials = Testimonial::latest()->get();
         $blogs = Blog::latest()->take(6)->get();
-        return view('frontend.pages.home', compact('testimonials', 'blogs'));
+
+        $topAstrologers = AstrologerProfile::latest()->take(6)->get();
+
+        return view('frontend.pages.home', compact('testimonials', 'blogs', 'topAstrologers'));
     }
 }

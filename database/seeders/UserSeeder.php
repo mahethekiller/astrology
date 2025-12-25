@@ -33,6 +33,14 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
             ],
+
+            [
+                'name' => 'Astrologer User',
+                'email' => 'astrologer@example.com',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+            ],
+
         ];
 
         $createdCount = 0;

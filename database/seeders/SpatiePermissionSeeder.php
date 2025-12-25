@@ -72,6 +72,11 @@ class SpatiePermissionSeeder extends Seeder
             'guard_name' => 'web'
         ]);
 
+        $astrologerRole = Role::firstOrCreate([
+            'name' => 'astrologer',
+            'guard_name' => 'web'
+        ]);
+
         $this->command->info('✅ Roles created successfully!');
 
         // Assign all permissions to admin
@@ -79,8 +84,13 @@ class SpatiePermissionSeeder extends Seeder
 
         // Assign limited permissions to manager
         $managerPermissions = Permission::whereIn('name', [
-            'view-users', 'create-users', 'edit-users',
-            'view-content', 'create-content', 'edit-content', 'delete-content'
+            'view-users',
+            'create-users',
+            'edit-users',
+            'view-content',
+            'create-content',
+            'edit-content',
+            'delete-content'
         ])->get();
 
         $managerRole->syncPermissions($managerPermissions);
@@ -88,6 +98,18 @@ class SpatiePermissionSeeder extends Seeder
         // Assign basic permissions to user
         $userPermissions = Permission::whereIn('name', ['view-content'])->get();
         $userRole->syncPermissions($userPermissions);
+
+
+        // Assign permissions to astrologer
+        $astrologerPermissions = Permission::whereIn('name', [
+            'view-content',
+            'create-content',
+            'edit-content'
+        ])->get();
+        $astrologerRole->syncPermissions($astrologerPermissions);
+
+
+
 
         $this->command->info('✅ Permissions assigned to roles successfully!');
 
@@ -139,5 +161,18 @@ class SpatiePermissionSeeder extends Seeder
         );
         $regularUser->assignRole('user');
         $this->command->info('✅ Regular user created/updated');
+
+        // Create astrologer user
+        $astrologerUser = User::firstOrCreate(
+            ['email' => 'astrologer@example.com'],
+            [
+                'name' => 'Astrologer User',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
+        $astrologerUser->assignRole('astrologer');
+        $this->command->info('✅ Astrologer user created/updated');
+
     }
 }

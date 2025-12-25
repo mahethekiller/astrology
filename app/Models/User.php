@@ -50,4 +50,12 @@ class User extends Authenticatable
     {
         return $this->hasRole('user');
     }
+
+    /**
+     * Relationship to AstrologerProfile
+     */
+    public function astrologerProfile()
+    {
+        return $this->hasOne(\App\Models\AstrologerProfile::class);
+    }
 }

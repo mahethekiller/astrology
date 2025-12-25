@@ -61,7 +61,13 @@
                     <li>
                         <a href="{{ route('admin.permissions.index') }}"
                             class="{{ request()->is('admin/permissions*') ? 'active' : '' }}">
-                            <i class="bi bi-key"></i> <span>Permission Management aa</span>
+                            <i class="bi bi-key"></i> <span>Permission Management</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ auth()->user()->isAdmin() ? route('admin.sliders.index') : route('manager.sliders.index') }}"
+                            class="{{ request()->is('*/sliders*') ? 'active' : '' }}">
+                            <i class="bi bi-sliders"></i> <span>Sliders</span>
                         </a>
                     </li>
                     <li>
@@ -81,6 +87,56 @@
                             <i class="bi bi-journal-text"></i> <span>Blogs</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('admin.users.index') }}" class="{{ request()->is('admin/users*') ? 'active' : '' }}">
+                            <i class="bi bi-people"></i> <span>User Management</span>
+                        </a>
+                    </li>
+
+
+
+
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center dropdown-toggle
+                                                    {{ request()->is('admin/astrologer-profiles*') || request()->is('admin/languages*') || request()->is('admin/specializations*') ? '' : 'collapsed' }}"
+                            href="#astrologerMenu" data-bs-toggle="collapse" data-bs-target="#astrologerMenu"
+                            aria-expanded="{{ request()->is('admin/astrologer-profiles*') || request()->is('admin/languages*') || request()->is('admin/specializations*') ? 'true' : 'false' }}"
+                            aria-controls="astrologerMenu">
+                            <i class="bi bi-stars me-2"></i>
+                            <span>Astrologer Management</span>
+                        </a>
+
+                        <ul id="astrologerMenu"
+                            class="collapse list-unstyled ps-3
+                                                    {{ request()->is('admin/astrologer-profiles*') || request()->is('admin/languages*') || request()->is('admin/specializations*') ? 'show' : '' }}">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.astrologer-profiles.index') }}"
+                                    class="nav-link {{ request()->is('admin/astrologer-profiles*') ? 'active' : '' }}">
+                                    <i class="bi bi-stars me-2"></i>
+                                    Astrologers
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('admin.languages.index') }}"
+                                    class="nav-link {{ request()->is('admin/languages*') ? 'active' : '' }}">
+                                    <i class="bi bi-translate me-2"></i>
+                                    Languages
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('admin.specializations.index') }}"
+                                    class="nav-link {{ request()->is('admin/specializations*') ? 'active' : '' }}">
+                                    <i class="bi bi-star me-2"></i>
+                                    Specializations
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+
+
                 @endif
 
                 <!-- Manager Only Menu -->

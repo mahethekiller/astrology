@@ -350,6 +350,89 @@
     color: var(--danger-color);
 }
 
+
+
+
+/*kundan*/
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+.auth-container{max-width: 470px;  padding: 0px;  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal; }
+
+body.auth-body{     background: url(../images/loginBg.jpg) no-repeat 0 0 !important;    background-size: cover;}
+
+.auth-form .form-label {
+    margin-bottom: 4px;
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+    color:rgba(83, 88, 99, 1);
+}
+
+.auth-content {
+    padding:20px 35px 0 35px;
+}
+
+.auth-form .form-control {
+    width: 100%;
+    padding: 12px 45px 12px 15px;
+    border: 1px solid rgba(51, 51, 51, 0.3);
+    border-radius: 10px !important;
+   font-weight: 600;
+    color: rgba(83, 88, 99, 1);
+    font-size: 14px;
+    transition: all 0.3s 
+ease;
+   
+}
+
+.auth-form .form-control:focus{ border: 1px solid rgba(51, 51, 51, 0.3);}
+.form-check-input{ border: 1px solid rgba(51, 51, 51, 0.3);}
+.auth-btn{    background: rgba(253, 219, 24, 1);
+    color: #000000;}
+    .auth-btn:hover {
+    background: rgba(253, 219, 24, 1);}
+   
+    .auth-card {
+        
+    border-radius: 15px;
+    
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+.auth-logo img{max-width:100%;}
+
+.form-check-input:checked {
+    background-color:rgba(253, 219, 24, 1);
+    border-color: rgba(253, 219, 24, 1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Responsive Design */
 @media (max-width: 480px) {
     .auth-container {
@@ -374,3 +457,7 @@
         gap: 10px;
     }
 }
+
+
+
+
