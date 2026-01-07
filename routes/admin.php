@@ -3,6 +3,7 @@ use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ComponentsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TablesController;
@@ -13,8 +14,15 @@ use App\Http\Controllers\Admin\SliderController;
 
 
 
+
+Route::get('admin/login', [AuthenticatedSessionController::class, 'create'])
+    ->middleware('guest')
+    ->name('admin.login');
+
 // ADMIN Routes - Only for users with admin role
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+
+
     // Admin Dashboard
     Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
 

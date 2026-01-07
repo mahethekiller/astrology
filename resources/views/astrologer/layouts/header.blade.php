@@ -6,17 +6,19 @@
         <h1>@yield('page-title', 'Dashboard')</h1>
     </div>
     <div class="header-right">
-        <div class="search-box">
+        <!-- <div class="search-box">
             <i class="bi bi-search"></i>
             <input type="text" placeholder="Search...">
-        </div>
+        </div> -->
         <button class="theme-toggle" id="themeToggle">
             <i class="bi bi-moon"></i>
         </button>
         <div class="user-profile dropdown">
-            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
-                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=4361ee&color=fff" alt="User">
-                <div>
+            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle"
+                data-bs-toggle="dropdown">
+                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=4361ee&color=fff"
+                    alt="User">
+                <div style="    padding: 5px;">
                     <div class="fw-bold">{{ auth()->user()->name }}</div>
                     <small class="text-muted">
                         @auth
@@ -28,12 +30,16 @@
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="bi bi-person me-2"></i>Profile</a></li>
-                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i
+                            class="bi bi-person me-2"></i>Profile</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}" id="logout-form">
                         @csrf
-                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <a class="dropdown-item" href="#"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="bi bi-box-arrow-right me-2"></i>Logout
                         </a>
                     </form>

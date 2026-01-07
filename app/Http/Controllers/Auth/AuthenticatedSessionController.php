@@ -16,6 +16,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
+
         return view('auth.login');
     }
 
@@ -38,11 +39,23 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $user = Auth::user();
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
+
+        if ($user) {
+            if ($user->hasRole('admin')) {
+                return redirect()->route('admin.login');
+            } elseif ($user->hasRole('manager')) {
+                return redirect()->route('manager.login');
+            } elseif ($user->hasRole('astrologer')) {
+                return redirect()->route('astrologer.login');
+            }
+        }
 
         return redirect('/');
     }

@@ -1,7 +1,12 @@
 <?php
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Astrologer\ChatController;
+
+Route::get('astrologer/login', [AuthenticatedSessionController::class, 'create'])
+    ->middleware('guest')
+    ->name('astrologer.login');
 
 Route::middleware(['auth'])->prefix('astrologer')->name('astrologer.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'astrologerDashboard'])->name('dashboard');
