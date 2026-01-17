@@ -77,77 +77,98 @@ class CallController extends Controller
 
     public function voiceCallback(Request $request)
     {
+        Log::info('Twilio Voice Callback Hit', $request->all());
+
         $response = new VoiceResponse();
 
-        // request header 'From' -> client:user_{id}
-        // request body 'astrologer_id' -> passed from client
+        try {
+            // request header 'From' -> client:user_{id}
+            // request body 'astrologer_id' -> passed from client
 
-        $from = $request->input('From'); // client:user_1
-        $toAstrologerId = $request->input('astrologer_id');
+            $from = $request->input('From'); // client:user_1
+            $toAstrologerId = $request->input('astrologer_id');
 
-        if (!$toAstrologerId) {
-            // Maybe it's a direct dial to client:astrologer_X? 
-            // If the client used .connect({ params: { astrologer_id: ... } }) it comes as post param.
-            $response->say('Invalid request. No Astrologer ID provided.');
-            return response($response)->header('Content-Type', 'text/xml');
-        }
+            Log::info("Call from: $from, To Astrologer ID: $toAstrologerId");
 
-        // Parse User ID from 'client:user_{id}'
-        $userId = str_replace('client:user_', '', $from);
-
-        $user = User::find($userId);
-        $astrologer = AstrologerProfile::find($toAstrologerId);
-
-        if (!$user || !$astrologer) {
-            $response->say('User or Astrologer not found.');
-            return response($response)->header('Content-Type', 'text/xml');
-        }
-
-        // Check Balance
-        // 1. Ensure wallet
-        if (!$user->wallet) {
-            $response->say('Insufficient balance.');
-            return response($response)->header('Content-Type', 'text/xml');
-        }
-
-        $pricePerMin = $astrologer->call_price;
-        if ($pricePerMin <= 0) {
-            // Free call? Or not allowed? Assuming allowed.
-            $timeLimit = 3600; // 1 hour cap
-        } else {
-            $balance = $user->wallet->balance;
-            $maxDuration = floor(($balance / $pricePerMin) * 60); // seconds
-
-            if ($maxDuration < 60) {
-                $response->say('You have insufficient balance for this call.');
+            if (!$toAstrologerId) {
+                // Maybe it's a direct dial to client:astrologer_X? 
+                // If the client used .connect({ params: { astrologer_id: ... } }) it comes as post param.
+                Log::error('No Astrologer ID provided');
+                $response->say('Invalid request. No Astrologer ID provided.');
                 return response($response)->header('Content-Type', 'text/xml');
             }
-            $timeLimit = $maxDuration;
+
+            // Parse User ID from 'client:user_{id}'
+            $userId = str_replace('client:user_', '', $from);
+
+            $user = User::find($userId);
+            $astrologer = AstrologerProfile::find($toAstrologerId);
+
+            if (!$user || !$astrologer) {
+                Log::error("User ($userId) or Astrologer ($toAstrologerId) not found");
+                $response->say('User or Astrologer not found.');
+                return response($response)->header('Content-Type', 'text/xml');
+            }
+
+            // Check Balance
+            // 1. Ensure wallet
+            if (!$user->wallet) {
+                Log::error("User $userId has no wallet");
+                $response->say('Insufficient balance.');
+                return response($response)->header('Content-Type', 'text/xml');
+            }
+
+            $pricePerMin = $astrologer->call_price;
+
+            // Log price and balance
+            Log::info("Price: $pricePerMin, Balance: " . $user->wallet->balance);
+
+            if ($pricePerMin <= 0) {
+                // Free call? Or not allowed? Assuming allowed.
+                $timeLimit = 3600; // 1 hour cap
+            } else {
+                $balance = $user->wallet->balance;
+                $maxDuration = floor(($balance / $pricePerMin) * 60); // seconds
+
+                if ($maxDuration < 60) {
+                    $response->say('You have insufficient balance for this call.');
+                    return response($response)->header('Content-Type', 'text/xml');
+                }
+                $timeLimit = $maxDuration;
+            }
+
+            // Create DB Record
+            Log::info("Creating CallRequest for User $userId and Astrologer $toAstrologerId");
+            $callRequest = CallRequest::create([
+                'user_id' => $user->id,
+                'astrologer_id' => $astrologer->id,
+                'twilio_sid' => $request->input('CallSid'),
+                'call_status' => 'initiated',
+                'start_time' => now(),
+                'call_cost' => 0 // Calculated at end
+            ]);
+
+            $dial = $response->dial('', [
+                'timeLimit' => $timeLimit,
+                'action' => route('call.status'), // Webhook when call ends
+                'method' => 'POST'
+            ]);
+
+            // Client identity: astrologer_{user_id_of_astrologer}
+            // Wait, AstrologerProfile has user_id.
+            $astrologerIdentity = 'astrologer_' . $astrologer->user_id;
+            Log::info("Dialing client identity: $astrologerIdentity");
+
+            $dial->client($astrologerIdentity);
+
+            return response($response)->header('Content-Type', 'text/xml');
+
+        } catch (\Exception $e) {
+            Log::error('Voice Callback Error: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+            $response->say('An internal error occurred: ' . $e->getMessage());
+            return response($response)->header('Content-Type', 'text/xml');
         }
-
-        // Create DB Record
-        $callRequest = CallRequest::create([
-            'user_id' => $user->id,
-            'astrologer_id' => $astrologer->id,
-            'twilio_sid' => $request->input('CallSid'),
-            'call_status' => 'initiated',
-            'start_time' => now(),
-            'call_cost' => 0 // Calculated at end
-        ]);
-
-        $dial = $response->dial('', [
-            'timeLimit' => $timeLimit,
-            'action' => route('call.status'), // Webhook when call ends
-            'method' => 'POST'
-        ]);
-
-        // Client identity: astrologer_{user_id_of_astrologer}
-        // Wait, AstrologerProfile has user_id.
-        $astrologerIdentity = 'astrologer_' . $astrologer->user_id;
-
-        $dial->client($astrologerIdentity);
-
-        return response($response)->header('Content-Type', 'text/xml');
     }
 
     public function callStatusCallback(Request $request)
