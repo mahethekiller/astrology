@@ -39,7 +39,7 @@
 @endsection
 
 @push('scripts')
-    <script src="https://sdk.twilio.com/js/client/v1.14/twilio.min.js"></script>
+    <script src="https://sdk.twilio.com/js/voice/releases/2.11.1/twilio.min.js"></script>
     <script>
         let device;
         let connection;
