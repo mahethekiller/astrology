@@ -39,7 +39,7 @@
 @endsection
 
 @push('scripts')
-    <script src="https://sdk.twilio.com/js/voice/releases/2.11.1/twilio.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@twilio/voice-sdk@2.11.1/dist/twilio.min.js"></script>
     <script>
         let device;
         let connection;
@@ -151,8 +151,13 @@
             }
         });
 
-        // Start immediately
-        initCall();
+        // Start
+        if (typeof Twilio !== 'undefined') {
+            initCall();
+        } else {
+            console.error('Twilio SDK not loaded.');
+            updateStatus('Failed to load Twilio SDK. Please refresh.', 'danger');
+        }
 
     </script>
 @endpush
