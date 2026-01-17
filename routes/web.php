@@ -102,4 +102,19 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/chat/token', [App\Http\Controllers\Frontend\ChatController::class, 'token'])->name('chat.token');
     Route::post('/chat/end', [App\Http\Controllers\Frontend\ChatController::class, 'endChat'])->name('chat.end');
     Route::post('/chat/billing/ping', [App\Http\Controllers\Frontend\ChatController::class, 'billingPing'])->name('chat.billing.ping');
+
+    // Call Routes
+    Route::post('/call/token', [App\Http\Controllers\Frontend\CallController::class, 'token'])->name('call.token');
+    Route::post('/call/connect', [App\Http\Controllers\Frontend\CallController::class, 'voiceCallback'])->name('call.connect'); // Webhook
+    Route::post('/call/status', [App\Http\Controllers\Frontend\CallController::class, 'callStatusCallback'])->name('call.status'); // Webhook
+
+    // Call Views
+    Route::get('/call/astrologer/{astrologerId}', function ($astrologerId) {
+        $astrologer = \App\Models\AstrologerProfile::findOrFail($astrologerId);
+        return view('frontend.call.index', compact('astrologer'));
+    })->name('call.initiate');
+
+    Route::get('/astrologer/call-dashboard', function () {
+        return view('astrologer.call.dashboard');
+    })->middleware(['auth', 'role:astrologer'])->name('astrologer.call.dashboard');
 });

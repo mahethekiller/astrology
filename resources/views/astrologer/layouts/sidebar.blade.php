@@ -19,6 +19,12 @@
                             <i class="bi bi-clock-history"></i> <span>Chat History</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('astrologer.call.dashboard') }}"
+                            class="{{ request()->is('astrologer/call/dashboard') ? 'active' : '' }}">
+                            <i class="bi bi-telephone"></i> <span>Call Dashboard</span>
+                        </a>
+                    </li>
                 @endif
             @endauth
 

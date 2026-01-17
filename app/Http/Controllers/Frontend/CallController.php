@@ -1,0 +1,204 @@
+<?php
+
+namespace App\Http\Controllers\Frontend;
+
+use App\Http\Controllers\Controller;
+use App\Models\AstrologerProfile;
+use App\Models\CallRequest;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Twilio\Jwt\AccessToken;
+use Twilio\Jwt\Grants\VoiceGrant;
+use Twilio\TwiML\VoiceResponse;
+
+class CallController extends Controller
+{
+    private $twilioSid;
+    private $twilioApiKey;
+    private $twilioApiSecret;
+    private $twilioVoiceAppSid;
+
+    public function __construct()
+    {
+        $this->twilioSid = config('services.twilio.sid');
+        $this->twilioApiKey = config('services.twilio.chat.api_key'); // Reusing Chat API Key if valid, else need separate
+        $this->twilioApiSecret = config('services.twilio.chat.api_secret');
+        $this->twilioVoiceAppSid = config('services.twilio.voice.app_sid'); // Must be set in config
+    }
+
+    public function token(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            // If not logged in user (maybe astrologer via different guard? or same table)
+            // For now assuming User logic handles Astrologers too since Astrologer extends/Link to User
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // Identify if User or Astrologer
+        // In this system, Astrologers are Users too.
+        // We'll use a prefix. `user_{id}` or if they are ON the astrologer dashboard, `astrologer_{id}`?
+        // Let's rely on the requested identity type.
+
+        $identityPrefix = 'user';
+        if ($request->has('is_astrologer') && $request->is_astrologer) {
+            // Verify this user IS an astrologer
+            if (!$user->isAstrologer()) {
+                return response()->json(['error' => 'Not an astrologer'], 403);
+            }
+            $identityPrefix = 'astrologer';
+        }
+
+        $identity = $identityPrefix . '_' . $user->id;
+
+        if (empty($this->twilioVoiceAppSid)) {
+            return response()->json(['error' => 'Twilio Voice App SID not configured.'], 500);
+        }
+
+        $token = new AccessToken(
+            $this->twilioSid,
+            $this->twilioApiKey,
+            $this->twilioApiSecret,
+            3600,
+            $identity
+        );
+
+        $voiceGrant = new VoiceGrant();
+        $voiceGrant->setOutgoingApplicationSid($this->twilioVoiceAppSid);
+        $voiceGrant->setIncomingAllow(true); // Allow incoming calls
+
+        $token->addGrant($voiceGrant);
+
+        return response()->json(['token' => $token->toJWT(), 'identity' => $identity]);
+    }
+
+    public function voiceCallback(Request $request)
+    {
+        $response = new VoiceResponse();
+
+        // request header 'From' -> client:user_{id}
+        // request body 'astrologer_id' -> passed from client
+
+        $from = $request->input('From'); // client:user_1
+        $toAstrologerId = $request->input('astrologer_id');
+
+        if (!$toAstrologerId) {
+            // Maybe it's a direct dial to client:astrologer_X? 
+            // If the client used .connect({ params: { astrologer_id: ... } }) it comes as post param.
+            $response->say('Invalid request. No Astrologer ID provided.');
+            return response($response)->header('Content-Type', 'text/xml');
+        }
+
+        // Parse User ID from 'client:user_{id}'
+        $userId = str_replace('client:user_', '', $from);
+
+        $user = User::find($userId);
+        $astrologer = AstrologerProfile::find($toAstrologerId);
+
+        if (!$user || !$astrologer) {
+            $response->say('User or Astrologer not found.');
+            return response($response)->header('Content-Type', 'text/xml');
+        }
+
+        // Check Balance
+        // 1. Ensure wallet
+        if (!$user->wallet) {
+            $response->say('Insufficient balance.');
+            return response($response)->header('Content-Type', 'text/xml');
+        }
+
+        $pricePerMin = $astrologer->call_price;
+        if ($pricePerMin <= 0) {
+            // Free call? Or not allowed? Assuming allowed.
+            $timeLimit = 3600; // 1 hour cap
+        } else {
+            $balance = $user->wallet->balance;
+            $maxDuration = floor(($balance / $pricePerMin) * 60); // seconds
+
+            if ($maxDuration < 60) {
+                $response->say('You have insufficient balance for this call.');
+                return response($response)->header('Content-Type', 'text/xml');
+            }
+            $timeLimit = $maxDuration;
+        }
+
+        // Create DB Record
+        $callRequest = CallRequest::create([
+            'user_id' => $user->id,
+            'astrologer_id' => $astrologer->id,
+            'twilio_sid' => $request->input('CallSid'),
+            'call_status' => 'initiated',
+            'start_time' => now(),
+            'call_cost' => 0 // Calculated at end
+        ]);
+
+        $dial = $response->dial('', [
+            'timeLimit' => $timeLimit,
+            'action' => route('call.status'), // Webhook when call ends
+            'method' => 'POST'
+        ]);
+
+        // Client identity: astrologer_{user_id_of_astrologer}
+        // Wait, AstrologerProfile has user_id.
+        $astrologerIdentity = 'astrologer_' . $astrologer->user_id;
+
+        $dial->client($astrologerIdentity);
+
+        return response($response)->header('Content-Type', 'text/xml');
+    }
+
+    public function callStatusCallback(Request $request)
+    {
+        // Twilio hits this after call ends (because of 'action' in Dial)
+        // Params: DialCallStatus, DialCallDuration, DialCallSid... OR CallStatus etc.
+        // If it's the 'action' callback, it gives the result of the Dial.
+
+        $sid = $request->input('CallSid');
+        $callRequest = CallRequest::where('twilio_sid', $sid)->first();
+
+        if ($callRequest) {
+            $duration = $request->input('DialCallDuration') ?? 0;
+            $status = $request->input('DialCallStatus');
+
+            $callRequest->call_duration = $duration;
+            $callRequest->call_status = strtolower($status); // completed, busy, no-answer, failed
+            $callRequest->end_time = now();
+
+            // Calculate Cost
+            $astrologer = $callRequest->astrologer;
+            $pricePerMin = $astrologer->call_price;
+
+            // User pays for full minutes? Or seconds? Usually per minute billing.
+            // Let's do per minute ceiling.
+            $minutes = ceil($duration / 60);
+            $cost = $minutes * $pricePerMin;
+
+            $callRequest->call_cost = $cost;
+            $callRequest->save();
+
+            // Deduct from Wallet
+            if ($cost > 0) {
+                // Ensure latest balance
+                $user = $callRequest->user; // Relation
+                // We should probably check if already deducted to avoid double charge (idempotency), 
+                // but Dial action is usually called once.
+
+                // Transaction
+                if ($user->wallet) {
+                    $user->wallet->decrement('balance', $cost);
+                    $user->wallet->transactions()->create([
+                        'amount' => $cost,
+                        'type' => 'debit',
+                        'description' => "Voice Call with {$astrologer->display_name} ({$minutes} mins)",
+                        'metadata' => ['call_request_id' => $callRequest->id]
+                    ]);
+                }
+            }
+        }
+
+        return response()->json(['success' => true]);
+    }
+}

@@ -103,7 +103,7 @@
                       NA
                   @endif
               </a> 
-              <a class="astrochaybtn" href="#">
+              <a class="astrochaybtn" href="{{ route('call.initiate', $astrologer->id) }}">
                   <img src="{{ asset('images/live-call.png') }}" /> 
                   @if($astrologer->call_price > 0)
                       {{ number_format($astrologer->call_price, 0) }}/Min 
