@@ -103,10 +103,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/chat/end', [App\Http\Controllers\Frontend\ChatController::class, 'endChat'])->name('chat.end');
     Route::post('/chat/billing/ping', [App\Http\Controllers\Frontend\ChatController::class, 'billingPing'])->name('chat.billing.ping');
 
-    // Call Routes
+    // Call Routes - Token must be authenticated
     Route::post('/call/token', [App\Http\Controllers\Frontend\CallController::class, 'token'])->name('call.token');
-    Route::post('/call/connect', [App\Http\Controllers\Frontend\CallController::class, 'voiceCallback'])->name('call.connect'); // Webhook
-    Route::post('/call/status', [App\Http\Controllers\Frontend\CallController::class, 'callStatusCallback'])->name('call.status'); // Webhook
 
     // Call Views
     Route::get('/call/astrologer/{astrologerId}', function ($astrologerId) {
@@ -118,3 +116,8 @@ Route::middleware(['auth'])->group(function () {
         return view('astrologer.call.dashboard');
     })->middleware(['auth', 'role:astrologer'])->name('astrologer.call.dashboard');
 });
+
+// Twilio Webhooks - Must be PUBLIC (No Auth Middleware)
+Route::post('/call/connect', [App\Http\Controllers\Frontend\CallController::class, 'voiceCallback'])->name('call.connect');
+Route::post('/call/status', [App\Http\Controllers\Frontend\CallController::class, 'callStatusCallback'])->name('call.status');
+

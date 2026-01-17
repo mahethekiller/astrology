@@ -55,6 +55,7 @@ class AstrologerController extends Controller
 
     public function show(int $id): View
     {
-        return view('frontend.astrologer.show', ['id' => $id]);
+        $astrologer = AstrologerProfile::with(['specializations', 'languages'])->findOrFail($id);
+        return view('frontend.astrologer.show', compact('astrologer'));
     }
 }
