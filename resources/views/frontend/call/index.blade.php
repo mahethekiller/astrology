@@ -124,6 +124,7 @@
 
             conn.on('accept', function () {
                 updateStatus('Connected', 'success');
+                debugger
                 startTimer();
             });
 
