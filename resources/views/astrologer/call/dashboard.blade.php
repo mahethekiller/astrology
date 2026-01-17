@@ -97,25 +97,33 @@
             try {
                 toggleBtn.disabled = true;
                 toggleBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Connecting...';
+                console.log("Requesting token...");
 
                 const response = await axios.post('{{ route("call.token") }}', { is_astrologer: true });
+                console.log("Token received:", response.data);
                 const token = response.data.token;
 
+                console.log("Initializing Twilio Device...");
                 device = new Twilio.Device(token, {
                     codecPreferences: ['opus', 'pcmu'],
                     fakeLocalDTMF: true,
                     enableRingingState: true,
-                    // Identity is critical here, backend ensures it is 'astrologer_{id}'
+                    debug: true
                 });
 
                 device.on('ready', function () {
+                    console.log("Twilio Device Ready!");
                     isOnline = true;
                     updateUIState(true);
                 });
+                
+                device.on('registered', function () {
+                    console.log("Twilio Device Registered!");
+                });
 
                 device.on('error', function (error) {
-                    console.error("Twilio Error", error);
-                    alert("Error: " + error.message);
+                    console.error("Twilio Device Error:", error);
+                    alert("Twilio Error: " + error.message);
                     goOffline();
                 });
 
@@ -130,10 +138,13 @@
                         activeConnection = null;
                     });
                 });
+                
+                // Explicitly register if needed (though constructor with token should do it)
+                // device.register(); 
 
             } catch (error) {
-                console.error(error);
-                alert("Failed to go online.");
+                console.error("Go Online Error:", error);
+                alert("Failed to go online. See console for details.");
                 goOffline();
             }
         }
