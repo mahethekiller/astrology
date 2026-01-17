@@ -31,7 +31,7 @@
             <!-- Common features accessible based on role -->
             @auth
                 @if(auth()->user()->isAdmin() || auth()->user()->isManager())
-                    
+
 
 
 
@@ -39,8 +39,8 @@
 
                 <!-- Admin Only Menu -->
                 @if(auth()->user()->isAdmin())
-                    
-                    
+
+
                     <li>
                         <a href="{{ auth()->user()->isAdmin() ? route('admin.sliders.index') : route('manager.sliders.index') }}"
                             class="{{ request()->is('*/sliders*') ? 'active' : '' }}">
@@ -75,7 +75,7 @@
 
                     <li class="nav-item">
                         <a class="nav-link d-flex align-items-center dropdown-toggle
-                                                    {{ request()->is('admin/astrologer-profiles*') || request()->is('admin/languages*') || request()->is('admin/specializations*') ? '' : 'collapsed' }}"
+                                                            {{ request()->is('admin/astrologer-profiles*') || request()->is('admin/languages*') || request()->is('admin/specializations*') ? '' : 'collapsed' }}"
                             href="#astrologerMenu" data-bs-toggle="collapse" data-bs-target="#astrologerMenu"
                             aria-expanded="{{ request()->is('admin/astrologer-profiles*') || request()->is('admin/languages*') || request()->is('admin/specializations*') ? 'true' : 'false' }}"
                             aria-controls="astrologerMenu">
@@ -85,7 +85,7 @@
 
                         <ul id="astrologerMenu"
                             class="collapse list-unstyled ps-3
-                                                    {{ request()->is('admin/astrologer-profiles*') || request()->is('admin/languages*') || request()->is('admin/specializations*') ? 'show' : '' }}">
+                                                            {{ request()->is('admin/astrologer-profiles*') || request()->is('admin/languages*') || request()->is('admin/specializations*') ? 'show' : '' }}">
                             <li class="nav-item">
                                 <a href="{{ route('admin.astrologer-profiles.index') }}"
                                     class="nav-link {{ request()->is('admin/astrologer-profiles*') ? 'active' : '' }}">
@@ -122,6 +122,12 @@
                         <a href="{{ route('admin.permissions.index') }}"
                             class="{{ request()->is('admin/permissions*') ? 'active' : '' }}">
                             <i class="bi bi-key"></i> <span>Permission Management</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.settings.index') }}"
+                            class="{{ request()->is('admin/settings*') ? 'active' : '' }}">
+                            <i class="bi bi-gear"></i> <span>Global Settings</span>
                         </a>
                     </li>
 
