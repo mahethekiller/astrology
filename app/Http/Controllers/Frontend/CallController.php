@@ -223,6 +223,9 @@ class CallController extends Controller
             }
         }
 
-        return response()->json(['success' => true]);
+        // Return TwiML to hangup (or just empty response to end call)
+        $response = new VoiceResponse();
+        $response->hangup();
+        return response($response->asXML())->header('Content-Type', 'text/xml');
     }
 }
