@@ -91,15 +91,22 @@
                     enableRingingState: true
                 });
 
-                device.on('ready', function (device) {
-                    updateStatus('Calling...', 'primary');
-                    // 3. Connect
-                    const params = {
-                        astrologer_id: astrologerId
-                    };
-                    connection = device.connect(params);
-                    setupConnectionListeners(connection);
-                });
+                // device.on('ready', function (device) {
+                // v2: No ready event.
+                // });
+
+                // Register (optional for outgoing but good practice) and Connect
+                // For immediate call:
+                console.log("Connecting...");
+                updateStatus('Calling...', 'primary');
+
+                const params = {
+                    astrologer_id: astrologerId
+                };
+
+                // device.connect() returns a Promise resolving to Call object
+                connection = await device.connect({ params: params });
+                setupConnectionListeners(connection);
 
                 device.on('error', function (error) {
                     console.error('Twilio Error:', error);

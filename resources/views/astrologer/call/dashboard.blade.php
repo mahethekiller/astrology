@@ -111,14 +111,16 @@
                     debug: true
                 });
 
-                device.on('ready', function () {
-                    console.log("Twilio Device Ready!");
-                    isOnline = true;
-                    updateUIState(true);
-                });
+                // device.on('ready', function () {
+                //    console.log("Twilio Device Ready!");
+                //    isOnline = true;
+                //    updateUIState(true);
+                // });
 
                 device.on('registered', function () {
                     console.log("Twilio Device Registered!");
+                    isOnline = true;
+                    updateUIState(true);
                 });
 
                 device.on('error', function (error) {
