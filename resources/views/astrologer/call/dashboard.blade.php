@@ -116,7 +116,7 @@
                     isOnline = true;
                     updateUIState(true);
                 });
-                
+
                 device.on('registered', function () {
                     console.log("Twilio Device Registered!");
                 });
@@ -138,9 +138,10 @@
                         activeConnection = null;
                     });
                 });
-                
-                // Explicitly register if needed (though constructor with token should do it)
-                // device.register(); 
+
+                // Explicitly register to receive calls
+                console.log("Registering device...");
+                device.register();
 
             } catch (error) {
                 console.error("Go Online Error:", error);
