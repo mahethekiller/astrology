@@ -95,7 +95,7 @@ class CallController extends Controller
                 // If the client used .connect({ params: { astrologer_id: ... } }) it comes as post param.
                 Log::error('No Astrologer ID provided');
                 $response->say('Invalid request. No Astrologer ID provided.');
-                return response($response)->header('Content-Type', 'text/xml');
+                return response($response->asXML())->header('Content-Type', 'text/xml');
             }
 
             // Parse User ID from 'client:user_{id}'
@@ -107,7 +107,7 @@ class CallController extends Controller
             if (!$user || !$astrologer) {
                 Log::error("User ($userId) or Astrologer ($toAstrologerId) not found");
                 $response->say('User or Astrologer not found.');
-                return response($response)->header('Content-Type', 'text/xml');
+                return response($response->asXML())->header('Content-Type', 'text/xml');
             }
 
             // Check Balance
@@ -115,7 +115,7 @@ class CallController extends Controller
             if (!$user->wallet) {
                 Log::error("User $userId has no wallet");
                 $response->say('Insufficient balance.');
-                return response($response)->header('Content-Type', 'text/xml');
+                return response($response->asXML())->header('Content-Type', 'text/xml');
             }
 
             $pricePerMin = $astrologer->call_price;
@@ -128,13 +128,15 @@ class CallController extends Controller
                 $timeLimit = 3600; // 1 hour cap
             } else {
                 $balance = $user->wallet->balance;
-                $maxDuration = floor(($balance / $pricePerMin) * 60); // seconds
+                // Safeguard against division by zero (already checked <=0 but good to cover)
+                $maxDuration = floor(($balance / ($pricePerMin > 0 ? $pricePerMin : 1)) * 60);
 
                 if ($maxDuration < 60) {
                     $response->say('You have insufficient balance for this call.');
-                    return response($response)->header('Content-Type', 'text/xml');
+                    return response($response->asXML())->header('Content-Type', 'text/xml');
                 }
-                $timeLimit = $maxDuration;
+                // Twilio max timeLimit is 4 hours (14400s). Ensure reasonable int.
+                $timeLimit = (int) min($maxDuration, 14400);
             }
 
             // Create DB Record
@@ -161,13 +163,14 @@ class CallController extends Controller
 
             $dial->client($astrologerIdentity);
 
-            return response($response)->header('Content-Type', 'text/xml');
+            return response($response->asXML())->header('Content-Type', 'text/xml');
 
         } catch (\Exception $e) {
             Log::error('Voice Callback Error: ' . $e->getMessage());
             Log::error($e->getTraceAsString());
+            $response = new VoiceResponse(); // Reset response to say error
             $response->say('An internal error occurred: ' . $e->getMessage());
-            return response($response)->header('Content-Type', 'text/xml');
+            return response($response->asXML())->header('Content-Type', 'text/xml');
         }
     }
 
