@@ -15,6 +15,8 @@ class CallRequest extends Model
         'call_status',
         'start_time',
         'end_time',
+        'commission_amount',
+        'astrologer_earnings',
     ];
 
     protected $casts = [

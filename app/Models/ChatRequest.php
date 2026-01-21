@@ -14,6 +14,10 @@ class ChatRequest extends Model
         'astrologer_id',
         'status',
         'twilio_sid',
+        'chat_duration',
+        'chat_cost',
+        'commission_amount',
+        'astrologer_earnings',
     ];
 
     public function user()

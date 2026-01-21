@@ -8,8 +8,8 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\NewsletterController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Route::view('/', 'welcome')->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/newsletter/subscribe', [NewsletterController::class, 'store'])->name('newsletter.subscribe');
 Route::get('/blog', [App\Http\Controllers\Frontend\BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [App\Http\Controllers\Frontend\BlogController::class, 'show'])->name('blog.show');
@@ -115,6 +115,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/astrologer/call-dashboard', function () {
         return view('astrologer.call.dashboard');
     })->middleware(['auth', 'role:astrologer'])->name('astrologer.call.dashboard');
+
+    // Astrologer History
+    Route::get('/astrologer/history', [App\Http\Controllers\Astrologer\HistoryController::class, 'index'])
+        ->middleware(['auth', 'role:astrologer'])
+        ->name('astrologer.history.index');
 });
 
 // Twilio Webhooks - Must be PUBLIC (No Auth Middleware)

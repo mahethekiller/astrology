@@ -206,9 +206,7 @@ class CallController extends Controller
             // Deduct from Wallet
             if ($cost > 0) {
                 // Ensure latest balance
-                $user = $callRequest->user; // Relation
-                // We should probably check if already deducted to avoid double charge (idempotency), 
-                // but Dial action is usually called once.
+                $user = $callRequest->user;
 
                 // Transaction
                 if ($user->wallet) {
@@ -219,6 +217,41 @@ class CallController extends Controller
                         'description' => "Voice Call with {$astrologer->display_name} ({$minutes} mins)",
                         'metadata' => ['call_request_id' => $callRequest->id]
                     ]);
+                }
+
+                // ---------------------------------------------------------
+                // 2. Calculate Commission & Earnings
+                // ---------------------------------------------------------
+                $commissionRate = \App\Models\Setting::getValue('global_voice_commission', 20); // Default 20%
+                $commissionAmount = round(($cost * $commissionRate) / 100, 2);
+                $astrologerEarnings = $cost - $commissionAmount;
+
+                // Update Call Request with financials
+                $callRequest->update([
+                    'commission_amount' => $commissionAmount,
+                    'astrologer_earnings' => $astrologerEarnings
+                ]);
+
+                // ---------------------------------------------------------
+                // 3. Credit Astrologer Wallet
+                // ---------------------------------------------------------
+                $astrologerUser = $astrologer->user; // Get User model from AstrologerProfile
+
+                if ($astrologerUser && $astrologerUser->wallet) {
+                    $astrologerUser->wallet->increment('balance', $astrologerEarnings);
+
+                    $astrologerUser->wallet->transactions()->create([
+                        'amount' => $astrologerEarnings,
+                        'type' => 'credit',
+                        'description' => "Earnings from Voice Call with {$user->name} ({$minutes} mins)",
+                        'metadata' => [
+                            'call_request_id' => $callRequest->id,
+                            'total_call_cost' => $cost,
+                            'commission_deducted' => $commissionAmount
+                        ]
+                    ]);
+                } else {
+                    Log::error("Astrologer User or Wallet not found for Astrologer ID: {$astrologer->id}");
                 }
             }
         }

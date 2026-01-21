@@ -79,4 +79,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Global Settings
     Route::get('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings.index');
     Route::post('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
+
+    // Call & Chat History
+    Route::get('/history', [App\Http\Controllers\Admin\HistoryController::class, 'index'])->name('history.index');
 });

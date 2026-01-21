@@ -227,6 +227,7 @@ class ChatController extends Controller
                     return response()->json(['status' => 'low_balance'], 402);
                 }
 
+                // 1. Deduct from User
                 $user->wallet->decrement('balance', $price);
                 $user->wallet->transactions()->create([
                     'amount' => $price,
@@ -234,6 +235,36 @@ class ChatController extends Controller
                     'description' => 'Chat usage charge (1 min)',
                     'metadata' => ['conversation_sid' => $request->sid]
                 ]);
+
+                // 2. Credit Astrologer & Update Request
+                $chatRequest = \App\Models\ChatRequest::where('twilio_sid', $request->sid)->first();
+                if ($chatRequest) {
+
+                    // Commission Calculation
+                    $commissionRate = \App\Models\Setting::getValue('global_chat_commission', 20);
+                    $commissionAmount = round(($price * $commissionRate) / 100, 2);
+                    $astrologerEarnings = $price - $commissionAmount;
+
+                    // Update Chat Request Totals
+                    $chatRequest->increment('chat_duration', 1); // 1 minute
+                    $chatRequest->increment('chat_cost', $price);
+                    $chatRequest->increment('commission_amount', $commissionAmount);
+                    $chatRequest->increment('astrologer_earnings', $astrologerEarnings);
+
+                    // Credit Astrologer
+                    $astrologer = $chatRequest->astrologer;
+                    $astrologerUser = $astrologer->user;
+
+                    if ($astrologerUser && $astrologerUser->wallet) {
+                        $astrologerUser->wallet->increment('balance', $astrologerEarnings);
+                        $astrologerUser->wallet->transactions()->create([
+                            'amount' => $astrologerEarnings,
+                            'type' => 'credit',
+                            'description' => "Earnings from Chat with {$user->name} (1 min)",
+                            'metadata' => ['chat_request_id' => $chatRequest->id]
+                        ]);
+                    }
+                }
             }
 
             return response()->json(['status' => 'ok', 'remaining_balance' => $user->wallet->balance]);

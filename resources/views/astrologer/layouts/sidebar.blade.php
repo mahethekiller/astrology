@@ -14,9 +14,9 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('astrologer.chat.history') }}"
-                            class="{{ request()->is('astrologer/chat/history') ? 'active' : '' }}">
-                            <i class="bi bi-clock-history"></i> <span>Chat History</span>
+                        <a href="{{ route('astrologer.history.index') }}"
+                            class="{{ request()->is('astrologer/history*') ? 'active' : '' }}">
+                            <i class="bi bi-clock-history"></i> <span>Service History</span>
                         </a>
                     </li>
                     <li>
