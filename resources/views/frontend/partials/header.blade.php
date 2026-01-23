@@ -15,7 +15,7 @@
               Astrologer</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ route('astrologer.index') }}">Talk to
               Astrologer</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Free Kundli</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ route('kundli.index') }}">Free Kundli</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Kundli Matching</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Horoscopes</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Blogs</a></li>

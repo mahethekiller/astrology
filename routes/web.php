@@ -18,6 +18,10 @@ Route::get('/astrologers', [App\Http\Controllers\Frontend\AstrologerController::
 Route::get('/astrologer/{id}', [App\Http\Controllers\Frontend\AstrologerController::class, 'show'])->name('astrologer.show')->where('id', '[0-9]+');
 
 
+Route::get('/horoscope/daily/{sign?}', [App\Http\Controllers\Frontend\HoroscopeController::class, 'daily'])->name('horoscope.daily');
+Route::get('/kundli', [App\Http\Controllers\Frontend\KundliController::class, 'index'])->name('kundli.index');
+Route::post('/kundli', [App\Http\Controllers\Frontend\KundliController::class, 'generate'])->name('kundli.generate');
+
 
 
 // Theme toggle - accessible to all authenticated users
@@ -125,4 +129,7 @@ Route::middleware(['auth'])->group(function () {
 // Twilio Webhooks - Must be PUBLIC (No Auth Middleware)
 Route::post('/call/connect', [App\Http\Controllers\Frontend\CallController::class, 'voiceCallback'])->name('call.connect');
 Route::post('/call/status', [App\Http\Controllers\Frontend\CallController::class, 'callStatusCallback'])->name('call.status');
+
+// API Routes
+Route::get('/api/location/search', [App\Http\Controllers\Api\LocationController::class, 'search'])->name('api.location.search');
 

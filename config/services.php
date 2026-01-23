@@ -49,4 +49,9 @@ return [
         ],
     ],
 
+    'prokerala' => [
+        'client_id' => env('PROKERALA_CLIENT_ID'),
+        'client_secret' => env('PROKERALA_CLIENT_SECRET'),
+    ],
+
 ];
