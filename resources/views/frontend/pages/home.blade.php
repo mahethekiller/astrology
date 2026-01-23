@@ -38,28 +38,28 @@
     <div class="row g-5">
       <div class="col-sm-6 col-lg-3">
         <div class="sec3Box">
-          <a href="#">
+          <a href="{{ route('astrologer.index') }}">
           <img src="{{ asset('frontend/images/chat.png') }}" /><span class="sec3text">Chat with Astrologer</span><span class="readmorebtn"><img src="{{ asset('frontend/images/readmorearrow.png') }}" /></span>
           </a>
         </div>
       </div>
       <div class="col-sm-6 col-lg-3">
         <div class="sec3Box">
-          <a href="#">
+          <a href="{{ route('astrologer.index') }}">
           <img src="{{ asset('frontend/images/talk.png') }}" /><span class="sec3text">Talk to Astrologer</span><span class="readmorebtn"><img src="{{ asset('frontend/images/readmorearrow.png') }}" /></span>
           </a>
         </div>
       </div>
       <div class="col-sm-6 col-lg-3">
         <div class="sec3Box">
-          <a href="#">
+          <a href="{{ route('horoscope.daily') }}">
           <img src="{{ asset('frontend/images/horoscop.png') }}" /><span class="sec3text">Horoscope</span><span class="readmorebtn"><img src="{{ asset('frontend/images/readmorearrow.png') }}" /></span>
           </a>
         </div>
       </div>
        <div class="col-sm-6 col-lg-3">
         <div class="sec3Box">
-          <a href="#">
+          <a href="{{ route('kundli.index') }}">
           <img src="{{ asset('frontend/images/kundli.png') }}" /><span class="sec3text">Kundli</span><span class="readmorebtn"><img src="{{ asset('frontend/images/readmorearrow.png') }}" /></span>
           </a>
         </div>
