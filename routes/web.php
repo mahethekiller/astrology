@@ -21,6 +21,7 @@ Route::get('/astrologer/{id}', [App\Http\Controllers\Frontend\AstrologerControll
 Route::get('/horoscope/daily/{sign?}', [App\Http\Controllers\Frontend\HoroscopeController::class, 'daily'])->name('horoscope.daily');
 Route::get('/kundli', [App\Http\Controllers\Frontend\KundliController::class, 'index'])->name('kundli.index');
 Route::post('/kundli', [App\Http\Controllers\Frontend\KundliController::class, 'generate'])->name('kundli.generate');
+Route::get('/kundli/detailed', [App\Http\Controllers\Frontend\KundliController::class, 'show'])->name('kundli.detailed');
 
 
 

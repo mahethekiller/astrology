@@ -27,11 +27,11 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -41,10 +41,29 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $user->assignRole('user'); // Assign default role
+
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        if ($request->wantsJson()) {
+            return response()->json(['redirect_url' => $this->redirectToDashboard($user)->getTargetUrl()]);
+        }
+
+        return $this->redirectToDashboard($user);
+    }
+
+    protected function redirectToDashboard($user): RedirectResponse
+    {
+        if ($user->hasRole('admin')) {
+            return redirect()->intended(route('admin.dashboard'));
+        } elseif ($user->hasRole('manager')) {
+            return redirect()->intended(route('manager.dashboard'));
+        } elseif ($user->hasRole('astrologer')) {
+            return redirect()->intended(route('astrologer.dashboard'));
+        } else {
+            return redirect()->intended(route('user.dashboard'));
+        }
     }
 }

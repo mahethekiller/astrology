@@ -96,6 +96,15 @@
                                         <option value="ml">Malayalam</option>
                                     </select>
                                 </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="result_type" class="form-label">Result Type</label>
+                                    <select class="form-select" id="result_type" name="result_type">
+                                        <option value="basic" {{ old('result_type') == 'basic' ? 'selected' : '' }}>Basic
+                                        </option>
+                                        <option value="advanced" {{ old('result_type') == 'advanced' ? 'selected' : '' }}>
+                                            Advanced</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="d-grid gap-2 mt-4">
@@ -150,11 +159,11 @@
                                             const locLong = loc[7];
 
                                             const item = $(`
-                                                        <button type="button" class="list-group-item list-group-item-action text-start">
-                                                            <strong>${locName}</strong><br>
-                                                            <small class="text-muted">${locRegion}, ${locCountry}</small>
-                                                        </button>
-                                                    `);
+                                                                <button type="button" class="list-group-item list-group-item-action text-start">
+                                                                    <strong>${locName}</strong><br>
+                                                                    <small class="text-muted">${locRegion}, ${locCountry}</small>
+                                                                </button>
+                                                            `);
 
                                             item.on('click', function () {
                                                 latInput.val(locLat);

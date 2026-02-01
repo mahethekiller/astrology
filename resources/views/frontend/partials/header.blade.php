@@ -57,40 +57,64 @@
       <div class="modal-body">
 
         <!-- Error Alert -->
-        <div id="login-error" class="alert alert-danger d-none"></div>
-        <!-- Test OTP Alert -->
-        <div id="test-otp-display" class="alert alert-info d-none"></div>
+        <div id="auth-error" class="alert alert-danger d-none"></div>
+        <div id="auth-success" class="alert alert-success d-none"></div>
 
-        <!-- Step 1: Phone Number -->
-        <div id="otp-step-1">
-          <div class="mb-3">
-            <label for="phone_number" class="form-label">Phone Number</label>
-            <input type="text" class="form-control" id="phone_number" placeholder="Enter your 10 digit number">
+        <!-- Login Form -->
+        <div id="login-container">
+          <form id="login-form">
+            @csrf
+            <div class="mb-3">
+              <label for="login_email" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="login_email" name="email" required
+                placeholder="Enter your email">
+            </div>
+            <div class="mb-3">
+              <label for="login_password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="login_password" name="password" required
+                placeholder="Enter your password">
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="remember_me" name="remember">
+              <label class="form-check-label" for="remember_me">Remember me</label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100" id="login-btn">Login</button>
+          </form>
+          <div class="mt-3 text-center">
+            <p>Don't have an account? <a href="#" id="show-register-link">Register here</a></p>
+            <p><a href="{{ route('password.request') }}">Forgot your password?</a></p>
           </div>
-          <button type="button" class="btn btn-primary w-100" id="send-otp-btn">Send OTP</button>
         </div>
 
-        <!-- Step 2: Verify OTP -->
-        <div id="otp-step-2" class="d-none">
-          <p>OTP sent to <span id="display-phone" class="fw-bold"></span></p>
-          <div class="mb-3">
-            <label for="otp_input" class="form-label">Enter OTP</label>
-            <input type="text" class="form-control" id="otp_input" placeholder="XXXXXX">
+        <!-- Register Form -->
+        <div id="register-container" class="d-none">
+          <form id="register-form">
+            @csrf
+            <div class="mb-3">
+              <label for="register_name" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="register_name" name="name" required
+                placeholder="Enter your full name">
+            </div>
+            <div class="mb-3">
+              <label for="register_email" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="register_email" name="email" required
+                placeholder="Enter your email">
+            </div>
+            <div class="mb-3">
+              <label for="register_password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="register_password" name="password" required
+                placeholder="Enter your password">
+            </div>
+            <div class="mb-3">
+              <label for="register_password_confirmation" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="register_password_confirmation"
+                name="password_confirmation" required placeholder="Confirm your password">
+            </div>
+            <button type="submit" class="btn btn-success w-100" id="register-btn">Register</button>
+          </form>
+          <div class="mt-3 text-center">
+            <p>Already have an account? <a href="#" id="show-login-link">Login here</a></p>
           </div>
-          <button type="button" class="btn btn-primary w-100" id="verify-otp-btn">Verify & Login</button>
-          <div class="mt-2 text-center">
-            <a href="#" id="change-number-link">Change Number</a>
-          </div>
-        </div>
-
-        <!-- Step 3: Register Name (New Users) -->
-        <div id="otp-step-3" class="d-none">
-          <div class="alert alert-success">Phone verified! Please complete your profile.</div>
-          <div class="mb-3">
-            <label for="user_name" class="form-label">Full Name</label>
-            <input type="text" class="form-control" id="user_name" placeholder="Enter your full name">
-          </div>
-          <button type="button" class="btn btn-success w-100" id="register-btn">Complete Account</button>
         </div>
 
       </div>
@@ -100,140 +124,130 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const step1 = document.getElementById('otp-step-1');
-    const step2 = document.getElementById('otp-step-2');
-    const step3 = document.getElementById('otp-step-3');
+    const loginContainer = document.getElementById('login-container');
+    const registerContainer = document.getElementById('register-container');
+    const showRegisterLink = document.getElementById('show-register-link');
+    const showLoginLink = document.getElementById('show-login-link');
 
-    const phoneInput = document.getElementById('phone_number');
-    const otpInput = document.getElementById('otp_input');
-    const nameInput = document.getElementById('user_name');
-
-    const sendBtn = document.getElementById('send-otp-btn');
-    const verifyBtn = document.getElementById('verify-otp-btn');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const loginBtn = document.getElementById('login-btn');
     const registerBtn = document.getElementById('register-btn');
-    const changeLink = document.getElementById('change-number-link');
-
-    const errorAlert = document.getElementById('login-error');
-    const otpDisplay = document.getElementById('test-otp-display');
-    const displayPhone = document.getElementById('display-phone');
-
-    let currentPhone = '';
+    const errorAlert = document.getElementById('auth-error');
+    const successAlert = document.getElementById('auth-success');
 
     function showError(msg) {
       errorAlert.textContent = msg;
       errorAlert.classList.remove('d-none');
-      setTimeout(() => {
-        errorAlert.classList.add('d-none');
-        errorAlert.textContent = '';
-      }, 5000);
+      successAlert.classList.add('d-none');
     }
 
-    function hideError() {
+    function showSuccess(msg) {
+      successAlert.textContent = msg;
+      successAlert.classList.remove('d-none');
       errorAlert.classList.add('d-none');
     }
 
-    sendBtn.addEventListener('click', function () {
-      currentPhone = phoneInput.value.trim();
-      if (!currentPhone) {
-        showError('Please enter a phone number');
-        return;
-      }
+    function clearAlerts() {
+      errorAlert.classList.add('d-none');
+      successAlert.classList.add('d-none');
+      errorAlert.textContent = '';
+      successAlert.textContent = '';
+    }
 
-      sendBtn.disabled = true;
-      sendBtn.textContent = 'Sending...';
-
-      axios.post('{{ route("login.send-otp") }}', {
-        phone_number: currentPhone
-      })
-        .then(function (response) {
-          // Success
-          step1.classList.add('d-none');
-          step2.classList.remove('d-none');
-          displayPhone.textContent = currentPhone;
-
-          // SHOW OTP for testing
-          if (response.data.otp) {
-            otpDisplay.textContent = 'TESTING OTP: ' + response.data.otp;
-            otpDisplay.classList.remove('d-none');
-          }
-        })
-        .catch(function (error) {
-          showError(error.response?.data?.error || 'Something went wrong');
-        })
-        .finally(function () {
-          sendBtn.disabled = false;
-          sendBtn.textContent = 'Send OTP';
-        });
+    // Toggle forms
+    showRegisterLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      loginContainer.classList.add('d-none');
+      registerContainer.classList.remove('d-none');
+      clearAlerts();
     });
 
-    verifyBtn.addEventListener('click', function () {
-      const otp = otpInput.value.trim();
-      if (!otp) {
-        showError('Please enter the OTP');
-        return;
-      }
+    showLoginLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      registerContainer.classList.add('d-none');
+      loginContainer.classList.remove('d-none');
+      clearAlerts();
+    });
 
-      verifyBtn.disabled = true;
-      verifyBtn.textContent = 'Verifying...';
+    // Handle Login
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      clearAlerts();
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Logging in...';
 
-      axios.post('{{ route("login.verify-otp") }}', {
-        phone_number: currentPhone,
-        otp: otp
+      const formData = new FormData(loginForm);
+      const data = Object.fromEntries(formData.entries());
+
+      axios.post('{{ route("login") }}', data, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json'
+        }
       })
         .then(function (response) {
-          if (response.data.status === 'success') {
+          if (response.data.redirect_url) {
             window.location.href = response.data.redirect_url;
-          } else if (response.data.status === 'new_user') {
-            // Show name step
-            step2.classList.add('d-none');
-            step3.classList.remove('d-none');
-            otpDisplay.classList.add('d-none'); // Hide OTP display
+          } else {
+            // Fallback if no redirect_url provided
+            window.location.href = '/';
           }
         })
         .catch(function (error) {
-          showError(error.response?.data?.error || 'Invalid OTP');
+          console.error(error);
+          let msg = 'Login failed. Please check your credentials.';
+          if (error.response && error.response.data && error.response.data.errors) {
+            // Take the first error
+            msg = Object.values(error.response.data.errors)[0][0];
+          } else if (error.response && error.response.data && error.response.data.message) {
+            msg = error.response.data.message;
+          }
+          showError(msg);
         })
         .finally(function () {
-          verifyBtn.disabled = false;
-          verifyBtn.textContent = 'Verify & Login';
+          loginBtn.disabled = false;
+          loginBtn.textContent = 'Login';
         });
     });
 
-    registerBtn.addEventListener('click', function () {
-      const name = nameInput.value.trim();
-      const otp = otpInput.value.trim(); // Still need OTP for verification in backend
-
-      if (!name) {
-        showError('Please enter your name');
-        return;
-      }
-
+    // Handle Register
+    registerForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      clearAlerts();
       registerBtn.disabled = true;
-      registerBtn.textContent = 'Creating Account...';
+      registerBtn.textContent = 'Registering...';
 
-      axios.post('{{ route("login.register-otp") }}', {
-        phone_number: currentPhone,
-        otp: otp,
-        name: name
+      const formData = new FormData(registerForm);
+      const data = Object.fromEntries(formData.entries());
+
+      axios.post('{{ route("register") }}', data, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json'
+        }
       })
         .then(function (response) {
-          window.location.href = response.data.redirect_url;
+          if (response.data.redirect_url) {
+            window.location.href = response.data.redirect_url;
+          } else {
+            window.location.href = '/';
+          }
         })
         .catch(function (error) {
-          showError(error.response?.data?.error || 'Registration failed');
+          console.error(error);
+          let msg = 'Registration failed.';
+          if (error.response && error.response.data && error.response.data.errors) {
+            msg = Object.values(error.response.data.errors)[0][0];
+          } else if (error.response && error.response.data && error.response.data.message) {
+            msg = error.response.data.message;
+          }
+          showError(msg);
         })
         .finally(function () {
           registerBtn.disabled = false;
-          registerBtn.textContent = 'Complete Account';
+          registerBtn.textContent = 'Register';
         });
-    });
-
-    changeLink.addEventListener('click', function (e) {
-      e.preventDefault();
-      step2.classList.add('d-none');
-      step1.classList.remove('d-none');
-      otpDisplay.classList.add('d-none');
-      otpInput.value = '';
     });
   });
 </script>

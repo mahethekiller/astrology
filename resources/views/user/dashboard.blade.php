@@ -42,6 +42,31 @@
                             <h5 class="mb-0">Profile Settings</h5>
                         </div>
                         <div class="card-body">
+                            {{-- Email Verification Status --}}
+                            @if (auth()->user()->isUser() && !auth()->user()->hasVerifiedEmail())
+                                <div class="alert alert-warning" role="alert">
+                                    <h4 class="alert-heading"><i class="bi bi-exclamation-triangle"></i> Email Not Verified!
+                                    </h4>
+                                    <p>Your email address is not verified. Please check your inbox for the verification link.
+                                    </p>
+                                    <hr>
+                                    <p class="mb-0">
+                                        Did not receive the email?
+                                    <form class="d-inline" method="POST" action="{{ route('verification.send') }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="btn btn-link p-0 m-0 align-baseline text-decoration-none fw-bold">Click here
+                                            to resend</button>.
+                                    </form>
+                                    </p>
+                                </div>
+                                @if (session('status') == 'verification-link-sent')
+                                    <div class="alert alert-success" role="alert">
+                                        A new verification link has been sent to your email address.
+                                    </div>
+                                @endif
+                            @endif
+
                             <form action="{{ route('user.profile.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')

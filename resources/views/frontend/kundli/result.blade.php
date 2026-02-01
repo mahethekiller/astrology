@@ -123,10 +123,120 @@
                             <div class="card-body">
                                 <div class="row">
                                     @foreach($kundli['data']['yoga_details'] as $yoga)
-                                        <div class="col-md-6 mb-3">
-                                            <div class="p-3 border rounded h-100">
-                                                <h6 class="fw-bold">{{ $yoga['name'] }}</h6>
-                                                <p class="text-muted small mb-0">{{ $yoga['description'] }}</p>
+                                        @if(isset($yoga['yoga_list']))
+                                            {{-- Advanced Structure --}}
+                                            <div class="col-12 mb-3">
+                                                <h6 class="fw-bold text-primary">{{ $yoga['name'] }}</h6>
+                                                <p class="text-muted small">{{ $yoga['description'] }}</p>
+                                                <div class="row">
+                                                    @foreach($yoga['yoga_list'] as $subYoga)
+                                                        <div class="col-md-6 mb-2">
+                                                            <div class="p-3 border rounded h-100 {{ $subYoga['has_yoga'] ? 'bg-light-success border-success' : 'bg-light' }}">
+                                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                    <strong class="{{ $subYoga['has_yoga'] ? 'text-success' : 'text-muted' }}">{{ $subYoga['name'] }}</strong>
+                                                                    @if($subYoga['has_yoga'])
+                                                                        <span class="badge bg-success">Present</span>
+                                                                    @endif
+                                                                </div>
+                                                                <p class="mb-0 small text-muted">{{ $subYoga['description'] }}</p>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @else
+                                            {{-- Basic Structure --}}
+                                            <div class="col-md-6 mb-3">
+                                                <div class="p-3 border rounded h-100">
+                                                    <h6 class="fw-bold">{{ $yoga['name'] }}</h6>
+                                                    <p class="text-muted small mb-0">{{ $yoga['description'] }}</p>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Dasha Balance (Advanced Only) --}}
+                @if(isset($kundli['data']['dasha_balance']))
+                    <div class="col-12 mb-4">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-warning text-dark">
+                                <h5 class="mb-0">Dasha Balance</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-0">
+                                    <strong>Lord:</strong> {{ $kundli['data']['dasha_balance']['lord']['name'] }} ({{ $kundli['data']['dasha_balance']['lord']['vedic_name'] }})<br>
+                                    <strong>Balance:</strong> {{ $kundli['data']['dasha_balance']['description'] }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Dasha Periods (Advanced Only) --}}
+                @if(isset($kundli['data']['dasha_periods']))
+                    <div class="col-12 mb-4">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-secondary text-white">
+                                <h5 class="mb-0">Dasha Periods</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="accordion" id="dashaAccordion">
+                                    @foreach($kundli['data']['dasha_periods'] as $index => $mahadasha)
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="heading{{ $index }}">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $index }}" aria-expanded="false" aria-controls="collapse{{ $index }}">
+                                                    <strong>{{ $mahadasha['name'] }}</strong> &nbsp;
+                                                    <span class="text-muted small">({{ \Carbon\Carbon::parse($mahadasha['start'])->format('d M Y') }} - {{ \Carbon\Carbon::parse($mahadasha['end'])->format('d M Y') }})</span>
+                                                </button>
+                                            </h2>
+                                            <div id="collapse{{ $index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $index }}" data-bs-parent="#dashaAccordion">
+                                                <div class="accordion-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-sm table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Antar Dasha</th>
+                                                                    <th>Start</th>
+                                                                    <th>End</th>
+                                                                    <th>Pratyantar Dasha</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($mahadasha['antardasha'] as $antardasha)
+                                                                    <tr>
+                                                                        <td>{{ $antardasha['name'] }}</td>
+                                                                        <td>{{ \Carbon\Carbon::parse($antardasha['start'])->format('d M Y') }}</td>
+                                                                        <td>{{ \Carbon\Carbon::parse($antardasha['end'])->format('d M Y') }}</td>
+                                                                        <td>
+                                                                            @if(isset($antardasha['pratyantardasha']))
+                                                                                <button class="btn btn-sm btn-link p-0" type="button" data-bs-toggle="collapse" data-bs-target="#pratyantar{{ $index }}_{{ $loop->index }}">
+                                                                                    View Details
+                                                                                </button>
+                                                                                <div class="collapse mt-2" id="pratyantar{{ $index }}_{{ $loop->index }}">
+                                                                                    <ul class="list-unstyled small ps-3 border-start">
+                                                                                        @foreach($antardasha['pratyantardasha'] as $pratyantar)
+                                                                                            <li>
+                                                                                                <strong>{{ $pratyantar['name'] }}</strong>: 
+                                                                                                {{ \Carbon\Carbon::parse($pratyantar['start'])->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($pratyantar['end'])->format('d/m/Y') }}
+                                                                                            </li>
+                                                                                        @endforeach
+                                                                                    </ul>
+                                                                                </div>
+                                                                            @else
+                                                                                -
+                                                                            @endif
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach
