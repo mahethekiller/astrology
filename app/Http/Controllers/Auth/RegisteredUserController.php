@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
+use App\Mail\RegistrationOtp;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
+
 class RegisteredUserController extends Controller
 {
     /**
@@ -35,17 +39,85 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Generate OTP
+        $otp = rand(100000, 999999);
+
+        // Store OTP and Registration Data
+        Cache::put('reg_otp_' . $request->email, $otp, 600);
+        session(['reg_data' => $request->only('name', 'email', 'password')]);
+
+        // Send Email
+        Mail::to($request->email)->send(new RegistrationOtp($otp));
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => 'otp_sent',
+                'message' => 'OTP sent to your email. Please verify.',
+                'email' => $request->email
+            ]);
+        }
+
+        return redirect()->route('register.verify-otp')->with('email', $request->email);
+    }
+
+    /**
+     * Show the OTP verification view.
+     */
+    public function showOtpVerify()
+    {
+        if (!session()->has('reg_data')) {
+            return redirect()->route('register');
+        }
+
+        return view('auth.otp-verify');
+    }
+
+    /**
+     * Verify OTP and complete registration.
+     */
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'otp' => ['required', 'string', 'size:6'],
+        ]);
+
+        $regData = session('reg_data');
+
+        if (!$regData) {
+            if ($request->wantsJson()) {
+                return response()->json(['message' => 'Registration session expired.'], 422);
+            }
+            return redirect()->route('register')->withErrors(['otp' => 'Registration session expired.']);
+        }
+
+        $email = $regData['email'];
+        $cachedOtp = Cache::get('reg_otp_' . $email);
+
+        if (!$cachedOtp || $cachedOtp != $request->otp) {
+            if ($request->wantsJson()) {
+                return response()->json(['errors' => ['otp' => ['Invalid or expired OTP.']]], 422);
+            }
+            return back()->withErrors(['otp' => 'Invalid or expired OTP.']);
+        }
+
+        // OTP Valid - Create User
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => $regData['name'],
+            'email' => $regData['email'],
+            'password' => Hash::make($regData['password']),
         ]);
 
         $user->assignRole('user'); // Assign default role
 
+        $user->markEmailAsVerified();
+
         event(new Registered($user));
 
         Auth::login($user);
+
+        // Clear session and cache
+        Cache::forget('reg_otp_' . $email);
+        session()->forget('reg_data');
 
         if ($request->wantsJson()) {
             return response()->json(['redirect_url' => $this->redirectToDashboard($user)->getTargetUrl()]);

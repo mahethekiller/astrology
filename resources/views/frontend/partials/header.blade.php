@@ -117,6 +117,23 @@
           </div>
         </div>
 
+        <!-- OTP Verification Form -->
+        <div id="otp-register-container" class="d-none">
+          <form id="otp-register-form">
+            @csrf
+            <p class="text-center mb-3">Please enter the 6-digit OTP sent to your email.</p>
+            <div class="mb-3">
+              <label for="reg_otp" class="form-label">OTP Code</label>
+              <input type="text" class="form-control" id="reg_otp" name="otp" required maxlength="6"
+                placeholder="Enter 6-digit OTP">
+            </div>
+            <button type="submit" class="btn btn-primary w-100" id="verify-otp-btn">Verify & Register</button>
+          </form>
+          <div class="mt-3 text-center">
+            <p><a href="#" id="back-to-register">Back to Register</a></p>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -126,13 +143,20 @@
   document.addEventListener('DOMContentLoaded', function () {
     const loginContainer = document.getElementById('login-container');
     const registerContainer = document.getElementById('register-container');
+    const otpContainer = document.getElementById('otp-register-container');
+
     const showRegisterLink = document.getElementById('show-register-link');
     const showLoginLink = document.getElementById('show-login-link');
+    const backToRegister = document.getElementById('back-to-register');
 
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
+    const otpForm = document.getElementById('otp-register-form');
+
     const loginBtn = document.getElementById('login-btn');
     const registerBtn = document.getElementById('register-btn');
+    const verifyOtpBtn = document.getElementById('verify-otp-btn');
+
     const errorAlert = document.getElementById('auth-error');
     const successAlert = document.getElementById('auth-success');
 
@@ -160,6 +184,7 @@
       e.preventDefault();
       loginContainer.classList.add('d-none');
       registerContainer.classList.remove('d-none');
+      otpContainer.classList.add('d-none');
       clearAlerts();
     });
 
@@ -167,6 +192,14 @@
       e.preventDefault();
       registerContainer.classList.add('d-none');
       loginContainer.classList.remove('d-none');
+      otpContainer.classList.add('d-none');
+      clearAlerts();
+    });
+
+    backToRegister.addEventListener('click', function (e) {
+      e.preventDefault();
+      otpContainer.classList.add('d-none');
+      registerContainer.classList.remove('d-none');
       clearAlerts();
     });
 
@@ -228,7 +261,11 @@
         }
       })
         .then(function (response) {
-          if (response.data.redirect_url) {
+          if (response.data.status === 'otp_sent') {
+            showSuccess(response.data.message);
+            registerContainer.classList.add('d-none');
+            otpContainer.classList.remove('d-none');
+          } else if (response.data.redirect_url) {
             window.location.href = response.data.redirect_url;
           } else {
             window.location.href = '/';
@@ -247,6 +284,45 @@
         .finally(function () {
           registerBtn.disabled = false;
           registerBtn.textContent = 'Register';
+        });
+    });
+
+    // Handle OTP Verify
+    otpForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      clearAlerts();
+      verifyOtpBtn.disabled = true;
+      verifyOtpBtn.textContent = 'Verifying...';
+
+      const formData = new FormData(otpForm);
+      const data = Object.fromEntries(formData.entries());
+
+      axios.post('{{ route("register.verify-otp") }}', data, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json'
+        }
+      })
+        .then(function (response) {
+          if (response.data.redirect_url) {
+            window.location.href = response.data.redirect_url;
+          } else {
+            window.location.href = '/';
+          }
+        })
+        .catch(function (error) {
+          console.error(error);
+          let msg = 'Verification failed.';
+          if (error.response && error.response.data && error.response.data.errors) {
+            msg = Object.values(error.response.data.errors)[0][0];
+          } else if (error.response && error.response.data && error.response.data.message) {
+            msg = error.response.data.message;
+          }
+          showError(msg);
+        })
+        .finally(function () {
+          verifyOtpBtn.disabled = false;
+          verifyOtpBtn.textContent = 'Verify & Register';
         });
     });
   });
