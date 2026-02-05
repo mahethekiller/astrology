@@ -37,9 +37,12 @@ class HoroscopeController extends Controller
             if (!array_key_exists(strtolower($sign), $signs)) {
                 abort(404);
             }
-            $prediction = $this->prokeralaService->getDailyHoroscope($sign, now());
+
+            // Get advanced horoscope data for the specific sign with all prediction types
+            $prediction = $this->prokeralaService->getAdvancedDailyHoroscope($sign, now(), 'all');
         }
 
         return view('frontend.horoscope.daily', compact('signs', 'sign', 'prediction'));
     }
+
 }

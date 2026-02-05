@@ -49,6 +49,28 @@ class ProkeralaService
         ]);
     }
 
+    public function getAdvancedDailyHoroscope($sign, $datetime, $type = 'all')
+    {
+        return $this->makeRequest('GET', $this->baseUrl . '/horoscope/daily/advanced', [
+            'datetime' => $datetime->format('c'),
+            'sign' => strtolower($sign),
+            'type' => $type,
+        ]);
+    }
+
+    public function getKundliMatching($boyDob, $boyCoordinates, $girlDob, $girlCoordinates, $ayanamsa = 1, $la = 'en')
+    {
+        return $this->makeRequest('GET', $this->baseUrl . '/astrology/kundli-matching/advanced', [
+            'boy_dob' => $boyDob,
+            'boy_coordinates' => $boyCoordinates,
+            'girl_dob' => $girlDob,
+            'girl_coordinates' => $girlCoordinates,
+            'ayanamsa' => $ayanamsa,
+            'la' => $la,
+        ]);
+    }
+
+
     public function getKundli($datetime, $coordinates, $ayanamsa = 1, $advanced = false)
     {
         $endpoint = $advanced ? '/astrology/kundli/advanced' : '/astrology/kundli';

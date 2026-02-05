@@ -23,6 +23,9 @@ Route::get('/kundli', [App\Http\Controllers\Frontend\KundliController::class, 'i
 Route::post('/kundli', [App\Http\Controllers\Frontend\KundliController::class, 'generate'])->name('kundli.generate');
 Route::get('/kundli/detailed', [App\Http\Controllers\Frontend\KundliController::class, 'show'])->name('kundli.detailed');
 
+Route::get('/kundli-matching', [App\Http\Controllers\Frontend\KundliMatchingController::class, 'index'])->name('kundli.matching');
+Route::post('/kundli-matching', [App\Http\Controllers\Frontend\KundliMatchingController::class, 'calculate'])->name('kundli.matching.calculate');
+
 
 
 // Theme toggle - accessible to all authenticated users
