@@ -8,7 +8,7 @@
     </div>
     <div>
         <!--  <h2 class="auth-title">Welcome Back</h2>
-                            <p class="auth-subtitle">Please sign in to your account</p>-->
+                                <p class="auth-subtitle">Please sign in to your account</p>-->
     </div>
 @endsection
 
@@ -78,19 +78,19 @@
     </form>
 
     <!-- <div class="auth-divider">
-                    <span>Or continue with</span>
-                </div> -->
+                        <span>Or continue with</span>
+                    </div> -->
 
     <!-- <div class="social-auth">
-                            <button type="button" class="social-btn google">
-                                <i class="bi bi-google"></i>
-                                Google
-                            </button>
-                            <button type="button" class="social-btn github">
-                                <i class="bi bi-github"></i>
-                                GitHub
-                            </button>
-                        </div>-->
+                                <button type="button" class="social-btn google">
+                                    <i class="bi bi-google"></i>
+                                    Google
+                                </button>
+                                <button type="button" class="social-btn github">
+                                    <i class="bi bi-github"></i>
+                                    GitHub
+                                </button>
+                            </div>-->
 @endsection
 
 @section('auth-footer')
@@ -103,16 +103,16 @@
         @endif
 
         <!-- @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="auth-link">
-                                <i class="bi bi-person-plus me-1"></i>
-                                Create account
-                            </a>
-                        @endif -->
+                                <a href="{{ route('register') }}" class="auth-link">
+                                    <i class="bi bi-person-plus me-1"></i>
+                                    Create account
+                                </a>
+                            @endif -->
     </div>
 
     <div style="text-align: center;">
         <small class="text-muted">
-            &copy; {{ date('Y') }} Laravel Admin. All rights reserved.
+            &copy; {{ date('Y') }} Astroauraa All rights reserved.
         </small>
     </div>
 @endsection

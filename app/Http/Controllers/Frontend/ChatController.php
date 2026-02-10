@@ -241,7 +241,7 @@ class ChatController extends Controller
                 if ($chatRequest) {
 
                     // Commission Calculation
-                    $commissionRate = \App\Models\Setting::getValue('global_chat_commission', 20);
+                    $commissionRate = $astrologer->chat_commission_percentage ?? \App\Models\Setting::getValue('global_chat_commission', 20);
                     $commissionAmount = round(($price * $commissionRate) / 100, 2);
                     $astrologerEarnings = $price - $commissionAmount;
 

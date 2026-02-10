@@ -33,6 +33,8 @@ class AstrologerProfile extends Model
         'total_consultations',
         'chat_price',
         'call_price',
+        'chat_commission_percentage',
+        'call_commission_percentage',
     ];
 
     protected $casts = [
@@ -47,6 +49,8 @@ class AstrologerProfile extends Model
         'experience_years' => 'integer',
         'chat_price' => 'decimal:2',
         'call_price' => 'decimal:2',
+        'chat_commission_percentage' => 'decimal:2',
+        'call_commission_percentage' => 'decimal:2',
     ];
 
     /**

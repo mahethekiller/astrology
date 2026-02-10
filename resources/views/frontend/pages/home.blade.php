@@ -95,7 +95,7 @@
             <div class="topAstroWork text-truncate" title="{{ $astrologer->specializations->pluck('name')->join(', ') }}">{{ $astrologer->specializations->pluck('name')->join(', ') }}</div>
             <div class="totalExp">Exp. : <strong>{{ $astrologer->experience_years }} Yrs</strong></div>
             <div class="astroCallorChatbtn">
-              <a class="astrochaybtn" href="#">
+              <a class="astrochaybtn" href="{{ route('chat.initiate', $astrologer->id) }}">
                   <img src="{{ asset('images/live-chat.png') }}" /> 
                   @if($astrologer->chat_price > 0)
                       {{ number_format($astrologer->chat_price, 0) }}/Min 

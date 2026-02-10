@@ -222,6 +222,29 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group-custom">
+                                    <label class="form-label-custom" for="chat_commission_percentage">Chat Commission (%)</label>
+                                    <input type="number" step="0.01" min="0" max="100" class="form-control-custom @error('chat_commission_percentage') is-invalid @enderror"
+                                        id="chat_commission_percentage" name="chat_commission_percentage" value="{{ old('chat_commission_percentage', $astrologerProfile->chat_commission_percentage) }}" placeholder="Leave empty for global rate">
+                                    @error('chat_commission_percentage')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group-custom">
+                                    <label class="form-label-custom" for="call_commission_percentage">Call Commission (%)</label>
+                                    <input type="number" step="0.01" min="0" max="100" class="form-control-custom @error('call_commission_percentage') is-invalid @enderror"
+                                        id="call_commission_percentage" name="call_commission_percentage" value="{{ old('call_commission_percentage', $astrologerProfile->call_commission_percentage) }}" placeholder="Leave empty for global rate">
+                                    @error('call_commission_percentage')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group-custom">
                             <label class="form-label-custom" for="about">About *</label>
                             <textarea class="form-control-custom @error('about') is-invalid @enderror" id="about"

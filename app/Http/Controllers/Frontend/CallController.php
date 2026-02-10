@@ -219,10 +219,9 @@ class CallController extends Controller
                     ]);
                 }
 
-                // ---------------------------------------------------------
                 // 2. Calculate Commission & Earnings
                 // ---------------------------------------------------------
-                $commissionRate = \App\Models\Setting::getValue('global_voice_commission', 20); // Default 20%
+                $commissionRate = $astrologer->call_commission_percentage ?? \App\Models\Setting::getValue('global_voice_commission', 20); // Default 20%
                 $commissionAmount = round(($cost * $commissionRate) / 100, 2);
                 $astrologerEarnings = $cost - $commissionAmount;
 
