@@ -130,6 +130,9 @@ class ChatController extends Controller
             $profile->is_call_online = $status;
         }
 
+        // Sync is_online: True if either chat or call is online
+        $profile->is_online = ($profile->is_chat_online || $profile->is_call_online);
+
         $profile->save();
 
         return response()->json(['success' => true, 'message' => 'Status updated']);

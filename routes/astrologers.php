@@ -15,5 +15,6 @@ Route::middleware(['auth'])->prefix('astrologer')->name('astrologer.')->group(fu
     Route::get('/chat/reject/{id}', [ChatController::class, 'reject'])->name('chat.reject');
     Route::get('/chat/room/{sid}', [ChatController::class, 'room'])->name('chat.room');
     Route::post('/status/toggle', [ChatController::class, 'toggleStatus'])->name('status.toggle');
+    Route::get('/requests/pending', [DashboardController::class, 'getPendingRequests'])->name('requests.pending');
     Route::get('/chat/history', [ChatController::class, 'history'])->name('chat.history');
 });

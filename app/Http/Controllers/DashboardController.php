@@ -123,21 +123,91 @@ class DashboardController extends Controller
             abort(403, 'Unauthorized');
         }
 
+        $profile = $user->astrologerProfile;
+
         $stats = [
             'total_chats' => 0, // Placeholder
             'today_earnings' => 0, // Placeholder
-            'rating' => $user->astrologerProfile->rating,
+            'rating' => $profile ? $profile->rating : 0,
         ];
 
         // Fetch recent Chat Requests
-        $incomingRequests = \App\Models\ChatRequest::where('astrologer_id', $user->astrologerProfile->id)
-            ->where('status', 'pending')
-            ->with('user')
-            ->latest()
-            ->take(5)
-            ->get();
+        $incomingRequests = [];
+        if ($profile) {
+            $incomingRequests = \App\Models\ChatRequest::where('astrologer_id', $profile->id)
+                ->where('status', 'pending')
+                ->with('user')
+                ->latest()
+                ->take(5)
+                ->get();
+        } else {
+            // If no profile, we can't have incoming requests tied to this astrologer
+            $incomingRequests = collect();
+        }
 
         return view('astrologer.dashboard', compact('stats', 'incomingRequests'));
+    }
+
+    public function getPendingRequests()
+    {
+        $user = Auth::user();
+        if (!$user->astrologerProfile) {
+            return response()->json(['error' => 'Not Authorized'], 403);
+        }
+
+        $profile = $user->astrologerProfile;
+
+        // Fetch pending chat requests
+        $chatRequests = \App\Models\ChatRequest::where('astrologer_id', $profile->id)
+            ->where('status', 'pending')
+            ->with([
+                'user' => function ($query) {
+                    $query->select('id', 'name', 'phone_number');
+                }
+            ])
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function ($request) {
+                return [
+                    'id' => $request->id,
+                    'user_name' => $request->user->name,
+                    'user_phone' => $request->user->phone_number,
+                    'user_initial' => strtoupper(substr($request->user->name, 0, 1)),
+                    'created_at_human' => $request->created_at->diffForHumans(),
+                    'accept_url' => route('astrologer.chat.accept', $request->id),
+                    'reject_url' => route('astrologer.chat.reject', $request->id),
+                ];
+            });
+
+        // Fetch pending call requests
+        $callRequests = \App\Models\CallRequest::where('astrologer_id', $profile->id)
+            ->where('call_status', 'pending')
+            ->with([
+                'user' => function ($query) {
+                    $query->select('id', 'name', 'phone_number');
+                }
+            ])
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function ($request) {
+                return [
+                    'id' => $request->id,
+                    'user_name' => $request->user->name,
+                    'user_phone' => $request->user->phone_number,
+                    'user_initial' => strtoupper(substr($request->user->name, 0, 1)),
+                    'created_at_human' => $request->created_at->diffForHumans(),
+                    // 'accept_url' => route('astrologer.call.accept', $request->id), // Adjust as needed
+                    // 'reject_url' => route('astrologer.call.reject', $request->id),
+                ];
+            });
+
+        return response()->json([
+            'chatRequests' => $chatRequests,
+            'callRequests' => $callRequests,
+            'timestamp' => now()->toDateTimeString()
+        ]);
     }
 
     public function toggleTheme(Request $request)

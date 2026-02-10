@@ -1056,4 +1056,4 @@ a.ourAstrobtn {
   .mpt50 {
     padding-top: 50px;
   }
-}
+}.topAstroBoxactive.offline { background-color: gray !important; }

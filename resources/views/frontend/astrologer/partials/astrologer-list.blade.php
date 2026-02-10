@@ -5,7 +5,7 @@
                 @if ($astrologer->is_online)
                     <span class="topAstroBoxactive"></span>
                 @else
-                    <span class="topAstroBoxactive" style="background-color: gray;"></span>
+                    <span class="topAstroBoxactive offline"></span>
                 @endif
                 <div class="flowBtn"> <a class="" href="#">Follow </a></div>
                 <div class="retingStar"><i class="fa-solid fa-star"></i> {{ number_format($astrologer->rating, 1) }}</div>
