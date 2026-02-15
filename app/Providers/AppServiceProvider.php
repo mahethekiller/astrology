@@ -21,7 +21,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-         // Or for Bootstrap 5 specifically
+        // Or for Bootstrap 5 specifically
         Paginator::useBootstrapFive();
+
+        \Illuminate\Support\Facades\Mail::extend('brevo', function (array $config) {
+            return new \App\Mail\Transports\BrevoTransport($config['key']);
+        });
     }
 }
