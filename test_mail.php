@@ -8,14 +8,15 @@ $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 
 try {
-    echo "Attempting to send test email via Brevo SDK...\n";
+    echo "Attempting to send test email via BrevoService...\n";
     // Change the email address below to your recipient address
     $recipient = 'mahethekiller@gmail.com';
 
-    Mail::raw('This is a test email to verify the Brevo SDK integration in Laravel 12.', function ($message) use ($recipient) {
-        $message->to($recipient)
-            ->subject('Brevo SDK Configuration Test');
-    });
+    \App\Services\BrevoService::sendEmail(
+        $recipient,
+        'BrevoService Configuration Test',
+        '<h1>Success!</h1><p>This is a test email to verify the reusable <b>BrevoService</b> integration in Laravel 12.</p>'
+    );
     echo "Test email sent successfully!\n";
 } catch (\Exception $e) {
     echo "Failed to send test email: " . $e->getMessage() . "\n";

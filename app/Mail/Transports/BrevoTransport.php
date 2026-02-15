@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Mail\Transports;
-
-use Illuminate\Support\Facades\Http;
 use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\AbstractTransport;
 use Symfony\Component\Mime\Address;
@@ -34,56 +32,50 @@ class BrevoTransport extends AbstractTransport
     {
         $email = MessageConverter::toEmail($message->getOriginalMessage());
 
-        $payload = [
-            'sender' => [
-                'name' => $email->getFrom()[0]->getName() ?: config('mail.from.name'),
-                'email' => $email->getFrom()[0]->getAddress(),
-            ],
-            'to' => array_map(function (Address $address) {
-                $recipient = ['email' => $address->getAddress()];
-                if ($address->getName()) {
-                    $recipient['name'] = $address->getName();
-                }
-                return $recipient;
-            }, $email->getTo()),
-            'subject' => $email->getSubject(),
+        $sender = [
+            'name' => $email->getFrom()[0]->getName() ?: config('mail.from.name'),
+            'email' => $email->getFrom()[0]->getAddress(),
         ];
 
-        if ($email->getHtmlBody()) {
-            $payload['htmlContent'] = $email->getHtmlBody();
-        }
+        $to = array_map(function (Address $address) {
+            $recipient = ['email' => $address->getAddress()];
+            if ($address->getName()) {
+                $recipient['name'] = $address->getName();
+            }
+            return $recipient;
+        }, $email->getTo());
+
+        $options = [];
 
         if ($email->getTextBody()) {
-            $payload['textContent'] = $email->getTextBody();
+            $options['textContent'] = $email->getTextBody();
         }
 
         if ($email->getCc()) {
-            $payload['cc'] = array_map(function (Address $address) {
+            $options['cc'] = array_map(function (Address $address) {
                 return ['email' => $address->getAddress(), 'name' => $address->getName()];
             }, $email->getCc());
         }
 
         if ($email->getBcc()) {
-            $payload['bcc'] = array_map(function (Address $address) {
+            $options['bcc'] = array_map(function (Address $address) {
                 return ['email' => $address->getAddress(), 'name' => $address->getName()];
             }, $email->getBcc());
         }
 
         if ($email->getReplyTo()) {
-            $payload['replyTo'] = [
+            $options['replyTo'] = [
                 'email' => $email->getReplyTo()[0]->getAddress(),
                 'name' => $email->getReplyTo()[0]->getName(),
             ];
         }
 
-        $response = Http::withHeaders([
-            'api-key' => $this->key,
-            'accept' => 'application/json',
-            'content-type' => 'application/json',
-        ])->post('https://api.brevo.com/v3/smtp/email', $payload);
-
-        if ($response->failed()) {
-            throw new \Exception('Brevo API request failed: ' . $response->body());
-        }
+        \App\Services\BrevoService::sendEmail(
+            $to,
+            $email->getSubject(),
+            $email->getHtmlBody() ?: '',
+            $sender,
+            $options
+        );
     }
 }

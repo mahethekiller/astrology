@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
-use App\Mail\RegistrationOtp;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
 
 class RegisteredUserController extends Controller
@@ -46,8 +44,12 @@ class RegisteredUserController extends Controller
         Cache::put('reg_otp_' . $request->email, $otp, 600);
         session(['reg_data' => $request->only('name', 'email', 'password')]);
 
-        // Send Email
-        Mail::to($request->email)->send(new RegistrationOtp($otp));
+        // Send Email via Reusable Brevo Service
+        \App\Services\BrevoService::sendEmail(
+            ['email' => $request->email, 'name' => $request->name],
+            'Your Registration OTP',
+            view('emails.registration-otp', ['otp' => $otp])->render()
+        );
 
         if ($request->wantsJson()) {
             return response()->json([
