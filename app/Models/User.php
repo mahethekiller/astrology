@@ -69,4 +69,27 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(\App\Models\Wallet::class);
     }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $url = route('password.reset', [
+            'token' => $token,
+            'email' => $this->getEmailForPasswordReset(),
+        ]);
+
+        \App\Services\BrevoService::sendEmail(
+            $this->email,
+            'Reset Your Password',
+            view('emails.password-reset', [
+                'url' => $url,
+                'count' => config('auth.passwords.' . config('auth.defaults.passwords') . '.expire'),
+            ])->render()
+        );
+    }
 }

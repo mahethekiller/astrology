@@ -89,7 +89,9 @@
               </a>
           </div>
           <div class="astroDetails">
-            <div class="topAstroName text-truncate" title="{{ $astrologer->display_name }}">{{ $astrologer->display_name }}</div>
+            <div class="topAstroName text-truncate" title="{{ $astrologer->display_name }}">
+            <a href="{{ route('astrologer.show', $astrologer->id) }}">{{ $astrologer->display_name }}</a>
+          </div>
 
             <div class="astroLang text-truncate" title="{{ $astrologer->languages->pluck('name')->join(', ') }}">{{ $astrologer->languages->pluck('name')->join(', ') }}</div>
             <div class="topAstroWork text-truncate" title="{{ $astrologer->specializations->pluck('name')->join(', ') }}">{{ $astrologer->specializations->pluck('name')->join(', ') }}</div>

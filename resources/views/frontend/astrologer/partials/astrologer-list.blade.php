@@ -17,7 +17,8 @@
                 </div>
                 <div class="astroDetails">
                     <div class="topAstroName text-truncate" title="{{ $astrologer->display_name }}">
-                        {{ $astrologer->display_name }}
+
+                        <a href="{{ route('astrologer.show', $astrologer->id) }}">{{ $astrologer->display_name }}</a>
                     </div>
 
                     <div class="astroLang text-truncate" title="{{ $astrologer->languages->pluck('name')->join(', ') }}">
