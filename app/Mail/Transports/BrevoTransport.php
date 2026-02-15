@@ -32,82 +32,58 @@ class BrevoTransport extends AbstractTransport
      */
     protected function doSend(SentMessage $message): void
     {
-        // Include the Brevo SDK autoloader
-        require_once base_path('APIv3-php-library/autoload.php');
-
         $email = MessageConverter::toEmail($message->getOriginalMessage());
 
-        $config = \Brevo\Client\Configuration::getDefaultConfiguration()->setApiKey('api-key', $this->key);
-        $apiInstance = new \Brevo\Client\Api\TransactionalEmailsApi(
-            new \GuzzleHttp\Client(),
-            $config
-        );
+        $payload = [
+            'sender' => [
+                'name' => $email->getFrom()[0]->getName() ?: config('mail.from.name'),
+                'email' => $email->getFrom()[0]->getAddress(),
+            ],
+            'to' => array_map(function (Address $address) {
+                $recipient = ['email' => $address->getAddress()];
+                if ($address->getName()) {
+                    $recipient['name'] = $address->getName();
+                }
+                return $recipient;
+            }, $email->getTo()),
+            'subject' => $email->getSubject(),
+        ];
 
-        $sendSmtpEmail = new \Brevo\Client\Model\SendSmtpEmail();
-
-        // Sender
-        $sender = new \Brevo\Client\Model\SendSmtpEmailSender([
-            'name' => $email->getFrom()[0]->getName() ?: config('mail.from.name'),
-            'email' => $email->getFrom()[0]->getAddress(),
-        ]);
-        $sendSmtpEmail->setSender($sender);
-
-        // To
-        $to = array_map(function (Address $address) {
-            $params = ['email' => $address->getAddress()];
-            if ($address->getName()) {
-                $params['name'] = $address->getName();
-            }
-            return new \Brevo\Client\Model\SendSmtpEmailTo($params);
-        }, $email->getTo());
-        $sendSmtpEmail->setTo($to);
-
-        // Subject
-        $sendSmtpEmail->setSubject($email->getSubject());
-
-        // Content
         if ($email->getHtmlBody()) {
-            $sendSmtpEmail->setHtmlContent($email->getHtmlBody());
+            $payload['htmlContent'] = $email->getHtmlBody();
         }
+
         if ($email->getTextBody()) {
-            $sendSmtpEmail->setTextContent($email->getTextBody());
+            $payload['textContent'] = $email->getTextBody();
         }
 
-        // Cc
         if ($email->getCc()) {
-            $cc = array_map(function (Address $address) {
-                return new \Brevo\Client\Model\SendSmtpEmailCc([
-                    'email' => $address->getAddress(),
-                    'name' => $address->getName(),
-                ]);
+            $payload['cc'] = array_map(function (Address $address) {
+                return ['email' => $address->getAddress(), 'name' => $address->getName()];
             }, $email->getCc());
-            $sendSmtpEmail->setCc($cc);
         }
 
-        // Bcc
         if ($email->getBcc()) {
-            $bcc = array_map(function (Address $address) {
-                return new \Brevo\Client\Model\SendSmtpEmailBcc([
-                    'email' => $address->getAddress(),
-                    'name' => $address->getName(),
-                ]);
+            $payload['bcc'] = array_map(function (Address $address) {
+                return ['email' => $address->getAddress(), 'name' => $address->getName()];
             }, $email->getBcc());
-            $sendSmtpEmail->setBcc($bcc);
         }
 
-        // Reply To
         if ($email->getReplyTo()) {
-            $replyTo = new \Brevo\Client\Model\SendSmtpEmailReplyTo([
+            $payload['replyTo'] = [
                 'email' => $email->getReplyTo()[0]->getAddress(),
                 'name' => $email->getReplyTo()[0]->getName(),
-            ]);
-            $sendSmtpEmail->setReplyTo($replyTo);
+            ];
         }
 
-        try {
-            $apiInstance->sendTransacEmail($sendSmtpEmail);
-        } catch (\Exception $e) {
-            throw new \Exception('Brevo SDK request failed: ' . $e->getMessage());
+        $response = Http::withHeaders([
+            'api-key' => $this->key,
+            'accept' => 'application/json',
+            'content-type' => 'application/json',
+        ])->post('https://api.brevo.com/v3/smtp/email', $payload);
+
+        if ($response->failed()) {
+            throw new \Exception('Brevo API request failed: ' . $response->body());
         }
     }
 }
