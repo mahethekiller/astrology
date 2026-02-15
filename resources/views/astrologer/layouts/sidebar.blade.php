@@ -20,6 +20,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('astrologer.revenue.index') }}"
+                            class="{{ request()->is('astrologer/revenue*') ? 'active' : '' }}">
+                            <i class="bi bi-briefcase"></i> <span>My Earnings</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('astrologer.call.dashboard') }}"
                             class="{{ request()->is('astrologer/call/dashboard') ? 'active' : '' }}">
                             <i class="bi bi-telephone"></i> <span>Call Dashboard</span>

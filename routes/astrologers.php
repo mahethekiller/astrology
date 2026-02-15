@@ -17,4 +17,7 @@ Route::middleware(['auth'])->prefix('astrologer')->name('astrologer.')->group(fu
     Route::post('/status/toggle', [ChatController::class, 'toggleStatus'])->name('status.toggle');
     Route::get('/requests/pending', [DashboardController::class, 'getPendingRequests'])->name('requests.pending');
     Route::get('/chat/history', [ChatController::class, 'history'])->name('chat.history');
+
+    // My Earnings
+    Route::get('/revenue', [App\Http\Controllers\Astrologer\RevenueController::class, 'index'])->name('revenue.index');
 });

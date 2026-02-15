@@ -82,4 +82,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Call & Chat History
     Route::get('/history', [App\Http\Controllers\Admin\HistoryController::class, 'index'])->name('history.index');
+
+    // Revenue Report
+    Route::get('/revenue', [App\Http\Controllers\Admin\RevenueController::class, 'index'])->name('revenue.index');
 });
