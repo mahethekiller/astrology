@@ -41,37 +41,36 @@ class DashboardController extends Controller
     public function adminDashboard()
     {
         $stats = [
-            'total_users' => 1254,
-            'total_orders' => 524,
-            'total_revenue' => 12850,
-            'page_views' => 8520,
-            'admin_tasks' => 23,
-            'system_health' => '98%'
+            'total_users' => \App\Models\User::role('user')->count(),
+            'total_astrologers' => \App\Models\AstrologerProfile::count(),
+            'total_revenue' => \App\Models\ChatRequest::sum('commission_amount') + \App\Models\CallRequest::sum('commission_amount'),
+            'pending_verifications' => \App\Models\AstrologerProfile::where('verification_status', 'pending')->count(),
         ];
 
-        $recent_orders = [
-            [
-                'id' => 'ORD-001',
-                'customer' => 'John Doe',
-                'date' => '2023-05-15',
-                'amount' => 245.99,
-                'status' => 'completed'
-            ],
-            [
-                'id' => 'ORD-002',
-                'customer' => 'Jane Smith',
-                'date' => '2023-05-14',
-                'amount' => 189.50,
-                'status' => 'pending'
-            ],
-        ];
+        // Chart Data: Last 6 Months Revenue
+        $months = [];
+        $revenueData = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $months[] = $date->format('M');
 
-        $system_alerts = [
-            ['type' => 'info', 'message' => 'System update scheduled for tonight'],
-            ['type' => 'success', 'message' => 'Backup completed successfully'],
-        ];
+            $monthRevenue = \App\Models\ChatRequest::whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
+                ->sum('commission_amount') +
+                \App\Models\CallRequest::whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month)
+                    ->sum('commission_amount');
 
-        return view('admin.dashboard', compact('stats', 'recent_orders', 'system_alerts'));
+            $revenueData[] = $monthRevenue;
+        }
+
+        // Recent Activity
+        $recent_consultations = \App\Models\ChatRequest::with('user', 'astrologer')
+            ->latest()
+            ->take(10)
+            ->get();
+
+        return view('admin.dashboard', compact('stats', 'months', 'revenueData', 'recent_consultations'));
     }
 
     // Manager Dashboard
@@ -113,7 +112,6 @@ class DashboardController extends Controller
         return view('user.dashboard', compact('stats', 'my_tasks'));
     }
 
-    // Astrologer Dashboard
     public function astrologerDashboard()
     {
         $user = Auth::user();
@@ -125,25 +123,51 @@ class DashboardController extends Controller
 
         $profile = $user->astrologerProfile;
 
+        if (!$profile) {
+            return view('astrologer.dashboard', [
+                'stats' => ['total_consultations' => 0, 'today_earnings' => 0, 'rating' => 0, 'total_earnings' => 0],
+                'incomingRequests' => collect()
+            ]);
+        }
+
+        // Calculate Stats
+        $today = now()->startOfDay();
+
+        $todayChatEarnings = \App\Models\ChatRequest::where('astrologer_id', $profile->id)
+            ->whereDate('created_at', $today)
+            ->sum('astrologer_earnings');
+
+        $todayCallEarnings = \App\Models\CallRequest::where('astrologer_id', $profile->id)
+            ->whereDate('created_at', $today)
+            ->sum('astrologer_earnings');
+
+        $totalChatConsultations = \App\Models\ChatRequest::where('astrologer_id', $profile->id)
+            ->where('status', 'completed')
+            ->count();
+
+        $totalCallConsultations = \App\Models\CallRequest::where('astrologer_id', $profile->id)
+            ->where('call_status', 'completed')
+            ->count();
+
+        $totalEarnings = \App\Models\ChatRequest::where('astrologer_id', $profile->id)->sum('astrologer_earnings') +
+            \App\Models\CallRequest::where('astrologer_id', $profile->id)->sum('astrologer_earnings');
+
         $stats = [
-            'total_chats' => 0, // Placeholder
-            'today_earnings' => 0, // Placeholder
-            'rating' => $profile ? $profile->rating : 0,
+            'total_consultations' => $totalChatConsultations + $totalCallConsultations,
+            'today_earnings' => $todayChatEarnings + $todayCallEarnings,
+            'rating' => $profile->rating,
+            'total_earnings' => $totalEarnings,
+            'total_chats' => $totalChatConsultations,
+            'total_calls' => $totalCallConsultations,
         ];
 
         // Fetch recent Chat Requests
-        $incomingRequests = [];
-        if ($profile) {
-            $incomingRequests = \App\Models\ChatRequest::where('astrologer_id', $profile->id)
-                ->where('status', 'pending')
-                ->with('user')
-                ->latest()
-                ->take(5)
-                ->get();
-        } else {
-            // If no profile, we can't have incoming requests tied to this astrologer
-            $incomingRequests = collect();
-        }
+        $incomingRequests = \App\Models\ChatRequest::where('astrologer_id', $profile->id)
+            ->where('status', 'pending')
+            ->with('user')
+            ->latest()
+            ->take(5)
+            ->get();
 
         return view('astrologer.dashboard', compact('stats', 'incomingRequests'));
     }

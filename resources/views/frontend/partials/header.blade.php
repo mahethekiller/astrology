@@ -26,7 +26,13 @@
                 {{ Auth::user()->name }}
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="{{ route('user.dashboard') }}">Dashboard</a></li>
+                @if (Auth::user()->hasRole('admin'))
+                  <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                @elseif(Auth::user()->hasRole('astrologer'))
+                  <li><a class="dropdown-item" href="{{ route('astrologer.dashboard') }}">Dashboard</a></li>
+                @else
+                  <li><a class="dropdown-item" href="{{ route('user.dashboard') }}">Dashboard</a></li>
+                @endif
                 <li>
                   <form method="POST" action="{{ route('logout') }}"> @csrf <button type="submit"
                       class="dropdown-item">Logout</button></form>

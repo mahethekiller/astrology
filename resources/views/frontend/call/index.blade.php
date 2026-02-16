@@ -46,6 +46,7 @@
         let timerInterval;
         let seconds = 0;
         const astrologerId = "{{ $astrologer->id }}";
+        console.log(astrologerId);
         const statusDiv = document.getElementById('call-status');
         const timerDisplay = document.getElementById('call-timer');
         const timerContainer = document.getElementById('timer-container');

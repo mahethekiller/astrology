@@ -85,28 +85,44 @@ class CallController extends Controller
             // request header 'From' -> client:user_{id}
             // request body 'astrologer_id' -> passed from client
 
-            $from = $request->input('From'); // client:user_1
+            $from = $request->input('From'); // e.g., client:user_1 or client:astrologer_2
             $toAstrologerId = $request->input('astrologer_id');
 
-            Log::info("Call from: $from, To Astrologer ID: $toAstrologerId");
+            Log::info("Voice Callback - Raw From: $from, Raw Astrologer ID: $toAstrologerId");
 
             if (!$toAstrologerId) {
-                // Maybe it's a direct dial to client:astrologer_X? 
-                // If the client used .connect({ params: { astrologer_id: ... } }) it comes as post param.
-                Log::error('No Astrologer ID provided');
+                Log::error('Voice Callback - No Astrologer ID provided in request');
                 $response->say('Invalid request. No Astrologer ID provided.');
                 return response($response->asXML())->header('Content-Type', 'text/xml');
             }
 
-            // Parse User ID from 'client:user_{id}'
-            $userId = str_replace('client:user_', '', $from);
+            // Parse User ID robustly
+            // 1. Remove 'client:' if present
+            // 2. Remove 'user_' or 'astrologer_' if present
+            $cleanFrom = preg_replace('/^(client:)?(user_|astrologer_)?/', '', $from);
+            $userId = $cleanFrom;
+
+            Log::info("Voice Callback - Parsed User ID: $userId, To Astrologer ID: $toAstrologerId");
 
             $user = User::find($userId);
+
+            // Try finding astrologer profile by ID first
             $astrologer = AstrologerProfile::find($toAstrologerId);
 
+            // Fallback: If not found, check if the ID passed was actually the USER ID of the astrologer
+            if (!$astrologer) {
+                Log::warning("Astrologer not found by ID ($toAstrologerId), trying as user_id");
+                $astrologer = AstrologerProfile::where('user_id', $toAstrologerId)->first();
+            }
+
             if (!$user || !$astrologer) {
-                Log::error("User ($userId) or Astrologer ($toAstrologerId) not found");
-                $response->say('User or Astrologer not found.');
+                $missing = !$user ? 'User' : 'Astrologer';
+                if (!$user && !$astrologer)
+                    $missing = 'User and Astrologer';
+
+                Log::error("Voice Callback - $missing not found. UserID: $userId, AstrologerID: $toAstrologerId");
+
+                $response->say("Sorry, your profile or the astrologer could not be identified. Please try again.");
                 return response($response->asXML())->header('Content-Type', 'text/xml');
             }
 
