@@ -75,7 +75,7 @@
 
                     <li class="nav-item">
                         <a class="nav-link d-flex align-items-center dropdown-toggle
-                                                                            {{ request()->is('admin/astrologer-profiles*') || request()->is('admin/languages*') || request()->is('admin/specializations*') ? '' : 'collapsed' }}"
+                                                                                    {{ request()->is('admin/astrologer-profiles*') || request()->is('admin/languages*') || request()->is('admin/specializations*') ? '' : 'collapsed' }}"
                             href="#astrologerMenu" data-bs-toggle="collapse" data-bs-target="#astrologerMenu"
                             aria-expanded="{{ request()->is('admin/astrologer-profiles*') || request()->is('admin/languages*') || request()->is('admin/specializations*') ? 'true' : 'false' }}"
                             aria-controls="astrologerMenu">
@@ -85,7 +85,7 @@
 
                         <ul id="astrologerMenu"
                             class="collapse list-unstyled ps-3
-                                                                            {{ request()->is('admin/astrologer-profiles*') || request()->is('admin/languages*') || request()->is('admin/specializations*') ? 'show' : '' }}">
+                                                                                    {{ request()->is('admin/astrologer-profiles*') || request()->is('admin/languages*') || request()->is('admin/specializations*') ? 'show' : '' }}">
                             <li class="nav-item">
                                 <a href="{{ route('admin.astrologer-profiles.index') }}"
                                     class="nav-link {{ request()->is('admin/astrologer-profiles*') ? 'active' : '' }}">
@@ -144,6 +144,36 @@
                             class="{{ request()->is('admin/revenue*') ? 'active' : '' }}">
                             <i class="bi bi-currency-dollar"></i> <span>Revenue Report</span>
                         </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center dropdown-toggle
+                                                                                    {{ request()->is('admin/api-*') ? '' : 'collapsed' }}"
+                            href="#apiMenu" data-bs-toggle="collapse" data-bs-target="#apiMenu"
+                            aria-expanded="{{ request()->is('admin/api-*') ? 'true' : 'false' }}" aria-controls="apiMenu">
+                            <i class="bi bi-code-slash me-2"></i>
+                            <span>API Management</span>
+                        </a>
+
+                        <ul id="apiMenu"
+                            class="collapse list-unstyled ps-3
+                                                                                    {{ request()->is('admin/api-*') ? 'show' : '' }}">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.api-tokens.index') }}"
+                                    class="nav-link {{ request()->is('admin/api-tokens*') ? 'active' : '' }}">
+                                    <i class="bi bi-shield-lock me-2"></i>
+                                    API Tokens
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('admin.api-docs') }}"
+                                    class="nav-link {{ request()->is('admin/api-docs*') ? 'active' : '' }}">
+                                    <i class="bi bi-file-earmark-text me-2"></i>
+                                    API Docs
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 @endif
 

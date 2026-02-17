@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\ApiTokenController;
 
 
 
@@ -85,4 +86,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Revenue Report
     Route::get('/revenue', [App\Http\Controllers\Admin\RevenueController::class, 'index'])->name('revenue.index');
+
+    // API Management
+    Route::get('/api-tokens', [ApiTokenController::class, 'index'])->name('api-tokens.index');
+    Route::post('/api-tokens', [ApiTokenController::class, 'store'])->name('api-tokens.store');
+    Route::delete('/api-tokens/{id}', [ApiTokenController::class, 'destroy'])->name('api-tokens.destroy');
+    Route::get('/api-docs', function () {
+        return view('admin.docs.api');
+    })->name('api-docs');
 });
