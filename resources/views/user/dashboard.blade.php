@@ -42,6 +42,12 @@
                             <h5 class="mb-0">Profile Settings</h5>
                         </div>
                         <div class="card-body">
+                            @if (session('success'))
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    {{ session('success') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            @endif
                             {{-- Email Verification Status --}}
                             @if (auth()->user()->isUser() && !auth()->user()->hasVerifiedEmail())
                                 <div class="alert alert-warning" role="alert">
