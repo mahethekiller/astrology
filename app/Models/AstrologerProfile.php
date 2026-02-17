@@ -10,6 +10,8 @@ class AstrologerProfile extends Model
 {
     use HasFactory;
 
+    protected $appends = ['profile_image_url', 'cover_image_url'];
+
     protected $fillable = [
         'user_id',
         'display_name',

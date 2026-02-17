@@ -4,8 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Support\Facades\Storage;
+
 class Blog extends Model
 {
+    protected $appends = ['image_url'];
     protected $fillable = [
         'title',
         'slug',
@@ -21,4 +24,9 @@ class Blog extends Model
     protected $casts = [
         'published_at' => 'datetime',
     ];
+
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? Storage::disk('public')->url($this->image) : null;
+    }
 }

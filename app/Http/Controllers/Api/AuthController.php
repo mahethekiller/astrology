@@ -101,6 +101,23 @@ class AuthController extends Controller
     }
 
     /**
+     * Get detailed user data.
+     */
+    public function userData(Request $request)
+    {
+        $user = $request->user();
+        $user->load('wallet'); // Ensure wallet is loaded
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'user' => $user,
+                'wallet_balance' => $user->wallet ? $user->wallet->balance : 0,
+            ]
+        ]);
+    }
+
+    /**
      * Logout user (Revoke token).
      */
     public function logout(Request $request)

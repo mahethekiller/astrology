@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Support\Facades\Storage;
+
 class Slider extends Model
 {
     use HasFactory;
+
+    protected $appends = ['image_url'];
 
     protected $fillable = [
         'title',
@@ -38,5 +42,10 @@ class Slider extends Model
     public function scopeOrdered($query)
     {
         return $query->orderBy('order')->orderBy('created_at');
+    }
+
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? Storage::disk('public')->url($this->image) : null;
     }
 }

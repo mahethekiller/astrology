@@ -94,20 +94,20 @@
 
                                         <h6>Example Response (201 Created)</h6>
                                         <pre class="bg-light p-3 border rounded"><code>{
-        "status": "success",
-        "message": "User registered successfully",
-        "data": {
-            "user": {
-                "id": 1,
-                "name": "John Doe",
-                "email": "john@example.com",
-                "phone_number": "1234567890",
-                "created_at": "2024-03-20T10:00:00.000000Z"
-            },
-            "access_token": "1|AbCdEfGhIjKlMnOpQrStUvWxYz",
-            "token_type": "Bearer"
-        }
-    }</code></pre>
+            "status": "success",
+            "message": "User registered successfully",
+            "data": {
+                "user": {
+                    "id": 1,
+                    "name": "John Doe",
+                    "email": "john@example.com",
+                    "phone_number": "1234567890",
+                    "created_at": "2024-03-20T10:00:00.000000Z"
+                },
+                "access_token": "1|AbCdEfGhIjKlMnOpQrStUvWxYz",
+                "token_type": "Bearer"
+            }
+        }</code></pre>
                                     </div>
                                 </div>
                             </div>
@@ -155,19 +155,19 @@
 
                                         <h6>Example Response (200 OK)</h6>
                                         <pre class="bg-light p-3 border rounded"><code>{
-        "status": "success",
-        "message": "Logged in successfully",
-        "data": {
-            "user": {
-                "id": 1,
-                "name": "John Doe",
-                "email": "john@example.com",
-                "phone_number": "1234567890"
-            },
-            "access_token": "2|XyZ123...",
-            "token_type": "Bearer"
-        }
-    }</code></pre>
+            "status": "success",
+            "message": "Logged in successfully",
+            "data": {
+                "user": {
+                    "id": 1,
+                    "name": "John Doe",
+                    "email": "john@example.com",
+                    "phone_number": "1234567890"
+                },
+                "access_token": "2|XyZ123...",
+                "token_type": "Bearer"
+            }
+        }</code></pre>
                                     </div>
                                 </div>
                             </div>
@@ -189,8 +189,149 @@
 
                                         <h6>Example Response (200 OK)</h6>
                                         <pre class="bg-light p-3 border rounded"><code>{
+            "status": "success",
+            "message": "Logged out successfully"
+        }</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Get User PROFILE API (Detailed) -->
+                            <div class="accordion-item shadow-sm mb-3 border-0">
+                                <h2 class="accordion-header" id="headingProfile">
+                                    <button class="accordion-button collapsed bg-white text-dark" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseProfile" aria-expanded="false"
+                                        aria-controls="collapseProfile">
+                                        <span class="badge bg-secondary me-2">GET</span> /api/profile
+                                    </button>
+                                </h2>
+                                <div id="collapseProfile" class="accordion-collapse collapse"
+                                    aria-labelledby="headingProfile" data-bs-parent="#apiAccordion">
+                                    <div class="accordion-body">
+                                        <h6>Description</h6>
+                                        <p>Get detailed user profile including wallet balance. Requires authentication.</p>
+
+                                        <h6>Example Response (200 OK)</h6>
+                                        <pre class="bg-light p-3 border rounded"><code>{
         "status": "success",
-        "message": "Logged out successfully"
+        "data": {
+            "user": {
+                "id": 1,
+                "name": "John Doe",
+                "email": "john@example.com",
+                "phone_number": "1234567890",
+                "wallet": {
+                    "id": 1,
+                    "user_id": 1,
+                    "balance": "100.00"
+                }
+            },
+            "wallet_balance": "100.00"
+        }
+    }</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Get Astrologers API -->
+                            <div class="accordion-item shadow-sm mb-3 border-0">
+                                <h2 class="accordion-header" id="headingAstrologers">
+                                    <button class="accordion-button collapsed bg-white text-dark" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseAstrologers"
+                                        aria-expanded="false" aria-controls="collapseAstrologers">
+                                        <span class="badge bg-success me-2">GET</span> /api/astrologers
+                                    </button>
+                                </h2>
+                                <div id="collapseAstrologers" class="accordion-collapse collapse"
+                                    aria-labelledby="headingAstrologers" data-bs-parent="#apiAccordion">
+                                    <div class="accordion-body">
+                                        <h6>Description</h6>
+                                        <p>Get a paginated list of active and approved astrologers.</p>
+
+                                        <h6>Query Parameters</h6>
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Parameter</th>
+                                                    <th>Type</th>
+                                                    <th>Description</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><code>search</code></td>
+                                                    <td>string</td>
+                                                    <td>Search by name or about</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><code>specialization</code></td>
+                                                    <td>string</td>
+                                                    <td>Filter by specialization slug (e.g., Vedic Astrology)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><code>page</code></td>
+                                                    <td>integer</td>
+                                                    <td>Page number for pagination</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><code>limit</code></td>
+                                                    <td>integer</td>
+                                                    <td>Number of items per page (default: 12)</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <h6>Example Response (200 OK)</h6>
+                                        <pre class="bg-light p-3 border rounded"><code>{
+        "status": "success",
+        "data": {
+            "current_page": 1,
+            "data": [
+                {
+                    "id": 1,
+                    "display_name": "Astrologer 1",
+                    "slug": "astrologer-1",
+                    "experience_years": 10,
+                    "rating": "4.50",
+                    "specializations": [...],
+                    "languages": [...]
+                }
+            ],
+            "total": 50
+        }
+    }</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Get Astrologer Detail API -->
+                            <div class="accordion-item shadow-sm mb-3 border-0">
+                                <h2 class="accordion-header" id="headingAstrologerDetail">
+                                    <button class="accordion-button collapsed bg-white text-dark" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseAstrologerDetail"
+                                        aria-expanded="false" aria-controls="collapseAstrologerDetail">
+                                        <span class="badge bg-info me-2 text-white">GET</span> /api/astrologers/{id}
+                                    </button>
+                                </h2>
+                                <div id="collapseAstrologerDetail" class="accordion-collapse collapse"
+                                    aria-labelledby="headingAstrologerDetail" data-bs-parent="#apiAccordion">
+                                    <div class="accordion-body">
+                                        <h6>Description</h6>
+                                        <p>Get detailed information for a specific astrologer by ID.</p>
+
+                                        <h6>Example Response (200 OK)</h6>
+                                        <pre class="bg-light p-3 border rounded"><code>{
+        "status": "success",
+        "data": {
+            "id": 1,
+            "display_name": "Astrologer 1",
+            "about": "Expert in Vedic Astrology...",
+            "experience_years": 10,
+            "chat_price": "10.00",
+            "call_price": "15.00",
+            "specializations": [...],
+            "languages": [...]
+        }
     }</code></pre>
                                     </div>
                                 </div>
@@ -213,13 +354,13 @@
 
                                         <h6>Example Response (200 OK)</h6>
                                         <pre class="bg-light p-3 border rounded"><code>{
-        "id": 1,
-        "name": "John Doe",
-        "email": "john@example.com",
-        "phone_number": "1234567890",
-        "created_at": "2024-03-20T10:00:00.000000Z",
-        "updated_at": "2024-03-20T10:00:00.000000Z"
-    }</code></pre>
+            "id": 1,
+            "name": "John Doe",
+            "email": "john@example.com",
+            "phone_number": "1234567890",
+            "created_at": "2024-03-20T10:00:00.000000Z",
+            "updated_at": "2024-03-20T10:00:00.000000Z"
+        }</code></pre>
                                     </div>
                                 </div>
                             </div>
