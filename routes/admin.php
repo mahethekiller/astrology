@@ -47,6 +47,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Blogs
     Route::resource('blogs', BlogController::class);
 
+    // Menus
+    Route::resource('menus', App\Http\Controllers\Admin\MenuController::class);
+    Route::get('menus/{menu}/items', [App\Http\Controllers\Admin\MenuItemController::class, 'index'])->name('menus.items.index');
+    Route::post('menus/{menu}/items', [App\Http\Controllers\Admin\MenuItemController::class, 'store'])->name('menus.items.store');
+    Route::put('menu-items/{menuItem}', [App\Http\Controllers\Admin\MenuItemController::class, 'update'])->name('menu-items.update');
+    Route::delete('menu-items/{menuItem}', [App\Http\Controllers\Admin\MenuItemController::class, 'destroy'])->name('menu-items.destroy');
+    Route::post('menu-items/update-order', [App\Http\Controllers\Admin\MenuItemController::class, 'updateOrder'])->name('menu-items.update-order');
+
     // User Management
     Route::resource('users', UserController::class);
 

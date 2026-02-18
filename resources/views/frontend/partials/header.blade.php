@@ -11,14 +11,31 @@
       <!-- Navbar links -->
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="{{ route('astrologer.index') }}">Chat with
-              Astrologer</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ route('astrologer.index') }}">Talk to
-              Astrologer</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ route('kundli.index') }}">Free Kundli</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ route('kundli.matching') }}">Kundli Matching</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ route('horoscope.daily') }}">Horoscopes</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Blogs</a></li>
+          @if ($headerMenu && $headerMenu->items)
+            @foreach ($headerMenu->items as $item)
+              @if ($item->children->count() > 0)
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown{{ $item->id }}" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ $item->title }}
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown{{ $item->id }}">
+                    @foreach ($item->children as $child)
+                      <li>
+                        <a class="dropdown-item" href="{{ $child->type == 'route' ? route($child->route) : $child->url }}"
+                          target="{{ $child->target }}">{{ $child->title }}</a>
+                      </li>
+                    @endforeach
+                  </ul>
+                </li>
+              @else
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ $item->type == 'route' ? route($item->route) : $item->url }}"
+                    target="{{ $item->target }}">{{ $item->title }}</a>
+                </li>
+              @endif
+            @endforeach
+          @endif
           @auth
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"

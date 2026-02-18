@@ -6,7 +6,8 @@
                 <form class="newsletter" action="{{ route('newsletter.subscribe') }}" method="POST">
                     @csrf
                     @if(session('success'))
-                        <div class="alert alert-success" style="color: green; margin-bottom: 10px;">{{ session('success') }}</div>
+                        <div class="alert alert-success" style="color: green; margin-bottom: 10px;">{{ session('success') }}
+                        </div>
                     @endif
                     @error('email')
                         <div class="alert alert-danger" style="color: red; margin-bottom: 10px;">{{ $message }}</div>
@@ -38,13 +39,12 @@
                     <div class="col-sm-4 col-lg-4">
                         <div class="ftitle mpt50">Quick Links</div>
                         <ul class="fmenu">
-                            <li><a href="#">Chat with Astrologer</a></li>
-                            <li> <a href="#">Tarot Readers</a></li>
-                            <li><a href="#">Vastu Experts</a></li>
-                            <li><a href="#">Love Astrologer</a></li>
-                            <li><a href="#">Financial Astrologer</a></li>
-                            <li><a href="#">Marriage Astrologer </a></li>
-                            <li><a href="#">Horoscope 2026</a></li>
+                            @if($footerMenu1 && $footerMenu1->items)
+                                @foreach($footerMenu1->items as $item)
+                                    <li><a href="{{ $item->type == 'route' ? ($item->route ? route($item->route) : '#') : ($item->url ?? '#') }}"
+                                            target="{{ $item->target }}">{{ $item->title }}</a></li>
+                                @endforeach
+                            @endif
                         </ul>
                         <div class="ftitle pb-2 pt-4">Download App</div>
                         <div class="appLink">
@@ -55,13 +55,12 @@
                     <div class="col-sm-4 col-lg-4">
                         <div class="ftitle vish">Quick Links</div>
                         <ul class="fmenu">
-                            <li><a href="#">About Us</a></li>
-                            <li> <a href="#">Contact Us</a></li>
-                            <li><a href="#">Astrologer Registration </a></li>
-                            <li><a href="#">Career</a></li>
-                            <li><a href="#">Site Map </a></li>
-                            <li><a href="#">Karma & Destiny </a></li>
-                            <li><a href="#">Media Coverage</a></li>
+                            @if($footerMenu2 && $footerMenu2->items)
+                                @foreach($footerMenu2->items as $item)
+                                    <li><a href="{{ $item->type == 'route' ? ($item->route ? route($item->route) : '#') : ($item->url ?? '#') }}"
+                                            target="{{ $item->target }}">{{ $item->title }}</a></li>
+                                @endforeach
+                            @endif
                         </ul>
 
                     </div>
