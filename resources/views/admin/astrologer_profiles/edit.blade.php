@@ -4,491 +4,371 @@
 @section('page-title', 'Edit Astrologer Profile')
 
 @push('styles')
+    <link rel="stylesheet" href="{{ asset('css/admin-astrologer-profiles.css') }}">
     <style>
-        .image-preview {
-            max-width: 200px;
-            max-height: 200px;
-            margin-top: 10px;
-            border-radius: 8px;
+        .current-image-preview {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 1rem;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
         }
 
-        .current-image {
-            max-width: 150px;
-            max-height: 150px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+        .current-cover-preview {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 1rem;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .image-status-badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            background: #f1f5f9;
+            color: #64748b;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: inline-block;
         }
     </style>
 @endpush
 
 @section('content')
-    <div class="row">
-        <div class="col-12">
-            <div class="component-card">
-                <h4>Edit Astrologer Profile</h4>
-                <form method="POST" action="{{ route('admin.astrologer-profiles.update', $astrologerProfile) }}"
-                    enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-
-                    <!-- User Account Section -->
-                    <div class="mb-4">
-                        <h5 class="border-bottom pb-2 mb-3">User Account Information</h5>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="name">Full Name *</label>
-                                    <input type="text" class="form-control-custom @error('name') is-invalid @enderror"
-                                        id="name" name="name" value="{{ old('name', $astrologerProfile->user->name) }}"
-                                        required placeholder="Enter full name">
-                                    @error('name')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="email">Email Address *</label>
-                                    <input type="email" class="form-control-custom @error('email') is-invalid @enderror"
-                                        id="email" name="email" value="{{ old('email', $astrologerProfile->user->email) }}"
-                                        required placeholder="Enter email address">
-                                    @error('email')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="password">Password (Leave blank to keep
-                                        current)</label>
-                                    <input type="password"
-                                        class="form-control-custom @error('password') is-invalid @enderror" id="password"
-                                        name="password" placeholder="Enter new password (minimum 8 characters)">
-                                    @error('password')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="password_confirmation">Confirm Password</label>
-                                    <input type="password" class="form-control-custom" id="password_confirmation"
-                                        name="password_confirmation" placeholder="Re-enter new password">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group-custom">
-                            <label class="form-label-custom" for="phone">Phone Number</label>
-                            <input type="text" class="form-control-custom @error('phone') is-invalid @enderror" id="phone"
-                                name="phone" value="{{ old('phone') }}" placeholder="Enter phone number (optional)">
-                            @error('phone')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <!-- Astrologer Profile Section -->
-                    <div class="mb-4">
-                        <h5 class="border-bottom pb-2 mb-3">Astrologer Profile Information</h5>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="display_name">Display Name *</label>
-                                    <input type="text"
-                                        class="form-control-custom @error('display_name') is-invalid @enderror"
-                                        id="display_name" name="display_name"
-                                        value="{{ old('display_name', $astrologerProfile->display_name) }}" required
-                                        placeholder="Enter display name for profile">
-                                    @error('display_name')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom">Slug (Auto-generated)</label>
-                                    <input type="text" class="form-control-custom" value="{{ $astrologerProfile->slug }}"
-                                        disabled>
-                                    <small class="text-muted">This is automatically generated from the display name</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom">Gender *</label>
-                                    <div class="d-flex gap-3">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="gender" id="gender_male"
-                                                value="male" {{ old('gender', $astrologerProfile->gender) === 'male' ? 'checked' : '' }} required>
-                                            <label class="form-check-label" for="gender_male">Male</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="gender" id="gender_female"
-                                                value="female" {{ old('gender', $astrologerProfile->gender) === 'female' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="gender_female">Female</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="gender" id="gender_other"
-                                                value="other" {{ old('gender', $astrologerProfile->gender) === 'other' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="gender_other">Other</label>
-                                        </div>
-                                    </div>
-                                    @error('gender')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="date_of_birth">Date of Birth *</label>
-                                    <input type="date"
-                                        class="form-control-custom @error('date_of_birth') is-invalid @enderror"
-                                        id="date_of_birth" name="date_of_birth"
-                                        value="{{ old('date_of_birth', $astrologerProfile->date_of_birth->format('Y-m-d')) }}"
-                                        required>
-                                    @error('date_of_birth')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="experience_years">Years of Experience *</label>
-                                    <input type="number"
-                                        class="form-control-custom @error('experience_years') is-invalid @enderror"
-                                        id="experience_years" name="experience_years"
-                                        value="{{ old('experience_years', $astrologerProfile->experience_years) }}" min="0"
-                                        max="70" required placeholder="Enter years of experience">
-                                    @error('experience_years')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom">Statistics (Read-only)</label>
-                                    <div class="d-flex gap-3 align-items-center">
-                                        <span class="badge bg-warning text-dark">
-                                            <i class="bi bi-star-fill"></i> Rating:
-                                            {{ number_format($astrologerProfile->rating, 1) }}
-                                        </span>
-                                        <span class="badge bg-info">
-                                            Reviews: {{ $astrologerProfile->total_reviews }}
-                                        </span>
-                                        <span class="badge bg-success">
-                                            Consultations: {{ $astrologerProfile->total_consultations }}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="chat_price">Chat Price (per min)</label>
-                                    <input type="number" step="0.01" min="0" class="form-control-custom @error('chat_price') is-invalid @enderror"
-                                        id="chat_price" name="chat_price" value="{{ old('chat_price', $astrologerProfile->chat_price) }}" placeholder="Enter chat price">
-                                    @error('chat_price')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="call_price">Call Price (per min)</label>
-                                    <input type="number" step="0.01" min="0" class="form-control-custom @error('call_price') is-invalid @enderror"
-                                        id="call_price" name="call_price" value="{{ old('call_price', $astrologerProfile->call_price) }}" placeholder="Enter call price">
-                                    @error('call_price')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="chat_commission_percentage">Chat Commission (%)</label>
-                                    <input type="number" step="0.01" min="0" max="100" class="form-control-custom @error('chat_commission_percentage') is-invalid @enderror"
-                                        id="chat_commission_percentage" name="chat_commission_percentage" value="{{ old('chat_commission_percentage', $astrologerProfile->chat_commission_percentage) }}" placeholder="Leave empty for global rate">
-                                    @error('chat_commission_percentage')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="call_commission_percentage">Call Commission (%)</label>
-                                    <input type="number" step="0.01" min="0" max="100" class="form-control-custom @error('call_commission_percentage') is-invalid @enderror"
-                                        id="call_commission_percentage" name="call_commission_percentage" value="{{ old('call_commission_percentage', $astrologerProfile->call_commission_percentage) }}" placeholder="Leave empty for global rate">
-                                    @error('call_commission_percentage')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group-custom">
-                            <label class="form-label-custom" for="about">About *</label>
-                            <textarea class="form-control-custom @error('about') is-invalid @enderror" id="about"
-                                name="about" rows="5" required
-                                placeholder="Enter detailed description about the astrologer">{{ old('about', $astrologerProfile->about) }}</textarea>
-                            @error('about')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="profile_image">Profile Image (Max 2MB)</label>
-                                    <div class="mb-2">
-                                        <label class="text-muted">Current Image:</label><br>
-                                        <img src="{{ $astrologerProfile->profile_image_url }}" class="current-image"
-                                            alt="Current Profile">
-                                    </div>
-                                    <input type="file"
-                                        class="form-control-custom @error('profile_image') is-invalid @enderror"
-                                        id="profile_image" name="profile_image" accept="image/jpeg,image/png,image/jpg"
-                                        onchange="previewImage(this, 'profile_preview')">
-                                    <img id="profile_preview" class="image-preview" style="display: none;"
-                                        alt="Profile Preview">
-                                    <small class="text-muted">Leave empty to keep current image</small>
-                                    @error('profile_image')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="cover_image">Cover Image (Max 2MB)</label>
-                                    @if($astrologerProfile->cover_image)
-                                        <div class="mb-2">
-                                            <label class="text-muted">Current Image:</label><br>
-                                            <img src="{{ $astrologerProfile->cover_image_url }}" class="current-image"
-                                                alt="Current Cover">
-                                        </div>
-                                    @endif
-                                    <input type="file"
-                                        class="form-control-custom @error('cover_image') is-invalid @enderror"
-                                        id="cover_image" name="cover_image" accept="image/jpeg,image/png,image/jpg"
-                                        onchange="previewImage(this, 'cover_preview')">
-                                    <img id="cover_preview" class="image-preview" style="display: none;"
-                                        alt="Cover Preview">
-                                    <small class="text-muted">Leave empty to keep current image</small>
-                                    @error('cover_image')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group-custom">
-                                <label class="form-label-custom">Languages * (Hold Ctrl/Cmd to select multiple)</label>
-                                <select class="form-control-custom @error('languages') is-invalid @enderror" 
-                                        name="languages[]" multiple size="5" required>
-                                    @foreach($languages as $language)
-                                        <option value="{{ $language->id }}" 
-                                            {{ in_array($language->id, old('languages', $astrologerProfile->languages->pluck('id')->toArray())) ? 'selected' : '' }}>
-                                            {{ $language->name }} ({{ strtoupper($language->code) }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple languages</small>
-                                @error('languages')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group-custom">
-                                <label class="form-label-custom">Specializations * (Hold Ctrl/Cmd to select multiple)</label>
-                                <select class="form-control-custom @error('specializations') is-invalid @enderror" 
-                                        name="specializations[]" multiple size="5" required>
-                                    @foreach($specializations as $specialization)
-                                        <option value="{{ $specialization->id }}" 
-                                            {{ in_array($specialization->id, old('specializations', $astrologerProfile->specializations->pluck('id')->toArray())) ? 'selected' : '' }}>
-                                            {{ $specialization->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple specializations</small>
-                                @error('specializations')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="verification_status">Verification Status *</label>
-                                    <select class="form-control-custom @error('verification_status') is-invalid @enderror"
-                                        id="verification_status" name="verification_status" required>
-                                        <option value="pending" {{ old('verification_status', $astrologerProfile->verification_status) === 'pending' ? 'selected' : '' }}>
-                                            Pending</option>
-                                        <option value="approved" {{ old('verification_status', $astrologerProfile->verification_status) === 'approved' ? 'selected' : '' }}>
-                                            Approved</option>
-                                        <option value="rejected" {{ old('verification_status', $astrologerProfile->verification_status) === 'rejected' ? 'selected' : '' }}>
-                                            Rejected</option>
-                                    </select>
-                                    @error('verification_status')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom" for="status">Status *</label>
-                                    <select class="form-control-custom @error('status') is-invalid @enderror" id="status"
-                                        name="status" required>
-                                        <option value="active" {{ old('status', $astrologerProfile->status) === 'active' ? 'selected' : '' }}>Active</option>
-                                        <option value="inactive" {{ old('status', $astrologerProfile->status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                                        <option value="suspended" {{ old('status', $astrologerProfile->status) === 'suspended' ? 'selected' : '' }}>Suspended</option>
-                                    </select>
-                                    @error('status')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group-custom">
-                                    <label class="form-label-custom">Options</label>
-                                    <div class="d-flex flex-column gap-2">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="is_featured"
-                                                id="is_featured" value="1" {{ old('is_featured', $astrologerProfile->is_featured) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="is_featured">
-                                                <i class="bi bi-star-fill text-warning"></i> Featured Astrologer
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="is_online" id="is_online"
-                                                value="1" {{ old('is_online', $astrologerProfile->is_online) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="is_online">
-                                                <i class="bi bi-circle-fill text-success"></i> Currently Online
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex gap-2 mt-4">
-                        <button type="submit" class="btn-custom btn-primary-custom">
-                            <i class="bi bi-check-lg me-2"></i>Update Astrologer Profile
-                        </button>
-                        <a href="{{ route('admin.astrologer-profiles.index') }}"
-                            class="btn-custom btn-outline-secondary-custom">
-                            <i class="bi bi-arrow-left me-2"></i>Cancel
-                        </a>
-                    </div>
-                </form>
+    <div class="redesign-container">
+        <div class="d-flex align-items-center justify-content-between mb-4 mt-2">
+            <div>
+                <h2 class="fw-bold text-dark mb-1">Edit Astrologer</h2>
+                <p class="text-muted small mb-0">Updating profile for
+                    <strong>{{ $astrologerProfile->display_name }}</strong></p>
             </div>
+            <a href="{{ route('admin.astrologer-profiles.index') }}"
+                class="btn btn-light rounded-pill px-4 shadow-sm border-0">
+                <i class="bi bi-arrow-left me-2"></i> Back to List
+            </a>
         </div>
+
+        @if ($errors->any())
+            <div class="alert alert-danger border-0 shadow-sm rounded-4 mb-4 p-4">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+                    <h5 class="mb-0 fw-bold">Please correct the following errors:</h5>
+                </div>
+                <ul class="mb-0 ms-4">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('admin.astrologer-profiles.update', $astrologerProfile) }}"
+            enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+
+            <!-- Section 1: User Account -->
+            <div class="form-section-card animate__animated animate__fadeInUp">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-person-badge"></i></div>
+                    <h5 class="section-title">Account Information</h5>
+                </div>
+                <div class="section-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Full Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control form-control-premium w-100"
+                                value="{{ old('name', $astrologerProfile->user->name) }}" required
+                                placeholder="e.g. Rahul Sharma">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Email Address <span class="text-danger">*</span></label>
+                            <input type="email" name="email" class="form-control form-control-premium w-100"
+                                value="{{ old('email', $astrologerProfile->user->email) }}" required
+                                placeholder="rahul@example.com">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Password <small
+                                    class="text-muted text-lowercase fw-normal">(Leave blank to keep
+                                    current)</small></label>
+                            <input type="password" name="password" class="form-control form-control-premium w-100"
+                                placeholder="Min. 8 characters">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Confirm Password</label>
+                            <input type="password" name="password_confirmation"
+                                class="form-control form-control-premium w-100" placeholder="Repeat password">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label-premium">Phone Number</label>
+                            <input type="text" name="phone" class="form-control form-control-premium w-100"
+                                value="{{ old('phone', $astrologerProfile->user->phone_number) }}"
+                                placeholder="+91 98765 43210">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Professional Profile -->
+            <div class="form-section-card animate__animated animate__fadeInUp" style="animation-delay: 0.1s">
+                <div class="section-header">
+                    <div class="section-icon bg-info"><i class="bi bi-briefcase"></i></div>
+                    <h5 class="section-title">Professional Profile</h5>
+                </div>
+                <div class="section-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Display Name <span class="text-danger">*</span></label>
+                            <input type="text" name="display_name" class="form-control form-control-premium w-100"
+                                value="{{ old('display_name', $astrologerProfile->display_name) }}" required
+                                placeholder="e.g. Acharya Rahul">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Gender <span class="text-danger">*</span></label>
+                            <div class="d-flex gap-3 pt-2">
+                                <div class="form-check custom-radio">
+                                    <input class="form-check-input" type="radio" name="gender" id="male" value="male" {{ old('gender', $astrologerProfile->gender) === 'male' ? 'checked' : '' }} required>
+                                    <label class="form-check-label fw-semibold" for="male">Male</label>
+                                </div>
+                                <div class="form-check custom-radio">
+                                    <input class="form-check-input" type="radio" name="gender" id="female" value="female" {{ old('gender', $astrologerProfile->gender) === 'female' ? 'checked' : '' }}>
+                                    <label class="form-check-label fw-semibold" for="female">Female</label>
+                                </div>
+                                <div class="form-check custom-radio">
+                                    <input class="form-check-input" type="radio" name="gender" id="other" value="other" {{ old('gender', $astrologerProfile->gender) === 'other' ? 'checked' : '' }}>
+                                    <label class="form-check-label fw-semibold" for="other">Other</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Date of Birth <span class="text-danger">*</span></label>
+                            <input type="date" name="date_of_birth" class="form-control form-control-premium w-100"
+                                value="{{ old('date_of_birth', $astrologerProfile->date_of_birth->format('Y-m-d')) }}"
+                                required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Experience (Years) <span class="text-danger">*</span></label>
+                            <input type="number" name="experience_years" class="form-control form-control-premium w-100"
+                                value="{{ old('experience_years', $astrologerProfile->experience_years) }}" min="0" max="70"
+                                required placeholder="e.g. 10">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label-premium">About Bio <span class="text-danger">*</span></label>
+                            <textarea name="about" class="form-control form-control-premium w-100" rows="5" required
+                                placeholder="Describe the astrologer's background and expertise...">{{ old('about', $astrologerProfile->about) }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Pricing & Commissions -->
+            <div class="form-section-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                <div class="section-header">
+                    <div class="section-icon bg-success"><i class="bi bi-currency-dollar"></i></div>
+                    <h5 class="section-title">Pricing & Commissions</h5>
+                </div>
+                <div class="section-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Chat Price (per min)</label>
+                            <div class="input-group">
+                                <span class="input-group-text input-group-text-premium"><i
+                                        class="bi bi-chat-dots-fill"></i></span>
+                                <input type="number" step="0.01" name="chat_price"
+                                    class="form-control form-control-premium input-premium-with-icon"
+                                    value="{{ old('chat_price', $astrologerProfile->chat_price) }}" placeholder="0.00">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Call Price (per min)</label>
+                            <div class="input-group">
+                                <span class="input-group-text input-group-text-premium"><i
+                                        class="bi bi-telephone-fill"></i></span>
+                                <input type="number" step="0.01" name="call_price"
+                                    class="form-control form-control-premium input-premium-with-icon"
+                                    value="{{ old('call_price', $astrologerProfile->call_price) }}" placeholder="0.00">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Chat Commission (%)</label>
+                            <div class="input-group">
+                                <span class="input-group-text input-group-text-premium"><i class="bi bi-percent"></i></span>
+                                <input type="number" step="0.01" name="chat_commission_percentage"
+                                    class="form-control form-control-premium input-premium-with-icon"
+                                    value="{{ old('chat_commission_percentage', $astrologerProfile->chat_commission_percentage) }}"
+                                    placeholder="Leave for global">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Call Commission (%)</label>
+                            <div class="input-group">
+                                <span class="input-group-text input-group-text-premium"><i class="bi bi-percent"></i></span>
+                                <input type="number" step="0.01" name="call_commission_percentage"
+                                    class="form-control form-control-premium input-premium-with-icon"
+                                    value="{{ old('call_commission_percentage', $astrologerProfile->call_commission_percentage) }}"
+                                    placeholder="Leave for global">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Media Assets -->
+            <div class="form-section-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s">
+                <div class="section-header">
+                    <div class="section-icon bg-warning text-dark"><i class="bi bi-images"></i></div>
+                    <h5 class="section-title">Media Assets</h5>
+                </div>
+                <div class="section-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Profile Image</label>
+                            <div class="text-center mb-3">
+                                <div class="image-status-badge">Current Profile</div><br>
+                                <img src="{{ $astrologerProfile->profile_image_url }}" class="current-image-preview">
+                            </div>
+                            <div class="image-upload-wrapper" onclick="document.getElementById('profile_image').click()">
+                                <input type="file" name="profile_image" id="profile_image" class="d-none" accept="image/*"
+                                    onchange="handlePreview(this, 'profile_preview')">
+                                <div class="upload-placeholder">
+                                    <i class="bi bi-cloud-arrow-up-fill"></i>
+                                    <span class="fw-bold">Upload New Profile</span>
+                                    <p class="small mb-0">Drag & drop or click to replace</p>
+                                </div>
+                                <img id="profile_preview" class="preview-img-premium">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Cover Image</label>
+                            <div class="text-center mb-3">
+                                <div class="image-status-badge">Current Cover</div><br>
+                                <img src="{{ $astrologerProfile->cover_image_url }}" class="current-cover-preview">
+                            </div>
+                            <div class="image-upload-wrapper" onclick="document.getElementById('cover_image').click()">
+                                <input type="file" name="cover_image" id="cover_image" class="d-none" accept="image/*"
+                                    onchange="handlePreview(this, 'cover_preview')">
+                                <div class="upload-placeholder">
+                                    <i class="bi bi-image-fill"></i>
+                                    <span class="fw-bold">Upload New Cover</span>
+                                    <p class="small mb-0">Recommended size: 1200x400px</p>
+                                </div>
+                                <img id="cover_preview" class="preview-img-premium">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 5: Expertise & Settings -->
+            <div class="form-section-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+                <div class="section-header">
+                    <div class="section-icon bg-dark text-white"><i class="bi bi-gear-fill"></i></div>
+                    <h5 class="section-title">Expertise & Settings</h5>
+                </div>
+                <div class="section-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Languages <span class="text-danger">*</span></label>
+                            <select name="languages[]" multiple
+                                class="form-control form-control-premium multi-select-premium w-100" required>
+                                @php $selectedLanguages = old('languages', $astrologerProfile->languages->pluck('id')->toArray()) @endphp
+                                @foreach($languages as $language)
+                                    <option value="{{ $language->id }}" {{ in_array($language->id, $selectedLanguages) ? 'selected' : '' }}>
+                                        {{ $language->name }} ({{ strtoupper($language->code) }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted d-block mt-2"><i class="bi bi-info-circle me-1"></i> Hold Ctrl/Cmd to
+                                select multiple</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-premium">Specializations <span class="text-danger">*</span></label>
+                            <select name="specializations[]" multiple
+                                class="form-control form-control-premium multi-select-premium w-100" required>
+                                @php $selectedSpecializations = old('specializations', $astrologerProfile->specializations->pluck('id')->toArray()) @endphp
+                                @foreach($specializations as $specialization)
+                                    <option value="{{ $specialization->id }}" {{ in_array($specialization->id, $selectedSpecializations) ? 'selected' : '' }}>
+                                        {{ $specialization->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted d-block mt-2"><i class="bi bi-info-circle me-1"></i> Hold Ctrl/Cmd to
+                                select multiple</small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-premium">Verification Status <span class="text-danger">*</span></label>
+                            <select name="verification_status" class="form-control form-control-premium w-100" required>
+                                <option value="pending" {{ old('verification_status', $astrologerProfile->verification_status) === 'pending' ? 'selected' : '' }}>Pending
+                                </option>
+                                <option value="approved" {{ old('verification_status', $astrologerProfile->verification_status) === 'approved' ? 'selected' : '' }}>Approved
+                                </option>
+                                <option value="rejected" {{ old('verification_status', $astrologerProfile->verification_status) === 'rejected' ? 'selected' : '' }}>Rejected
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-premium">Profile Status <span class="text-danger">*</span></label>
+                            <select name="status" class="form-control form-control-premium w-100" required>
+                                <option value="active" {{ old('status', $astrologerProfile->status) === 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ old('status', $astrologerProfile->status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                <option value="suspended" {{ old('status', $astrologerProfile->status) === 'suspended' ? 'selected' : '' }}>Suspended</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-premium">Promotion Options</label>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="is_featured" id="feat" value="1"
+                                        {{ old('is_featured', $astrologerProfile->is_featured) ? 'checked' : '' }}>
+                                    <label class="form-check-label fw-semibold" for="feat">
+                                        <i class="bi bi-star-fill text-warning me-1"></i> Featured
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="is_online" id="online" value="1"
+                                        {{ old('is_online', $astrologerProfile->is_online) ? 'checked' : '' }}>
+                                    <label class="form-check-label fw-semibold" for="online">
+                                        <i class="bi bi-circle-fill text-success me-1"></i> Force Online
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3 py-5">
+                <button type="submit" class="btn-submit-premium">
+                    <i class="bi bi-check-all"></i> Update Expert Profile
+                </button>
+                <a href="{{ route('admin.astrologer-profiles.index') }}" class="btn-cancel-premium">
+                    Cancel
+                </a>
+            </div>
+        </form>
     </div>
 @endsection
 
 @push('scripts')
     <script>
-        // Image preview function
-        function previewImage(input, previewId) {
+        function handlePreview(input, previewId) {
             const preview = document.getElementById(previewId);
+            const placeholder = input.parentElement.querySelector('.upload-placeholder');
+
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     preview.src = e.target.result;
-                    preview.style.display = 'block';
+                    preview.style.display = 'inline-block';
+                    if (placeholder) placeholder.style.display = 'none';
                 };
                 reader.readAsDataURL(input.files[0]);
             }
         }
-
-        // Tag input functionality
-        function initTagInput(inputId, containerId, hiddenId, fieldName, existingTags = []) {
-            const input = document.getElementById(inputId);
-            const container = document.getElementById(containerId);
-            const hiddenContainer = document.getElementById(hiddenId);
-            const tags = [...existingTags];
-
-            // Add existing tags
-            existingTags.forEach(tag => addTag(tag));
-
-            input.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const value = this.value.trim();
-                    if (value && !tags.includes(value)) {
-                        tags.push(value);
-                        addTag(value);
-                        this.value = '';
-                    }
-                }
-            });
-
-            function addTag(value) {
-                const tagElement = document.createElement('span');
-                tagElement.className = 'tag-item';
-                tagElement.innerHTML = `
-                    ${value}
-                    <span class="tag-remove" onclick="removeTag(this, '${value}', '${inputId}')">&times;</span>
-                `;
-                container.insertBefore(tagElement, input);
-
-                // Add hidden input
-                const hiddenInput = document.createElement('input');
-                hiddenInput.type = 'hidden';
-                hiddenInput.name = fieldName + '[]';
-                hiddenInput.value = value;
-                hiddenInput.dataset.value = value;
-                hiddenContainer.appendChild(hiddenInput);
-            }
-
-            window.removeTag = function (element, value, inputId) {
-                const tagElement = element.parentElement;
-                tagElement.remove();
-
-                const index = tags.indexOf(value);
-                if (index > -1) {
-                    tags.splice(index, 1);
-                }
-
-                // Remove hidden input
-                const hiddenInputs = hiddenContainer.querySelectorAll(`input[data-value="${value}"]`);
-                hiddenInputs.forEach(input => input.remove());
-            };
-        }
-
-        // Initialize tag inputs with existing data
-        const existingLanguages = @json($astrologerProfile->languages);
-        const existingSpecializations = @json($astrologerProfile->specializations);
-
-        initTagInput('languages-input', 'languages-container', 'languages-hidden', 'languages', existingLanguages);
-        initTagInput('specializations-input', 'specializations-container', 'specializations-hidden', 'specializations', existingSpecializations);
     </script>
 @endpush

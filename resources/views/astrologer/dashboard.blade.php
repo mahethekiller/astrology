@@ -382,19 +382,19 @@
         });
     });
 
-    // Polling for Pending Requests with Enhanced UI
-    async function fetchPendingRequests() {
-        try {
-            const response = await axios.get("{{ route('astrologer.requests.pending') }}");
-            const chatRequests = response.data.chatRequests;
-            const callRequests = response.data.callRequests;
-            
-            const tableBody = document.querySelector('#incomingRequestsTable tbody');
-            const requestsContainer = document.querySelector('#requestsContainer');
-            const badge = document.querySelector('#requestCountBadge');
+    // Listen for Global Request Updates
+    window.addEventListener('astrologer:requests-updated', function (event) {
+        const { chatRequests, callRequests } = event.detail;
+        updateDashboardTables(chatRequests, callRequests);
+    });
 
-            badge.textContent = `${chatRequests.length} New`;
-            
+    function updateDashboardTables(chatRequests, callRequests) {
+        const requestsContainer = document.querySelector('#requestsContainer');
+        const badge = document.querySelector('#requestCountBadge');
+
+        if (badge) badge.textContent = `${chatRequests.length} New`;
+        
+        if (requestsContainer) {
             if (chatRequests.length === 0) {
                 requestsContainer.innerHTML = `
                     <div class="text-center py-5" id="emptyRequestsState">
@@ -456,11 +456,13 @@
                 html += `</tbody></table></div>`;
                 requestsContainer.innerHTML = html;
             }
+        }
 
-            // Handle Call Requests
-            const callCard = document.querySelector('#callRequestsCard');
-            const callTableBody = document.querySelector('#incomingCallRequestsTable tbody');
+        // Handle Call Requests
+        const callCard = document.querySelector('#callRequestsCard');
+        const callTableBody = document.querySelector('#incomingCallRequestsTable tbody');
 
+        if (callCard && callTableBody) {
             if (callRequests.length > 0) {
                 callCard.classList.remove('d-none');
                 let callHtml = '';
@@ -480,7 +482,7 @@
                             </td>
                             <td class="text-end pe-4">
                                 <span class="badge bg-success pulse-animation px-3 py-2 rounded-pill">
-                                    <i class="fas fa-phone-alt me-1"></i> Rining...
+                                    <i class="fas fa-phone-alt me-1"></i> Ringing...
                                 </span>
                             </td>
                         </tr>
@@ -490,15 +492,8 @@
             } else {
                 callCard.classList.add('d-none');
             }
-
-        } catch (error) {
-            console.error('Error fetching pending requests:', error);
         }
     }
-
-    // Start polling every 5 seconds
-    setInterval(fetchPendingRequests, 5000);
-    fetchPendingRequests();
 </script>
 
 <style>

@@ -14,12 +14,6 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('astrologer.history.index') }}"
-                            class="{{ request()->is('astrologer/history*') ? 'active' : '' }}">
-                            <i class="bi bi-clock-history"></i> <span>Service History</span>
-                        </a>
-                    </li>
-                    <li>
                         <a href="{{ route('astrologer.revenue.index') }}"
                             class="{{ request()->is('astrologer/revenue*') ? 'active' : '' }}">
                             <i class="bi bi-briefcase"></i> <span>My Earnings</span>
@@ -28,7 +22,19 @@
                     <li>
                         <a href="{{ route('astrologer.call.dashboard') }}"
                             class="{{ request()->is('astrologer/call/dashboard') ? 'active' : '' }}">
-                            <i class="bi bi-telephone"></i> <span>Call Dashboard</span>
+                            <i class="bi bi-telephone-fill"></i> <span>Call Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('astrologer.wallet.index') }}"
+                            class="{{ request()->is('astrologer/wallet*') ? 'active' : '' }}">
+                            <i class="bi bi-wallet2"></i> <span>My Wallet</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('astrologer.profile.edit') }}"
+                            class="{{ request()->is('astrologer/profile/edit') ? 'active' : '' }}">
+                            <i class="bi bi-person-gear"></i> <span>Profile Settings</span>
                         </a>
                     </li>
                 @endif

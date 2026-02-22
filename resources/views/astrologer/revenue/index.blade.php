@@ -2,149 +2,187 @@
 
 @section('title', 'My Earnings')
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('assets/css/astrologer-panel.css') }}">
+@endpush
+
 @section('content')
-    <div class="container-fluid">
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">My Earnings</h4>
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0 text-muted">
-                            <li class="breadcrumb-item"><a href="{{ route('astrologer.dashboard') }}"
-                                    class="text-reset">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Revenue</li>
-                        </ol>
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center justify-content-between my-4">
+            <div>
+                <h1 class="h3 mb-0 text-gray-800">My Earnings</h1>
+                <p class="text-muted small mb-0">Track your performance and revenue across all sessions.</p>
+            </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{{ route('astrologer.dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Revenue</li>
+                </ol>
+            </nav>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="stats-card card-primary">
+                    <div class="stats-icon">
+                        <i class="bi bi-wallet2"></i>
+                    </div>
+                    <div class="stats-label">Total Earnings (Net)</div>
+                    <h2 class="stats-value">₹{{ number_format($totalEarnings, 2) }}</h2>
+                    <div class="mt-2">
+                        <small class="opacity-75">{{ $totalSessions }} Total Sessions</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="stats-card card-success">
+                    <div class="stats-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div class="stats-label">Today's Earnings</div>
+                    <h2 class="stats-value">₹{{ number_format($todayEarnings, 2) }}</h2>
+                    <div class="mt-2">
+                        <small class="opacity-75">Active Today</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="stats-card card-warning">
+                    <div class="stats-icon">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+                    <div class="stats-label">This Week</div>
+                    <h2 class="stats-value">₹{{ number_format($weeklyEarnings, 2) }}</h2>
+                    <div class="mt-2">
+                        <small class="opacity-75">Last 7 days</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="stats-card card-info">
+                    <div class="stats-icon">
+                        <i class="bi bi-calendar-month"></i>
+                    </div>
+                    <div class="stats-label">This Month</div>
+                    <h2 class="stats-value">₹{{ number_format($monthlyEarnings, 2) }}</h2>
+                    <div class="mt-2">
+                        <small class="opacity-75">February 2026</small>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Summary Cards -->
-        <div class="row mb-4">
-            <div class="col-md-6 col-xl-4">
-                <div class="card bg-success text-white shadow-sm border-0">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-grow-1">
-                                <h6 class="text-white-50">Total Earnings (Net)</h6>
-                                <h2 class="mb-0">₹{{ number_format($totalEarnings, 2) }}</h2>
-                            </div>
-                            <div class="ms-3">
-                                <i class="bi bi-wallet2 fs-1 text-white-50"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Earnings Breakdown -->
+        <div class="breakdown-card">
+            <div class="card-header bg-transparent border-0 pt-4 px-4 d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 fw-bold">Earnings Breakdown</h5>
+                <ul class="nav nav-pills" id="earningsTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="calls-tab" data-bs-toggle="pill" data-bs-target="#calls-pane"
+                            type="button" role="tab">Voice Calls</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="chats-tab" data-bs-toggle="pill" data-bs-target="#chats-pane"
+                            type="button" role="tab">Chats</button>
+                    </li>
+                </ul>
             </div>
-            <div class="col-md-6 col-xl-4">
-                <div class="card bg-info text-white shadow-sm border-0">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-grow-1">
-                                <h6 class="text-white-50">Total Consultations</h6>
-                                <h2 class="mb-0">{{ $totalSessions }}</h2>
-                            </div>
-                            <div class="ms-3">
-                                <i class="bi bi-people fs-1 text-white-50"></i>
-                            </div>
+            <div class="card-body p-4">
+                <div class="tab-content" id="earningsTabContent">
+                    <!-- Calls Pane -->
+                    <div class="tab-pane fade show active" id="calls-pane" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="border-0 px-3">Date</th>
+                                        <th class="border-0">User</th>
+                                        <th class="border-0 text-center">Duration</th>
+                                        <th class="border-0 text-end">Charged</th>
+                                        <th class="border-0 text-end">Commission</th>
+                                        <th class="border-0 text-end px-3">Net Earnings</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($calls as $call)
+                                        <tr>
+                                            <td class="px-3">
+                                                <div class="fw-bold">{{ $call->created_at->format('d M Y') }}</div>
+                                                <small class="text-muted">{{ $call->created_at->format('h:i A') }}</small>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($call->user->name ?? 'U') }}&background=random"
+                                                        class="table-user-img" alt="">
+                                                    <span>{{ $call->user->name ?? 'Unknown' }}</span>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">{{ ceil($call->call_duration / 60) }} min</td>
+                                            <td class="text-end">₹{{ number_format($call->call_cost, 2) }}</td>
+                                            <td class="text-end text-danger">-₹{{ number_format($call->commission_amount, 2) }}
+                                            </td>
+                                            <td class="text-end px-3 fw-bold text-success">
+                                                ₹{{ number_format($call->astrologer_earnings, 2) }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center py-5 text-muted">
+                                                <i class="bi bi-telephone-x fs-1 d-block mb-3 opacity-25"></i>
+                                                No call records found for completed sessions.
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col-12">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white border-bottom py-3">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h5 class="mb-0">Earnings Breakdown</h5>
-                            <ul class="nav nav-pills" id="pills-tab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="pills-calls-tab" data-bs-toggle="pill"
-                                        data-bs-target="#pills-calls" type="button" role="tab" aria-controls="pills-calls"
-                                        aria-selected="true">Voice Calls</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="pills-chats-tab" data-bs-toggle="pill"
-                                        data-bs-target="#pills-chats" type="button" role="tab" aria-controls="pills-chats"
-                                        aria-selected="false">Chats</button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="tab-content" id="pills-tabContent">
-                            <!-- Calls Tab -->
-                            <div class="tab-pane fade show active" id="pills-calls" role="tabpanel"
-                                aria-labelledby="pills-calls-tab">
-                                <div class="table-responsive">
-                                    <table class="table table-hover align-middle">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>User</th>
-                                                <th>Duration</th>
-                                                <th>Charged Amount</th>
-                                                <th>Commission</th>
-                                                <th>My Earnings</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @forelse($calls as $call)
-                                                <tr>
-                                                    <td>{{ $call->created_at->format('d M Y, h:i A') }}</td>
-                                                    <td>{{ $call->user->name ?? 'Unknown' }}</td>
-                                                    <td>{{ ceil($call->call_duration / 60) }} min</td>
-                                                    <td>₹{{ $call->call_cost }}</td>
-                                                    <td class="text-danger">- ₹{{ $call->commission_amount }}</td>
-                                                    <td class="text-success fw-bold">₹{{ $call->astrologer_earnings }}</td>
-                                                </tr>
-                                            @empty
-                                                <tr>
-                                                    <td colspan="6" class="text-center py-4 text-muted">No call records found
-                                                    </td>
-                                                </tr>
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- Chats Tab -->
-                            <div class="tab-pane fade" id="pills-chats" role="tabpanel" aria-labelledby="pills-chats-tab">
-                                <div class="table-responsive">
-                                    <table class="table table-hover align-middle">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>User</th>
-                                                <th>Duration</th>
-                                                <th>Charged Amount</th>
-                                                <th>Commission</th>
-                                                <th>My Earnings</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @forelse($chats as $chat)
-                                                <tr>
-                                                    <td>{{ $chat->created_at->format('d M Y, h:i A') }}</td>
-                                                    <td>{{ $chat->user->name ?? 'Unknown' }}</td>
-                                                    <td>{{ $chat->chat_duration }} min</td>
-                                                    <td>₹{{ $chat->chat_cost }}</td>
-                                                    <td class="text-danger">- ₹{{ $chat->commission_amount }}</td>
-                                                    <td class="text-success fw-bold">₹{{ $chat->astrologer_earnings }}</td>
-                                                </tr>
-                                            @empty
-                                                <tr>
-                                                    <td colspan="6" class="text-center py-4 text-muted">No chat records found
-                                                    </td>
-                                                </tr>
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                    <!-- Chats Pane -->
+                    <div class="tab-pane fade" id="chats-pane" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="border-0 px-3">Date</th>
+                                        <th class="border-0">User</th>
+                                        <th class="border-0 text-center">Duration</th>
+                                        <th class="border-0 text-end">Charged</th>
+                                        <th class="border-0 text-end">Commission</th>
+                                        <th class="border-0 text-end px-3">Net Earnings</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($chats as $chat)
+                                        <tr>
+                                            <td class="px-3">
+                                                <div class="fw-bold">{{ $chat->created_at->format('d M Y') }}</div>
+                                                <small class="text-muted">{{ $chat->created_at->format('h:i A') }}</small>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($chat->user->name ?? 'U') }}&background=random"
+                                                        class="table-user-img" alt="">
+                                                    <span>{{ $chat->user->name ?? 'Unknown' }}</span>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">{{ $chat->chat_duration }} min</td>
+                                            <td class="text-end">₹{{ number_format($chat->chat_cost, 2) }}</td>
+                                            <td class="text-end text-danger">-₹{{ number_format($chat->commission_amount, 2) }}
+                                            </td>
+                                            <td class="text-end px-3 fw-bold text-success">
+                                                ₹{{ number_format($chat->astrologer_earnings, 2) }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center py-5 text-muted">
+                                                <i class="bi bi-chat-left-x fs-1 d-block mb-3 opacity-25"></i>
+                                                No chat records found for completed sessions.
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

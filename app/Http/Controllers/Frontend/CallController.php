@@ -190,6 +190,36 @@ class CallController extends Controller
         }
     }
 
+    public function toggleOnlineStatus(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->isAstrologer()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $request->validate([
+            'is_online' => 'required|boolean'
+        ]);
+
+        $profile = $user->astrologerProfile;
+        if (!$profile) {
+            return response()->json(['error' => 'Astrologer profile not found'], 404);
+        }
+
+        $isOnline = $request->input('is_online');
+
+        $profile->update([
+            'is_call_online' => $isOnline,
+            'is_online' => $isOnline // Sync general online status for now
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'is_call_online' => $profile->is_call_online
+        ]);
+    }
+
     public function callStatusCallback(Request $request)
     {
         // Twilio hits this after call ends (because of 'action' in Dial)

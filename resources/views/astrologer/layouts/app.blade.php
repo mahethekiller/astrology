@@ -68,6 +68,13 @@
         }
     </script>
 
+    <!-- Twilio Voice SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@twilio/voice-sdk@2.11.1/dist/twilio.min.js"></script>
+
+    @include('astrologer.layouts.call-status-modal')
+    @include('astrologer.layouts.chat-status-modal')
+    @include('astrologer.layouts.global-notifications')
+
     @stack('scripts')
 </body>
 

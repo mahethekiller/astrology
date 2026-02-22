@@ -10,6 +10,16 @@
             <i class="bi bi-search"></i>
             <input type="text" placeholder="Search...">
         </div> -->
+        <button class="theme-toggle px-3 me-2" id="chat-status-indicator" data-bs-toggle="modal"
+            data-bs-target="#astrologerChatManagementModal" style="width: auto; border-radius: 50px;">
+            <i class="bi bi-chat-dots-fill"></i>
+            <span id="chat-status-indicator-text" class="ms-1 small fw-bold">Offline</span>
+        </button>
+        <button class="theme-toggle px-3 me-2" id="call-status-indicator" data-bs-toggle="modal"
+            data-bs-target="#astrologerCallManagementModal" style="width: auto; border-radius: 50px;">
+            <i class="bi bi-telephone-fill"></i>
+            <span id="call-status-text" class="ms-1 small fw-bold">Offline</span>
+        </button>
         <button class="theme-toggle" id="themeToggle">
             <i class="bi bi-moon"></i>
         </button>

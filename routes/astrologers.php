@@ -16,8 +16,14 @@ Route::middleware(['auth'])->prefix('astrologer')->name('astrologer.')->group(fu
     Route::get('/chat/room/{sid}', [ChatController::class, 'room'])->name('chat.room');
     Route::post('/status/toggle', [ChatController::class, 'toggleStatus'])->name('status.toggle');
     Route::get('/requests/pending', [DashboardController::class, 'getPendingRequests'])->name('requests.pending');
-    Route::get('/chat/history', [ChatController::class, 'history'])->name('chat.history');
 
     // My Earnings
     Route::get('/revenue', [App\Http\Controllers\Astrologer\RevenueController::class, 'index'])->name('revenue.index');
+
+    // Profile Management
+    Route::get('/profile/edit', [App\Http\Controllers\Astrologer\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [App\Http\Controllers\Astrologer\ProfileController::class, 'update'])->name('profile.update');
+
+    // Wallet System
+    Route::get('/wallet', [App\Http\Controllers\Astrologer\WalletController::class, 'index'])->name('wallet.index');
 });

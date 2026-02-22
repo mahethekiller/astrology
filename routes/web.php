@@ -115,6 +115,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Call Routes - Token must be authenticated
     Route::post('/call/token', [App\Http\Controllers\Frontend\CallController::class, 'token'])->name('call.token');
+    Route::post('/call/toggle-status', [App\Http\Controllers\Frontend\CallController::class, 'toggleOnlineStatus'])->name('call.toggle-status');
 
     // Call Views
     Route::get('/call/astrologer/{astrologerId}', function ($astrologerId) {
@@ -126,10 +127,6 @@ Route::middleware(['auth'])->group(function () {
         return view('astrologer.call.dashboard');
     })->middleware(['auth', 'role:astrologer'])->name('astrologer.call.dashboard');
 
-    // Astrologer History
-    Route::get('/astrologer/history', [App\Http\Controllers\Astrologer\HistoryController::class, 'index'])
-        ->middleware(['auth', 'role:astrologer'])
-        ->name('astrologer.history.index');
 });
 
 // Twilio Webhooks - Must be PUBLIC (No Auth Middleware)

@@ -15,19 +15,39 @@ class RevenueController extends Controller
         $userId = Auth::id();
         $astrologer = AstrologerProfile::where('user_id', $userId)->firstOrFail();
 
-        $calls = CallRequest::where('astrologer_id', $astrologer->id)
-            ->where('call_status', 'completed')
-            ->latest()
-            ->get();
+        // Base queries
+        $callQuery = CallRequest::with('user')->where('astrologer_id', $astrologer->id)->where('call_status', 'completed');
+        $chatQuery = ChatRequest::with('user')->where('astrologer_id', $astrologer->id)->where('status', 'completed');
 
-        $chats = ChatRequest::where('astrologer_id', $astrologer->id)
-            ->where('status', 'completed')
-            ->latest()
-            ->get();
+        $calls = $callQuery->latest()->get();
+        $chats = $chatQuery->latest()->get();
 
+        // Calculate Totals
         $totalEarnings = $calls->sum('astrologer_earnings') + $chats->sum('astrologer_earnings');
         $totalSessions = $calls->count() + $chats->count();
 
-        return view('astrologer.revenue.index', compact('calls', 'chats', 'totalEarnings', 'totalSessions'));
+        // Periodic Stats
+        $today = now()->startOfDay();
+        $thisWeek = now()->startOfWeek();
+        $thisMonth = now()->startOfMonth();
+
+        $todayEarnings = $callQuery->clone()->where('created_at', '>=', $today)->sum('astrologer_earnings') +
+            $chatQuery->clone()->where('created_at', '>=', $today)->sum('astrologer_earnings');
+
+        $weeklyEarnings = $callQuery->clone()->where('created_at', '>=', $thisWeek)->sum('astrologer_earnings') +
+            $chatQuery->clone()->where('created_at', '>=', $thisWeek)->sum('astrologer_earnings');
+
+        $monthlyEarnings = $callQuery->clone()->where('created_at', '>=', $thisMonth)->sum('astrologer_earnings') +
+            $chatQuery->clone()->where('created_at', '>=', $thisMonth)->sum('astrologer_earnings');
+
+        return view('astrologer.revenue.index', compact(
+            'calls',
+            'chats',
+            'totalEarnings',
+            'totalSessions',
+            'todayEarnings',
+            'weeklyEarnings',
+            'monthlyEarnings'
+        ));
     }
 }
