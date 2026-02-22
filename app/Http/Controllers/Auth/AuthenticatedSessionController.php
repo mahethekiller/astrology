@@ -45,6 +45,14 @@ class AuthenticatedSessionController extends Controller
     {
         $user = Auth::user();
 
+        if ($user && $user->hasRole('astrologer')) {
+            $user->astrologerProfile()->update([
+                'is_chat_online' => false,
+                'is_call_online' => false,
+                'is_online' => false,
+            ]);
+        }
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

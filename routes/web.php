@@ -15,6 +15,8 @@ Route::get('/blog', [App\Http\Controllers\Frontend\BlogController::class, 'index
 Route::get('/blog/{slug}', [App\Http\Controllers\Frontend\BlogController::class, 'show'])->name('blog.show');
 
 Route::get('/astrologers', [App\Http\Controllers\Frontend\AstrologerController::class, 'index'])->name('astrologer.index');
+Route::get('/astrologer/register', [App\Http\Controllers\Frontend\AstrologerRegistrationController::class, 'showRegistrationForm'])->name('astrologer.register');
+Route::post('/astrologer/register', [App\Http\Controllers\Frontend\AstrologerRegistrationController::class, 'register'])->name('astrologer.register.submit');
 Route::get('/astrologer/{id}', [App\Http\Controllers\Frontend\AstrologerController::class, 'show'])->name('astrologer.show')->where('id', '[0-9]+');
 
 

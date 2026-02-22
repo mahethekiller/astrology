@@ -48,10 +48,24 @@
     @endif
 
     <link href="{{ asset('frontend/css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="{{ asset('frontend/css/all.min.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('frontend/css/owl.carousel.min.css') }}">
     <link href="{{ asset('frontend/css/style.css') }}" rel="stylesheet" />
     <link href="{{ asset('frontend/css/pages.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/auth.css') }}" rel="stylesheet" />
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --border-color: #e9ecef;
+            --text-color: #212529;
+            --text-muted: #6c757d;
+            --card-bg: #ffffff;
+            --success-color: #4cc9a7;
+            --danger-color: #f94144;
+        }
+    </style>
     @stack('styles')
 </head>
 

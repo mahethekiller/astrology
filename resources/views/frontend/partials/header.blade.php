@@ -72,91 +72,149 @@
 <!-- Login Modal -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="loginModalLabel">Login / Sign Up</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
+    <div class="modal-content auth-card p-0 overflow-hidden" style="border: none;">
+      <div class="modal-body auth-content">
+        <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"
+          aria-label="Close" style="z-index: 10;"></button>
+
+        <div class="auth-header pt-4">
+          <div class="auth-logo">
+            <img src="{{ asset('images/loginLogo.png') }}" alt="Logo" style="max-width: 100%;">
+          </div>
+        </div>
 
         <!-- Error Alert -->
-        <div id="auth-error" class="alert alert-danger d-none"></div>
-        <div id="auth-success" class="alert alert-success d-none"></div>
+        <div id="auth-error" class="alert alert-danger d-none">
+          <i class="bi bi-exclamation-circle me-2"></i>
+          <span class="message-content"></span>
+        </div>
+        <div id="auth-success" class="alert alert-success d-none">
+          <i class="bi bi-check-circle me-2"></i>
+          <span class="message-content"></span>
+        </div>
 
         <!-- Login Form -->
         <div id="login-container">
-          <form id="login-form">
+          <form id="login-form" class="auth-form">
             @csrf
-            <div class="mb-3">
+            <div class="form-group mb-3">
               <label for="login_email" class="form-label">Email Address</label>
-              <input type="email" class="form-control" id="login_email" name="email" required
-                placeholder="Enter your email">
+              <div class="input-group">
+                <input type="email" class="form-control" id="login_email" name="email" required
+                  placeholder="Enter your email">
+                <div class="input-icon">
+                  <i class="bi bi-envelope"></i>
+                </div>
+              </div>
             </div>
-            <div class="mb-3">
+            <div class="form-group mb-3">
               <label for="login_password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="login_password" name="password" required
-                placeholder="Enter your password">
+              <div class="input-group">
+                <input type="password" class="form-control" id="login_password" name="password" required
+                  placeholder="Enter your password">
+                <div class="input-icon">
+                  <i class="bi bi-lock"></i>
+                </div>
+              </div>
             </div>
-            <div class="mb-3 form-check">
+            <div class="form-check mb-3">
               <input type="checkbox" class="form-check-input" id="remember_me" name="remember">
               <label class="form-check-label" for="remember_me">Remember me</label>
             </div>
-            <button type="submit" class="btn btn-primary w-100" id="login-btn">Login</button>
+            <button type="submit" class="auth-btn" id="login-btn">
+              <i class="bi bi-box-arrow-in-right me-2"></i> LOGIN
+            </button>
           </form>
           <div class="mt-3 text-center">
-            <p>Don't have an account? <a href="#" id="show-register-link">Register here</a></p>
-            <p><a href="{{ route('password.request') }}">Forgot your password?</a></p>
+            <p class="mb-2">Don't have an account? <a href="#" id="show-register-link" class="auth-link">Register
+                here</a></p>
+            <p><a href="{{ route('password.request') }}" class="auth-link"><i class="bi bi-key me-1"></i>Forgot
+                your password?</a></p>
           </div>
         </div>
 
         <!-- Register Form -->
         <div id="register-container" class="d-none">
-          <form id="register-form">
+          <form id="register-form" class="auth-form">
             @csrf
-            <div class="mb-3">
+            <div class="form-group mb-3">
               <label for="register_name" class="form-label">Full Name</label>
-              <input type="text" class="form-control" id="register_name" name="name" required
-                placeholder="Enter your full name">
+              <div class="input-group">
+                <input type="text" class="form-control" id="register_name" name="name" required
+                  placeholder="Enter your full name">
+                <div class="input-icon">
+                  <i class="bi bi-person"></i>
+                </div>
+              </div>
             </div>
-            <div class="mb-3">
+            <div class="form-group mb-3">
               <label for="register_email" class="form-label">Email Address</label>
-              <input type="email" class="form-control" id="register_email" name="email" required
-                placeholder="Enter your email">
+              <div class="input-group">
+                <input type="email" class="form-control" id="register_email" name="email" required
+                  placeholder="Enter your email">
+                <div class="input-icon">
+                  <i class="bi bi-envelope"></i>
+                </div>
+              </div>
             </div>
-            <div class="mb-3">
+            <div class="form-group mb-3">
               <label for="register_password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="register_password" name="password" required
-                placeholder="Enter your password">
+              <div class="input-group">
+                <input type="password" class="form-control" id="register_password" name="password" required
+                  placeholder="Enter your password">
+                <div class="input-icon">
+                  <i class="bi bi-lock"></i>
+                </div>
+              </div>
             </div>
-            <div class="mb-3">
+            <div class="form-group mb-3">
               <label for="register_password_confirmation" class="form-label">Confirm Password</label>
-              <input type="password" class="form-control" id="register_password_confirmation"
-                name="password_confirmation" required placeholder="Confirm your password">
+              <div class="input-group">
+                <input type="password" class="form-control" id="register_password_confirmation"
+                  name="password_confirmation" required placeholder="Confirm your password">
+                <div class="input-icon">
+                  <i class="bi bi-shield-check"></i>
+                </div>
+              </div>
             </div>
-            <button type="submit" class="btn btn-success w-100" id="register-btn">Register</button>
+            <button type="submit" class="auth-btn" id="register-btn">
+              <i class="bi bi-person-plus me-2"></i> REGISTER
+            </button>
           </form>
           <div class="mt-3 text-center">
-            <p>Already have an account? <a href="#" id="show-login-link">Login here</a></p>
+            <p>Already have an account? <a href="#" id="show-login-link" class="auth-link">Login here</a></p>
           </div>
         </div>
 
         <!-- OTP Verification Form -->
         <div id="otp-register-container" class="d-none">
-          <form id="otp-register-form">
+          <form id="otp-register-form" class="auth-form">
             @csrf
             <p class="text-center mb-3">Please enter the 6-digit OTP sent to your email.</p>
-            <div class="mb-3">
+            <div class="form-group mb-3">
               <label for="reg_otp" class="form-label">OTP Code</label>
-              <input type="text" class="form-control" id="reg_otp" name="otp" required maxlength="6"
-                placeholder="Enter 6-digit OTP">
+              <div class="input-group">
+                <input type="text" class="form-control" id="reg_otp" name="otp" required maxlength="6"
+                  placeholder="Enter 6-digit OTP">
+                <div class="input-icon">
+                  <i class="bi bi-shield-lock"></i>
+                </div>
+              </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100" id="verify-otp-btn">Verify & Register</button>
+            <button type="submit" class="auth-btn" id="verify-otp-btn">
+              <i class="bi bi-check2-circle me-2"></i> VERIFY & REGISTER
+            </button>
           </form>
           <div class="mt-3 text-center">
-            <p><a href="#" id="back-to-register">Back to Register</a></p>
+            <p><a href="#" id="back-to-register" class="auth-link">Back to Register</a></p>
           </div>
         </div>
 
+      </div>
+      <div class="auth-footer py-3 text-center border-top">
+        <small class="text-muted">
+          &copy; {{ date('Y') }} Astroauraa All rights reserved.
+        </small>
       </div>
     </div>
   </div>
@@ -184,13 +242,13 @@
     const successAlert = document.getElementById('auth-success');
 
     function showError(msg) {
-      errorAlert.textContent = msg;
+      errorAlert.querySelector('.message-content').textContent = msg;
       errorAlert.classList.remove('d-none');
       successAlert.classList.add('d-none');
     }
 
     function showSuccess(msg) {
-      successAlert.textContent = msg;
+      successAlert.querySelector('.message-content').textContent = msg;
       successAlert.classList.remove('d-none');
       errorAlert.classList.add('d-none');
     }
@@ -198,8 +256,8 @@
     function clearAlerts() {
       errorAlert.classList.add('d-none');
       successAlert.classList.add('d-none');
-      errorAlert.textContent = '';
-      successAlert.textContent = '';
+      errorAlert.querySelector('.message-content').textContent = '';
+      successAlert.querySelector('.message-content').textContent = '';
     }
 
     // Toggle forms

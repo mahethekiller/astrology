@@ -16,7 +16,7 @@ class HomeController extends Controller
         $testimonials = Testimonial::latest()->get();
         $blogs = Blog::latest()->take(6)->get();
 
-        $topAstrologers = AstrologerProfile::latest()->take(6)->get();
+        $topAstrologers = AstrologerProfile::active()->approved()->latest()->take(6)->get();
 
         return view('frontend.pages.home', compact('testimonials', 'blogs', 'topAstrologers'));
     }
