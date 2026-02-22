@@ -137,3 +137,6 @@ Route::post('/call/status', [App\Http\Controllers\Frontend\CallController::class
 // API Routes
 Route::get('/api/location/search', [App\Http\Controllers\Api\LocationController::class, 'search'])->name('api.location.search');
 
+// Static Pages Route (Must be last)
+Route::get('/{slug}', [App\Http\Controllers\PageController::class, 'show'])->name('pages.show');
+

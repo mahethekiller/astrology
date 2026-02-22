@@ -1,0 +1,169 @@
+/* Informational Pages Stylesheet */
+
+/* Layout & Spacing */
+.mt-n5 {
+    margin-top: -5rem !important;
+}
+
+.max-w-600 {
+    max-width: 600px;
+}
+
+.max-w-800 {
+    max-width: 800px;
+}
+
+.w-fit {
+    width: fit-content;
+}
+
+/* Typography */
+.tracking-tight {
+    letter-spacing: -0.02em;
+}
+
+.line-height-lg {
+    line-height: 1.8;
+}
+
+.line-height-xl {
+    line-height: 2;
+}
+
+/* Banner Component */
+.page-banner {
+    background-color: #0f172a;
+}
+
+.banner-overlay {
+    z-index: 1;
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+/* Gradients */
+.bg-gradient-purple {
+    background: linear-gradient(45deg, #4c1d95, #7c3aed);
+}
+
+.bg-gradient-premium {
+    background: linear-gradient(45deg, #7c3aed, #db2777) !important;
+    border: none;
+}
+
+.bg-primary-soft {
+    background-color: rgba(67, 56, 202, 0.1);
+}
+
+.bg-success-soft {
+    background-color: rgba(16, 185, 129, 0.1);
+}
+
+.bg-warning-soft {
+    background-color: rgba(245, 158, 11, 0.1);
+}
+
+/* Components */
+.shadow-premium {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+}
+
+.icon-box {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.15;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.25;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.15;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 4s infinite ease-in-out;
+}
+
+.animate-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.animate-hover:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Dynamic Content Areas */
+.page-content h1,
+.page-content h2,
+.page-content h3,
+.page-content h4,
+.page-content h5 {
+    color: #1e1b4b;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    font-weight: 700;
+}
+
+.page-content p {
+    margin-bottom: 1.5rem;
+}
+
+.page-content img {
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Specific Content Alignments used in Contact/Policy */
+.text-center-content p,
+.text-center-content h3 {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}

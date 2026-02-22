@@ -55,6 +55,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('menu-items/{menuItem}', [App\Http\Controllers\Admin\MenuItemController::class, 'destroy'])->name('menu-items.destroy');
     Route::post('menu-items/update-order', [App\Http\Controllers\Admin\MenuItemController::class, 'updateOrder'])->name('menu-items.update-order');
 
+    // Pages Management
+    Route::get('pages/standard', [App\Http\Controllers\Admin\PageController::class, 'standardPages'])->name('pages.standard');
+    Route::resource('pages', App\Http\Controllers\Admin\PageController::class);
+
+    // SEO Management
+    Route::resource('seo', App\Http\Controllers\Admin\SeoController::class);
+
     // User Management
     Route::resource('users', UserController::class);
 

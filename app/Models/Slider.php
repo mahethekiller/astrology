@@ -11,12 +11,13 @@ class Slider extends Model
 {
     use HasFactory;
 
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url', 'mobile_image_url'];
 
     protected $fillable = [
         'title',
         'description',
         'image',
+        'mobile_image',
         'group',
         'order',
         'is_active',
@@ -46,6 +47,11 @@ class Slider extends Model
 
     public function getImageUrlAttribute()
     {
-        return $this->image ? Storage::disk('public')->url($this->image) : null;
+        return $this->image ? Storage::url($this->image) : null;
+    }
+
+    public function getMobileImageUrlAttribute()
+    {
+        return $this->mobile_image ? Storage::url($this->mobile_image) : null;
     }
 }

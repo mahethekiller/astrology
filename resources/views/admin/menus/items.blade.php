@@ -2,22 +2,6 @@
 
 @section('title', 'Manage Menu: ' . $menu->name)
 
-@push('css')
-<style>
-    .bg-soft-primary { background-color: rgba(9, 120, 240, 0.1); }
-    .table-light-soft { background-color: #f8fafc; }
-    .uppercase { text-transform: uppercase; }
-    .tracking-wider { letter-spacing: 0.05em; }
-    .dot {
-        height: 8px;
-        width: 8px;
-        border-radius: 50%;
-        display: inline-block;
-    }
-    .hover-opacity-100:hover { opacity: 1 !important; }
-    .bg-gradient { background: linear-gradient(45deg, #0d6efd 0%, #0db9fd 100%) !important; }
-</style>
-@endpush
 
 @section('content')
     <div class="container-fluid">

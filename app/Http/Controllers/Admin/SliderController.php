@@ -27,6 +27,7 @@ class SliderController extends Controller
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'mobile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'group' => 'required|string|max:50',
             'order' => 'nullable|integer',
             'button_text' => 'nullable|string|max:50',
@@ -34,11 +35,15 @@ class SliderController extends Controller
         ]);
 
         $imagePath = $request->file('image')->store('sliders', 'public');
+        $mobileImagePath = $request->hasFile('mobile_image')
+            ? $request->file('mobile_image')->store('sliders', 'public')
+            : null;
 
         Slider::create([
             'title' => $request->title,
             'description' => $request->description,
             'image' => $imagePath,
+            'mobile_image' => $mobileImagePath,
             'group' => $request->group,
             'order' => $request->order ?? 0,
             'button_text' => $request->button_text,
@@ -60,6 +65,7 @@ class SliderController extends Controller
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'mobile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'group' => 'required|string|max:50',
             'order' => 'nullable|integer',
             'button_text' => 'nullable|string|max:50',
@@ -83,6 +89,14 @@ class SliderController extends Controller
             $data['image'] = $request->file('image')->store('sliders', 'public');
         }
 
+        if ($request->hasFile('mobile_image')) {
+            // Delete old mobile image
+            if ($slider->mobile_image) {
+                Storage::disk('public')->delete($slider->mobile_image);
+            }
+            $data['mobile_image'] = $request->file('mobile_image')->store('sliders', 'public');
+        }
+
         $slider->update($data);
 
         return redirect()->route('admin.sliders.index')->with('success', 'Slider updated successfully.');
@@ -92,6 +106,9 @@ class SliderController extends Controller
     {
         if ($slider->image) {
             Storage::disk('public')->delete($slider->image);
+        }
+        if ($slider->mobile_image) {
+            Storage::disk('public')->delete($slider->mobile_image);
         }
         $slider->delete();
 
