@@ -258,10 +258,46 @@
                     </div>
 
                     <div class="tab-pane fade" id="pills-reviews" role="tabpanel">
-                        <div class="text-center py-5">
-                            <i class="fas fa-star fa-3x text-light mb-3"></i>
-                            <h5 class="text-muted">No reviews yet</h5>
-                            <p class="text-muted">Start a consultation to be the first to leave a review!</p>
+                        <div class="mb-4">
+                            <h3 class="fw-bold">Client Reviews</h3>
+                            <div class="d-flex align-items-center gap-2 mb-4">
+                                <h2 class="mb-0 fw-bold">{{ number_format($astrologer->rating, 1) }}</h2>
+                                <div class="text-warning">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="fa{{ $i <= round($astrologer->rating) ? 's' : 'r' }} fa-star"></i>
+                                    @endfor
+                                </div>
+                                <span class="text-muted">({{ $astrologer->total_reviews }} reviews)</span>
+                            </div>
+                        </div>
+
+                        <div class="review-list">
+                            @forelse($astrologer->ratings()->where('status', 'approved')->with('user')->latest()->get() as $review)
+                                <div class="review-item mb-4 pb-4 border-bottom">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <img src="https://ui-avatars.com/api/?name={{ urlencode($review->user->name) }}&background=random"
+                                                class="rounded-circle" width="40" height="40">
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">{{ $review->user->name }}</h6>
+                                                <small class="text-muted">{{ $review->created_at->format('M d, Y') }}</small>
+                                            </div>
+                                        </div>
+                                        <div class="text-warning small">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star"></i>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    <p class="text-secondary mb-0">{{ $review->comment }}</p>
+                                </div>
+                            @empty
+                                <div class="text-center py-5">
+                                    <i class="fas fa-star fa-3x text-light mb-3"></i>
+                                    <h5 class="text-muted">No reviews yet</h5>
+                                    <p class="text-muted">Start a consultation to be the first to leave a review!</p>
+                                </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>

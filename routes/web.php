@@ -127,6 +127,8 @@ Route::middleware(['auth'])->group(function () {
         return view('astrologer.call.dashboard');
     })->middleware(['auth', 'role:astrologer'])->name('astrologer.call.dashboard');
 
+    // Rating Route
+    Route::post('/rating/store', [App\Http\Controllers\Frontend\RatingController::class, 'store'])->name('rating.store');
 });
 
 // Twilio Webhooks - Must be PUBLIC (No Auth Middleware)

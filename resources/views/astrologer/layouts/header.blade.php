@@ -40,7 +40,7 @@
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i
+                <li><a class="dropdown-item" href="{{ route('astrologer.profile.edit') }}"><i
                             class="bi bi-person me-2"></i>Profile</a></li>
                 <li>
                     <hr class="dropdown-divider">

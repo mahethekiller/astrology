@@ -75,7 +75,7 @@
 
                             <form action="{{ route('user.profile.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                @method('PUT')
+                                @method('PATCH')
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">

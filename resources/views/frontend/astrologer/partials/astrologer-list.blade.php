@@ -8,7 +8,12 @@
                     <span class="topAstroBoxactive offline"></span>
                 @endif
                 <div class="flowBtn"> <a class="" href="#">Follow </a></div>
-                <div class="retingStar"><i class="fa-solid fa-star"></i> {{ number_format($astrologer->rating, 1) }}</div>
+                <div class="retingStar">
+                    <i class="fa-solid fa-star"></i> {{ number_format($astrologer->rating, 1) }}
+                    @if($astrologer->total_reviews > 0)
+                        <small class="text-white opacity-75">({{ $astrologer->total_reviews }})</small>
+                    @endif
+                </div>
                 <div class="topAstroBoxImg">
                     <a href="{{ route('astrologer.show', $astrologer->id) }}">
                         <img class="img-responsive" width="100" height="100" style="border-radius:50%; object-fit:cover;"

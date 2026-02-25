@@ -79,6 +79,11 @@ class AstrologerProfile extends Model
         return $this->belongsToMany(Language::class, 'astrologer_profile_language');
     }
 
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
+
     /**
      * Get the profile image URL
      */
