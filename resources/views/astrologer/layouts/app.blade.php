@@ -7,7 +7,11 @@
     <title>@yield('title', 'Admin Panel') - Astroaura</title>
 
     <!-- CSRF Token -->
+    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('images/fevicon.jpeg') }}" type="image/jpeg">
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">

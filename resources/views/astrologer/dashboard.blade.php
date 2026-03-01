@@ -345,25 +345,30 @@
 
 @push('scripts')
 <script>
-    // Toggle Status with feedback
+    // Toggle Status by triggering the global master buttons to keep everything synced (Twilio registration, etc)
     document.querySelectorAll('.status-toggle').forEach(item => {
-        item.addEventListener('change', async function () {
+        item.addEventListener('click', function (e) {
+            e.preventDefault(); // Stop the checkbox from toggling immediately
             const type = this.dataset.type;
-            const status = this.checked ? 1 : 0;
-            const label = this.closest('.p-3').querySelector('h6').textContent;
-
-            try {
-                await axios.post("{{ route('astrologer.status.toggle') }}", {
-                    type: type,
-                    status: status
-                });
-                // Optional: You could add a small toast here
-            } catch (error) {
-                console.error(error);
-                alert('Failed to update status for ' + label);
-                this.checked = !status; // Revert
+            if (type === 'chat') {
+                const globalBtn = document.getElementById('toggle-chat-online-btn-global');
+                if (globalBtn) globalBtn.click();
+            } else if (type === 'call') {
+                const globalBtn = document.getElementById('toggle-online-btn-global');
+                if (globalBtn) globalBtn.click();
             }
         });
+    });
+
+    // Listen to global events to update the switches
+    window.addEventListener('chatStatusChanged', function(e) {
+        const chatSwitch = document.getElementById('chatStatus');
+        if (chatSwitch) chatSwitch.checked = e.detail.isOnline;
+    });
+
+    window.addEventListener('callStatusChanged', function(e) {
+        const callSwitch = document.getElementById('callStatus');
+        if (callSwitch) callSwitch.checked = e.detail.isOnline;
     });
 
     // Listen for Global Request Updates

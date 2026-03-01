@@ -273,6 +273,8 @@
                     if (headerText) headerText.textContent = 'Offline';
                 }
             }
+            // Dispatch event for other listeners (like dashboard settings)
+            window.dispatchEvent(new CustomEvent('callStatusChanged', { detail: { isOnline: online } }));
         }
 
         acceptBtn.addEventListener('click', () => {

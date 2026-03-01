@@ -1,6 +1,11 @@
 <div class="sidebar">
     <div class="sidebar-header">
-        <h3><i class="bi bi-layout-text-window-reverse"></i> <span>{{ config('app.name', 'Laravel') }}</span></h3>
+        <h3>
+            <a href="{{ url('/') }}" class="text-decoration-none">
+                <img src="{{ asset('frontend/images/logo.png') }}" alt="{{ config('app.name', 'Astroauraa') }}"
+                    style="max-height: 45px; object-fit: contain;">
+            </a>
+        </h3>
     </div>
     <div class="sidebar-menu">
         <ul>

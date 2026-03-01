@@ -87,6 +87,8 @@
                     if (chatHeaderText) chatHeaderText.textContent = 'Offline';
                 }
             }
+            // Dispatch event for other listeners (like dashboard settings)
+            window.dispatchEvent(new CustomEvent('chatStatusChanged', { detail: { isOnline: online } }));
         }
     });
 </script>
