@@ -18,7 +18,7 @@ Route::get('/astrologers', [App\Http\Controllers\Frontend\AstrologerController::
 Route::get('/astrologer/register', [App\Http\Controllers\Frontend\AstrologerRegistrationController::class, 'showRegistrationForm'])->name('astrologer.register');
 Route::post('/astrologer/register', [App\Http\Controllers\Frontend\AstrologerRegistrationController::class, 'register'])->name('astrologer.register.submit');
 Route::get('/astrologer/registration/thanks', [App\Http\Controllers\Frontend\AstrologerRegistrationController::class, 'thanks'])->name('astrologer.thanks');
-Route::get('/astrologer/{slug}', [App\Http\Controllers\Frontend\AstrologerController::class, 'show'])->name('astrologer.show');
+
 
 
 Route::get('/horoscope/daily/{sign?}', [App\Http\Controllers\Frontend\HoroscopeController::class, 'daily'])->name('horoscope.daily');
@@ -93,6 +93,9 @@ Route::middleware(['auth'])->group(function () {
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/astrologers.php';
+
+// Astrologer Profile specific route with {slug} parameter (catch-all for /astrologer/*)
+Route::get('/astrologer/{slug}', [App\Http\Controllers\Frontend\AstrologerController::class, 'show'])->name('astrologer.show');
 
 // OTP Auth Routes
 Route::post('/login/send-otp', [App\Http\Controllers\Auth\OtpAuthController::class, 'sendOtp'])->name('login.send-otp');
