@@ -78,6 +78,11 @@
     </div>
 </div>
 
+<!-- Call Notification Audio -->
+<audio id="callNotificationSound" preload="auto" loop>
+    <source src="{{ asset('sounds/ring.mp3') }}" type="audio/mpeg">
+</audio>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         let device;
@@ -100,6 +105,7 @@
         const rejectBtn = document.getElementById('reject-btn');
         const hangupBtn = document.getElementById('hangup-btn');
         const callTimer = document.getElementById('call-timer-global');
+        const callNotificationSound = document.getElementById('callNotificationSound');
 
         // Metadata Sync for Call Popup
         let latestCallRequests = [];
@@ -182,6 +188,14 @@
                 device.on('incoming', function (conn) {
                     activeConnection = conn;
 
+                    // Play call ringtone
+                    try {
+                        callNotificationSound.currentTime = 0;
+                        callNotificationSound.play();
+                    } catch (e) {
+                        console.warn('Call audio play blocked');
+                    }
+
                     // Reset modal to default before showing
                     const nameEl = document.getElementById('call-popup-user-name');
                     const phoneEl = document.getElementById('call-popup-user-phone');
@@ -199,6 +213,7 @@
                     conn.on('cancel', () => {
                         incomingModal.hide();
                         activeConnection = null;
+                        stopCallRingtone();
                     });
                 });
 
@@ -263,6 +278,7 @@
         acceptBtn.addEventListener('click', () => {
             if (activeConnection) {
                 activeConnection.accept();
+                stopCallRingtone();
                 incomingModal.hide();
                 inCallModal.show();
                 startTimer();
@@ -278,6 +294,7 @@
         rejectBtn.addEventListener('click', () => {
             if (activeConnection) {
                 activeConnection.reject();
+                stopCallRingtone();
                 incomingModal.hide();
                 activeConnection = null;
             }
@@ -306,6 +323,13 @@
 
         function stopTimer() {
             clearInterval(timerInterval);
+        }
+
+        function stopCallRingtone() {
+            if (callNotificationSound) {
+                callNotificationSound.pause();
+                callNotificationSound.currentTime = 0;
+            }
         }
     });
 </script>

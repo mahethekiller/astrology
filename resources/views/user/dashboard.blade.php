@@ -87,20 +87,19 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="email" class="form-label">Email Address</label>
-                                        <input type="email" name="email" id="email"
-                                            class="form-control @error('email') is-invalid @enderror"
-                                            value="{{ old('email', auth()->user()->email) }}" required>
-                                        @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                        <input type="email" name="email" id="email" class="form-control"
+                                            value="{{ auth()->user()->email }}" readonly disabled>
+                                        <div class="form-text">Email address cannot be changed.</div>
                                     </div>
                                 </div>
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="phone" class="form-label">Phone Number</label>
-                                        <input type="text" readonly name="phone" id="phone"
-                                            class="form-control @error('phone') is-invalid @enderror"
-                                            value="{{ old('phone', auth()->user()->phone_number) }}">
-                                        @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                        <label for="phone_number" class="form-label">Phone Number</label>
+                                        <input type="text" name="phone_number" id="phone_number"
+                                            class="form-control @error('phone_number') is-invalid @enderror"
+                                            value="{{ old('phone_number', auth()->user()->phone_number) }}" required>
+                                        @error('phone_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                     </div>
                                     <div class="col-md-6">
                                         <label for="profile_image" class="form-label">Update Profile Image</label>

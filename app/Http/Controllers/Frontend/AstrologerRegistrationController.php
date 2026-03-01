@@ -25,6 +25,14 @@ class AstrologerRegistrationController extends Controller
     }
 
     /**
+     * Show the thank you page after registration.
+     */
+    public function thanks()
+    {
+        return view('frontend.astrologer.thanks');
+    }
+
+    /**
      * Handle an astrologer registration request.
      */
     public function register(Request $request)
@@ -100,8 +108,8 @@ class AstrologerRegistrationController extends Controller
 
             DB::commit();
 
-            return redirect()->route('login')
-                ->with('success', 'Your application has been submitted successfully! We will review your profile and get back to you soon.');
+            return redirect()->route('astrologer.thanks')
+                ->with('success', 'Your application has been submitted successfully!');
 
         } catch (\Exception $e) {
             DB::rollBack();

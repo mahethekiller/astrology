@@ -1,0 +1,33 @@
+/* Blog Sidebar Styles */
+.hover-bg-light:hover {
+    background-color: #f8f9fa;
+    transition: all 0.2s ease;
+}
+
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.blog-sidebar .card {
+    transition: transform 0.3s ease;
+}
+
+.blog-sidebar .card:hover {
+    transform: translateY(-5px);
+}
+
+/* Blog Content Styles */
+.blog-post-card {
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.blog-post-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}

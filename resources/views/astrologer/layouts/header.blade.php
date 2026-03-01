@@ -24,10 +24,11 @@
             <i class="bi bi-moon"></i>
         </button>
         <div class="user-profile dropdown">
-            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle"
+            <a href="#" class="mk22 d-flex align-items-center text-decoration-none dropdown-toggle"
                 data-bs-toggle="dropdown">
-                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=4361ee&color=fff"
-                    alt="User">
+                <img src="{{ auth()->user()->astrologerProfile && auth()->user()->astrologerProfile->profile_image ? asset('uploads/astrologers/' . auth()->user()->astrologerProfile->profile_image) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=4361ee&color=fff' }}"
+                    alt="User" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
+
                 <div style="    padding: 5px;">
                     <div class="fw-bold">{{ auth()->user()->name }}</div>
                     <small class="text-muted">

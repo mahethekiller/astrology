@@ -11,7 +11,7 @@
                                 {{ $planetData['name'] }}
                             </div>
                             <div class="card-body p-0">
-                                <table class="table table-striped table-sm mb-0">
+                                <table class="table kundli-report-table table-striped table-sm mb-0">
                                     <thead>
                                         <tr>
                                             <th>Planet</th>

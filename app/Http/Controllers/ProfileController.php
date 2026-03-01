@@ -28,10 +28,6 @@ class ProfileController extends Controller
     {
         $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
@@ -56,12 +52,12 @@ class ProfileController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'phone_number' => 'required|string|max:20|unique:users,phone_number,' . $user->id,
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'bio' => 'nullable|string|max:1000',
         ]);
 
-        $data = $request->only('name', 'email', 'bio');
+        $data = $request->only('name', 'phone_number', 'bio');
 
         if ($request->hasFile('profile_image')) {
             // Delete old image if exists
@@ -71,10 +67,6 @@ class ProfileController extends Controller
 
             $path = $request->file('profile_image')->store('profile-images', 'public');
             $data['profile_image'] = $path;
-        }
-
-        if ($user->email !== $request->email) {
-            $user->email_verified_at = null;
         }
 
         $user->update($data);

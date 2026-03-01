@@ -156,6 +156,22 @@ class ChatController extends Controller
         return view('frontend.chat.history', compact('chats'));
     }
 
+    public function getMessages($id)
+    {
+        $user = Auth::user();
+        $chat = \App\Models\ChatRequest::where('user_id', $user->id)
+            ->where('id', $id)
+            ->with(['messages', 'astrologer'])
+            ->firstOrFail();
+
+        return response()->json([
+            'success' => true,
+            'messages' => $chat->messages,
+            'astrologer_name' => $chat->astrologer->display_name,
+            'user_identity' => 'user_' . $user->id
+        ]);
+    }
+
     public function token(Request $request)
     {
         $user = Auth::user();

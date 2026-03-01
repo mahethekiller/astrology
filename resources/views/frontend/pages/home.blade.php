@@ -84,13 +84,13 @@
           <div class="flowBtn"> <a class="" href="#">Follow </a></div>
           <div class="retingStar"><i class="fa-solid fa-star"></i> {{ number_format($astrologer->rating, 1) }}</div>
           <div class="topAstroBoxImg">
-              <a href="{{ route('astrologer.show', $astrologer->id) }}">
+              <a href="{{ route('astrologer.show', $astrologer->slug) }}">
                 <img class="img-responsive" width="100" height="100" style="border-radius:50%; object-fit:cover;" src="{{ asset('uploads/astrologers/' . $astrologer->profile_image) }}" />
               </a>
           </div>
           <div class="astroDetails">
             <div class="topAstroName text-truncate" title="{{ $astrologer->display_name }}">
-            <a href="{{ route('astrologer.show', $astrologer->id) }}">{{ $astrologer->display_name }}</a>
+            <a href="{{ route('astrologer.show', $astrologer->slug) }}">{{ $astrologer->display_name }}</a>
           </div>
 
             <div class="astroLang text-truncate" title="{{ $astrologer->languages->pluck('name')->join(', ') }}">{{ $astrologer->languages->pluck('name')->join(', ') }}</div>
@@ -134,102 +134,76 @@
     <div class="headingDeign"><img src="{{ asset('frontend/images/headingDesign.png') }}" /></div>
     <div class="row">
       <div class="col-sm-6 col-lg-2">
-        <div class="sec5Box">
-          <a href="{{ route('horoscope.daily', 'aries') }}">
-            <span class="sec5icon"><img src="{{ asset('frontend/images/aries.png') }}" /></span>
-        <span class="sec5text">Aries</span>
-          </a>
-        </div>
-      </div>
-   <div class="col-sm-6 col-lg-2">
-        <div class="sec5Box">
-          <a href="{{ route('horoscope.daily', 'taurus') }}">
-            <span class="sec5icon"><img src="{{ asset('frontend/images/taurus.png') }}" /></span>
-        <span class="sec5text">Taurus</span>
-          </a>
-        </div>
+        <a href="{{ route('horoscope.daily', 'aries') }}" class="sec5Box">
+          <span class="sec5icon"><img src="{{ asset('frontend/images/aries.png') }}" /></span>
+          <span class="sec5text">Aries</span>
+        </a>
       </div>
       <div class="col-sm-6 col-lg-2">
-        <div class="sec5Box">
-          <a href="{{ route('horoscope.daily', 'gemini') }}">
-            <span class="sec5icon"><img src="{{ asset('frontend/images/gemini.png') }}" /></span>
-        <span class="sec5text">Gemini</span>
-          </a>
-        </div>
+        <a href="{{ route('horoscope.daily', 'taurus') }}" class="sec5Box">
+          <span class="sec5icon"><img src="{{ asset('frontend/images/taurus.png') }}" /></span>
+          <span class="sec5text">Taurus</span>
+        </a>
       </div>
       <div class="col-sm-6 col-lg-2">
-        <div class="sec5Box">
-          <a href="{{ route('horoscope.daily', 'cancer') }}">
-            <span class="sec5icon"><img src="{{ asset('frontend/images/cancer.png') }}" /></span>
-        <span class="sec5text">Cancer</span>
-          </a>
-        </div>
+        <a href="{{ route('horoscope.daily', 'gemini') }}" class="sec5Box">
+          <span class="sec5icon"><img src="{{ asset('frontend/images/gemini.png') }}" /></span>
+          <span class="sec5text">Gemini</span>
+        </a>
       </div>
       <div class="col-sm-6 col-lg-2">
-        <div class="sec5Box">
-          <a href="{{ route('horoscope.daily', 'leo') }}">
-            <span class="sec5icon"><img src="{{ asset('frontend/images/leo.png') }}" /></span>
-        <span class="sec5text">Leo</span>
-          </a>
-        </div>
+        <a href="{{ route('horoscope.daily', 'cancer') }}" class="sec5Box">
+          <span class="sec5icon"><img src="{{ asset('frontend/images/cancer.png') }}" /></span>
+          <span class="sec5text">Cancer</span>
+        </a>
       </div>
       <div class="col-sm-6 col-lg-2">
-        <div class="sec5Box">
-          <a href="{{ route('horoscope.daily', 'virgo') }}">
-            <span class="sec5icon"><img src="{{ asset('frontend/images/virgo.png') }}" /></span>
-        <span class="sec5text">Virgo</span>
-          </a>
-        </div>
+        <a href="{{ route('horoscope.daily', 'leo') }}" class="sec5Box">
+          <span class="sec5icon"><img src="{{ asset('frontend/images/leo.png') }}" /></span>
+          <span class="sec5text">Leo</span>
+        </a>
       </div>
       <div class="col-sm-6 col-lg-2">
-        <div class="sec5Box">
-          <a href="{{ route('horoscope.daily', 'libra') }}">
-            <span class="sec5icon"><img src="{{ asset('frontend/images/libra.png') }}" /></span>
-        <span class="sec5text">Libra</span>
-          </a>
-        </div>
-      </div>
-       <div class="col-sm-6 col-lg-2">
-        <div class="sec5Box">
-          <a href="{{ route('horoscope.daily', 'scorpio') }}">
-            <span class="sec5icon"><img src="{{ asset('frontend/images/scorpio.png') }}" /></span>
-        <span class="sec5text">Scorpio</span>
-          </a>
-        </div>
+        <a href="{{ route('horoscope.daily', 'virgo') }}" class="sec5Box">
+          <span class="sec5icon"><img src="{{ asset('frontend/images/virgo.png') }}" /></span>
+          <span class="sec5text">Virgo</span>
+        </a>
       </div>
       <div class="col-sm-6 col-lg-2">
-        <div class="sec5Box">
-          <a href="{{ route('horoscope.daily', 'sagittarius') }}">
-            <span class="sec5icon"><img src="{{ asset('frontend/images/sagittarius.png') }}" /></span>
-        <span class="sec5text">Sagittarius</span>
-          </a>
-        </div>
+        <a href="{{ route('horoscope.daily', 'libra') }}" class="sec5Box">
+          <span class="sec5icon"><img src="{{ asset('frontend/images/libra.png') }}" /></span>
+          <span class="sec5text">Libra</span>
+        </a>
       </div>
       <div class="col-sm-6 col-lg-2">
-        <div class="sec5Box">
-          <a href="{{ route('horoscope.daily', 'capricorn') }}">
-            <span class="sec5icon"><img src="{{ asset('frontend/images/capricorn.png') }}" /></span>
-        <span class="sec5text">Capricorn</span>
-          </a>
-        </div>
+        <a href="{{ route('horoscope.daily', 'scorpio') }}" class="sec5Box">
+          <span class="sec5icon"><img src="{{ asset('frontend/images/scorpio.png') }}" /></span>
+          <span class="sec5text">Scorpio</span>
+        </a>
       </div>
       <div class="col-sm-6 col-lg-2">
-        <div class="sec5Box">
-          <a href="{{ route('horoscope.daily', 'aquarius') }}">
-            <span class="sec5icon"><img src="{{ asset('frontend/images/aquarius.png') }}" /></span>
-        <span class="sec5text">Aquarius</span>
-          </a>
-        </div>
+        <a href="{{ route('horoscope.daily', 'sagittarius') }}" class="sec5Box">
+          <span class="sec5icon"><img src="{{ asset('frontend/images/sagittarius.png') }}" /></span>
+          <span class="sec5text">Sagittarius</span>
+        </a>
       </div>
-
-
       <div class="col-sm-6 col-lg-2">
-        <div class="sec5Box">
-          <a href="{{ route('horoscope.daily', 'pisces') }}">
-            <span class="sec5icon"><img src="{{ asset('frontend/images/pisces.png') }}" /></span>
-        <span class="sec5text">Pisces </span>
-          </a>
-        </div>
+        <a href="{{ route('horoscope.daily', 'capricorn') }}" class="sec5Box">
+          <span class="sec5icon"><img src="{{ asset('frontend/images/capricorn.png') }}" /></span>
+          <span class="sec5text">Capricorn</span>
+        </a>
+      </div>
+      <div class="col-sm-6 col-lg-2">
+        <a href="{{ route('horoscope.daily', 'aquarius') }}" class="sec5Box">
+          <span class="sec5icon"><img src="{{ asset('frontend/images/aquarius.png') }}" /></span>
+          <span class="sec5text">Aquarius</span>
+        </a>
+      </div>
+      <div class="col-sm-6 col-lg-2">
+        <a href="{{ route('horoscope.daily', 'pisces') }}" class="sec5Box">
+          <span class="sec5icon"><img src="{{ asset('frontend/images/pisces.png') }}" /></span>
+          <span class="sec5text">Pisces </span>
+        </a>
       </div>
     </div>
   </div>

@@ -17,7 +17,8 @@ Route::get('/blog/{slug}', [App\Http\Controllers\Frontend\BlogController::class,
 Route::get('/astrologers', [App\Http\Controllers\Frontend\AstrologerController::class, 'index'])->name('astrologer.index');
 Route::get('/astrologer/register', [App\Http\Controllers\Frontend\AstrologerRegistrationController::class, 'showRegistrationForm'])->name('astrologer.register');
 Route::post('/astrologer/register', [App\Http\Controllers\Frontend\AstrologerRegistrationController::class, 'register'])->name('astrologer.register.submit');
-Route::get('/astrologer/{id}', [App\Http\Controllers\Frontend\AstrologerController::class, 'show'])->name('astrologer.show')->where('id', '[0-9]+');
+Route::get('/astrologer/registration/thanks', [App\Http\Controllers\Frontend\AstrologerRegistrationController::class, 'thanks'])->name('astrologer.thanks');
+Route::get('/astrologer/{slug}', [App\Http\Controllers\Frontend\AstrologerController::class, 'show'])->name('astrologer.show');
 
 
 Route::get('/horoscope/daily/{sign?}', [App\Http\Controllers\Frontend\HoroscopeController::class, 'daily'])->name('horoscope.daily');
@@ -84,6 +85,9 @@ Route::middleware(['auth'])->group(function () {
     // These remain accessible to all authenticated users without role prefix
     Route::get('/components', [ComponentsController::class, 'index'])->name('components');
     Route::get('/tables', [TablesController::class, 'index'])->name('tables');
+    Route::post('/chat/verify-session', [\App\Http\Controllers\Frontend\ChatController::class, 'verifySession'])->name('chat.verify-session');
+    Route::get('/chat/history', [\App\Http\Controllers\Frontend\ChatController::class, 'history'])->name('chat.history');
+    Route::get('/chat/history/{id}/messages', [\App\Http\Controllers\Frontend\ChatController::class, 'getMessages'])->name('chat.history.messages');
 });
 
 require __DIR__ . '/auth.php';
@@ -116,6 +120,8 @@ Route::middleware(['auth'])->group(function () {
     // Call Routes - Token must be authenticated
     Route::post('/call/token', [App\Http\Controllers\Frontend\CallController::class, 'token'])->name('call.token');
     Route::post('/call/toggle-status', [App\Http\Controllers\Frontend\CallController::class, 'toggleOnlineStatus'])->name('call.toggle-status');
+    Route::post('/call/billing/ping', [App\Http\Controllers\Frontend\CallController::class, 'billingPing'])->name('call.billing.ping');
+    Route::post('/call/status', [App\Http\Controllers\Frontend\CallController::class, 'callStatusCallback'])->name('call.status');
 
     // Call Views
     Route::get('/call/astrologer/{astrologerId}', function ($astrologerId) {

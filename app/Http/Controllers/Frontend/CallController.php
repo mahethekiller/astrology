@@ -220,88 +220,133 @@ class CallController extends Controller
         ]);
     }
 
+    /**
+     * Billing Ping - Called every minute during the call from the frontend
+     */
+    public function billingPing(Request $request)
+    {
+        $request->validate([
+            'sid' => 'required'
+        ]);
+
+        $user = Auth::user();
+        $callRequest = CallRequest::where('twilio_sid', $request->sid)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$callRequest) {
+            return response()->json(['error' => 'Call sequence not found'], 404);
+        }
+
+        $astrologer = $callRequest->astrologer;
+        $price = $astrologer->call_price;
+
+        if ($price > 0) {
+            if ($user->wallet->balance < $price) {
+                return response()->json(['status' => 'low_balance'], 402);
+            }
+
+            // 1. Deduct from User
+            $user->wallet->decrement('balance', (float) $price);
+            $user->wallet->transactions()->create([
+                'amount' => $price,
+                'type' => 'debit',
+                'description' => "Voice Call usage charge with {$astrologer->display_name} (1 min)",
+                'metadata' => ['twilio_sid' => $request->sid]
+            ]);
+
+            // 2. Financial Calculations
+            $commissionRate = $astrologer->call_commission_percentage ?? \App\Models\Setting::getValue('global_voice_commission', 20);
+            $commissionAmount = round(($price * $commissionRate) / 100, 2);
+            $astrologerEarnings = $price - $commissionAmount;
+
+            // 3. Update Call Request
+            $callRequest->increment('call_duration', 60); // Track in seconds
+            $callRequest->increment('call_cost', (float) $price);
+            $callRequest->increment('commission_amount', (float) $commissionAmount);
+            $callRequest->increment('astrologer_earnings', (float) $astrologerEarnings);
+
+            // 4. Credit Astrologer
+            $astrologerUser = $astrologer->user;
+            if ($astrologerUser && $astrologerUser->wallet) {
+                $astrologerUser->wallet->increment('balance', (float) $astrologerEarnings);
+                $astrologerUser->wallet->transactions()->create([
+                    'amount' => $astrologerEarnings,
+                    'type' => 'credit',
+                    'description' => "Earnings from Voice Call with {$user->name} (1 min)",
+                    'metadata' => ['call_request_id' => $callRequest->id]
+                ]);
+            }
+        }
+
+        return response()->json([
+            'status' => 'ok',
+            'remaining_balance' => $user->wallet->balance
+        ]);
+    }
+
     public function callStatusCallback(Request $request)
     {
-        // Twilio hits this after call ends (because of 'action' in Dial)
-        // Params: DialCallStatus, DialCallDuration, DialCallSid... OR CallStatus etc.
-        // If it's the 'action' callback, it gives the result of the Dial.
-
+        // Twilio hits this after call ends
         $sid = $request->input('CallSid');
         $callRequest = CallRequest::where('twilio_sid', $sid)->first();
 
         if ($callRequest) {
-            $duration = $request->input('DialCallDuration') ?? 0;
-            $status = $request->input('DialCallStatus');
+            $totalDuration = $request->input('DialCallDuration') ?? $request->input('CallDuration') ?? 0;
+            $status = $request->input('DialCallStatus') ?? $request->input('CallStatus');
 
-            $callRequest->call_duration = $duration;
-            $callRequest->call_status = strtolower($status); // completed, busy, no-answer, failed
+            // Find how many minutes we've already billed via pings
+            $billedMinutes = floor($callRequest->call_duration / 60);
+            $totalMinutesToBill = ceil($totalDuration / 60);
+
+            $remainingMinutes = max(0, $totalMinutesToBill - $billedMinutes);
+
+            $callRequest->call_duration = $totalDuration;
+            $callRequest->call_status = strtolower($status);
             $callRequest->end_time = now();
 
-            // Calculate Cost
-            $astrologer = $callRequest->astrologer;
-            $pricePerMin = $astrologer->call_price;
+            if ($remainingMinutes > 0) {
+                $astrologer = $callRequest->astrologer;
+                $pricePerMin = $astrologer->call_price;
+                $remainingCost = (float) ($remainingMinutes * $pricePerMin);
 
-            // User pays for full minutes? Or seconds? Usually per minute billing.
-            // Let's do per minute ceiling.
-            $minutes = ceil($duration / 60);
-            $cost = $minutes * $pricePerMin;
-
-            $callRequest->call_cost = $cost;
-            $callRequest->save();
-
-            // Deduct from Wallet
-            if ($cost > 0) {
-                // Ensure latest balance
+                // Final deduction for remaining time
                 $user = $callRequest->user;
-
-                // Transaction
-                if ($user->wallet) {
-                    $user->wallet->decrement('balance', $cost);
+                if ($user->wallet && $remainingCost > 0) {
+                    $user->wallet->decrement('balance', $remainingCost);
                     $user->wallet->transactions()->create([
-                        'amount' => $cost,
+                        'amount' => $remainingCost,
                         'type' => 'debit',
-                        'description' => "Voice Call with {$astrologer->display_name} ({$minutes} mins)",
+                        'description' => "Final Voice Call charge with {$astrologer->display_name} ({$remainingMinutes} mins)",
                         'metadata' => ['call_request_id' => $callRequest->id]
                     ]);
-                }
 
-                // 2. Calculate Commission & Earnings
-                // ---------------------------------------------------------
-                $commissionRate = $astrologer->call_commission_percentage ?? \App\Models\Setting::getValue('global_voice_commission', 20); // Default 20%
-                $commissionAmount = round(($cost * $commissionRate) / 100, 2);
-                $astrologerEarnings = $cost - $commissionAmount;
+                    // Commission & Earnings
+                    $commissionRate = $astrologer->call_commission_percentage ?? \App\Models\Setting::getValue('global_voice_commission', 20);
+                    $commissionAmount = round(($remainingCost * $commissionRate) / 100, 2);
+                    $astrologerEarnings = $remainingCost - $commissionAmount;
 
-                // Update Call Request with financials
-                $callRequest->update([
-                    'commission_amount' => $commissionAmount,
-                    'astrologer_earnings' => $astrologerEarnings
-                ]);
+                    $callRequest->increment('call_cost', (float) $remainingCost);
+                    $callRequest->increment('commission_amount', (float) $commissionAmount);
+                    $callRequest->increment('astrologer_earnings', (float) $astrologerEarnings);
 
-                // ---------------------------------------------------------
-                // 3. Credit Astrologer Wallet
-                // ---------------------------------------------------------
-                $astrologerUser = $astrologer->user; // Get User model from AstrologerProfile
-
-                if ($astrologerUser && $astrologerUser->wallet) {
-                    $astrologerUser->wallet->increment('balance', $astrologerEarnings);
-
-                    $astrologerUser->wallet->transactions()->create([
-                        'amount' => $astrologerEarnings,
-                        'type' => 'credit',
-                        'description' => "Earnings from Voice Call with {$user->name} ({$minutes} mins)",
-                        'metadata' => [
-                            'call_request_id' => $callRequest->id,
-                            'total_call_cost' => $cost,
-                            'commission_deducted' => $commissionAmount
-                        ]
-                    ]);
-                } else {
-                    Log::error("Astrologer User or Wallet not found for Astrologer ID: {$astrologer->id}");
+                    // Credit Astrologer
+                    $astrologerUser = $astrologer->user;
+                    if ($astrologerUser && $astrologerUser->wallet) {
+                        $astrologerUser->wallet->increment('balance', (float) $astrologerEarnings);
+                        $astrologerUser->wallet->transactions()->create([
+                            'amount' => $astrologerEarnings,
+                            'type' => 'credit',
+                            'description' => "Final Earnings from Voice Call with {$user->name} ({$remainingMinutes} mins)",
+                            'metadata' => ['call_request_id' => $callRequest->id]
+                        ]);
+                    }
                 }
             }
+
+            $callRequest->save();
         }
 
-        // Return TwiML to hangup (or just empty response to end call)
         $response = new VoiceResponse();
         $response->hangup();
         return response($response->asXML())->header('Content-Type', 'text/xml');

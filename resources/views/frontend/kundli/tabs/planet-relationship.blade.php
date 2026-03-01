@@ -24,7 +24,7 @@
     {{-- Natural Relationship --}}
     <div class="tab-pane fade show active" id="natural" role="tabpanel" aria-labelledby="natural-tab">
         <div class="table-responsive">
-            <table class="table table-bordered table-striped text-center">
+            <table class="table kundli-report-table table-bordered table-striped text-center">
                 <thead class="table-dark">
                     <tr>
                         <th>First Planet</th>
@@ -62,7 +62,7 @@
     {{-- Temporal Relationship --}}
     <div class="tab-pane fade" id="temporal" role="tabpanel" aria-labelledby="temporal-tab">
         <div class="table-responsive">
-            <table class="table table-bordered table-striped text-center">
+            <table class="table kundli-report-table table-bordered table-striped text-center">
                 <thead class="table-dark">
                     <tr>
                         <th>First Planet</th>
@@ -100,7 +100,7 @@
     {{-- Compound Relationship --}}
     <div class="tab-pane fade" id="compound" role="tabpanel" aria-labelledby="compound-tab">
         <div class="table-responsive">
-            <table class="table table-bordered table-striped text-center">
+            <table class="table kundli-report-table table-bordered table-striped text-center">
                 <thead class="table-dark">
                     <tr>
                         <th>First Planet</th>

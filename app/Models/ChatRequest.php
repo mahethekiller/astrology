@@ -29,4 +29,9 @@ class ChatRequest extends Model
     {
         return $this->belongsTo(AstrologerProfile::class, 'astrologer_id');
     }
+
+    public function messages()
+    {
+        return $this->hasMany(ChatMessage::class);
+    }
 }

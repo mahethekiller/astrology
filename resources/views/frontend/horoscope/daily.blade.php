@@ -10,100 +10,87 @@
 
             <div class="row">
                 <div class="col-sm-6 col-lg-2">
-                    <div class="sec5Box {{ $sign === 'aries' ? 'active' : '' }}">
-                        <a href="{{ route('horoscope.daily', 'aries') }}">
-                            <span class="sec5icon"><img src="{{ asset('frontend/images/aries.png') }}" /></span>
-                            <span class="sec5text">Aries</span>
-                        </a>
-                    </div>
+                    <a href="{{ route('horoscope.daily', 'aries') }}"
+                        class="sec5Box {{ $sign === 'aries' ? 'active' : '' }}">
+                        <span class="sec5icon"><img src="{{ asset('frontend/images/aries.png') }}" /></span>
+                        <span class="sec5text">Aries</span>
+                    </a>
                 </div>
                 <div class="col-sm-6 col-lg-2">
-                    <div class="sec5Box {{ $sign === 'taurus' ? 'active' : '' }}">
-                        <a href="{{ route('horoscope.daily', 'taurus') }}">
-                            <span class="sec5icon"><img src="{{ asset('frontend/images/taurus.png') }}" /></span>
-                            <span class="sec5text">Taurus</span>
-                        </a>
-                    </div>
+                    <a href="{{ route('horoscope.daily', 'taurus') }}"
+                        class="sec5Box {{ $sign === 'taurus' ? 'active' : '' }}">
+                        <span class="sec5icon"><img src="{{ asset('frontend/images/taurus.png') }}" /></span>
+                        <span class="sec5text">Taurus</span>
+                    </a>
                 </div>
                 <div class="col-sm-6 col-lg-2">
-                    <div class="sec5Box {{ $sign === 'gemini' ? 'active' : '' }}">
-                        <a href="{{ route('horoscope.daily', 'gemini') }}">
-                            <span class="sec5icon"><img src="{{ asset('frontend/images/gemini.png') }}" /></span>
-                            <span class="sec5text">Gemini</span>
-                        </a>
-                    </div>
+                    <a href="{{ route('horoscope.daily', 'gemini') }}"
+                        class="sec5Box {{ $sign === 'gemini' ? 'active' : '' }}">
+                        <span class="sec5icon"><img src="{{ asset('frontend/images/gemini.png') }}" /></span>
+                        <span class="sec5text">Gemini</span>
+                    </a>
                 </div>
                 <div class="col-sm-6 col-lg-2">
-                    <div class="sec5Box {{ $sign === 'cancer' ? 'active' : '' }}">
-                        <a href="{{ route('horoscope.daily', 'cancer') }}">
-                            <span class="sec5icon"><img src="{{ asset('frontend/images/cancer.png') }}" /></span>
-                            <span class="sec5text">Cancer</span>
-                        </a>
-                    </div>
+                    <a href="{{ route('horoscope.daily', 'cancer') }}"
+                        class="sec5Box {{ $sign === 'cancer' ? 'active' : '' }}">
+                        <span class="sec5icon"><img src="{{ asset('frontend/images/cancer.png') }}" /></span>
+                        <span class="sec5text">Cancer</span>
+                    </a>
                 </div>
                 <div class="col-sm-6 col-lg-2">
-                    <div class="sec5Box {{ $sign === 'leo' ? 'active' : '' }}">
-                        <a href="{{ route('horoscope.daily', 'leo') }}">
-                            <span class="sec5icon"><img src="{{ asset('frontend/images/leo.png') }}" /></span>
-                            <span class="sec5text">Leo</span>
-                        </a>
-                    </div>
+                    <a href="{{ route('horoscope.daily', 'leo') }}" class="sec5Box {{ $sign === 'leo' ? 'active' : '' }}">
+                        <span class="sec5icon"><img src="{{ asset('frontend/images/leo.png') }}" /></span>
+                        <span class="sec5text">Leo</span>
+                    </a>
                 </div>
                 <div class="col-sm-6 col-lg-2">
-                    <div class="sec5Box {{ $sign === 'virgo' ? 'active' : '' }}">
-                        <a href="{{ route('horoscope.daily', 'virgo') }}">
-                            <span class="sec5icon"><img src="{{ asset('frontend/images/virgo.png') }}" /></span>
-                            <span class="sec5text">Virgo</span>
-                        </a>
-                    </div>
+                    <a href="{{ route('horoscope.daily', 'virgo') }}"
+                        class="sec5Box {{ $sign === 'virgo' ? 'active' : '' }}">
+                        <span class="sec5icon"><img src="{{ asset('frontend/images/virgo.png') }}" /></span>
+                        <span class="sec5text">Virgo</span>
+                    </a>
                 </div>
                 <div class="col-sm-6 col-lg-2">
-                    <div class="sec5Box {{ $sign === 'libra' ? 'active' : '' }}">
-                        <a href="{{ route('horoscope.daily', 'libra') }}">
-                            <span class="sec5icon"><img src="{{ asset('frontend/images/libra.png') }}" /></span>
-                            <span class="sec5text">Libra</span>
-                        </a>
-                    </div>
+                    <a href="{{ route('horoscope.daily', 'libra') }}"
+                        class="sec5Box {{ $sign === 'libra' ? 'active' : '' }}">
+                        <span class="sec5icon"><img src="{{ asset('frontend/images/libra.png') }}" /></span>
+                        <span class="sec5text">Libra</span>
+                    </a>
                 </div>
                 <div class="col-sm-6 col-lg-2">
-                    <div class="sec5Box {{ $sign === 'scorpio' ? 'active' : '' }}">
-                        <a href="{{ route('horoscope.daily', 'scorpio') }}">
-                            <span class="sec5icon"><img src="{{ asset('frontend/images/scorpio.png') }}" /></span>
-                            <span class="sec5text">Scorpio</span>
-                        </a>
-                    </div>
+                    <a href="{{ route('horoscope.daily', 'scorpio') }}"
+                        class="sec5Box {{ $sign === 'scorpio' ? 'active' : '' }}">
+                        <span class="sec5icon"><img src="{{ asset('frontend/images/scorpio.png') }}" /></span>
+                        <span class="sec5text">Scorpio</span>
+                    </a>
                 </div>
                 <div class="col-sm-6 col-lg-2">
-                    <div class="sec5Box {{ $sign === 'sagittarius' ? 'active' : '' }}">
-                        <a href="{{ route('horoscope.daily', 'sagittarius') }}">
-                            <span class="sec5icon"><img src="{{ asset('frontend/images/sagittarius.png') }}" /></span>
-                            <span class="sec5text">Sagittarius</span>
-                        </a>
-                    </div>
+                    <a href="{{ route('horoscope.daily', 'sagittarius') }}"
+                        class="sec5Box {{ $sign === 'sagittarius' ? 'active' : '' }}">
+                        <span class="sec5icon"><img src="{{ asset('frontend/images/sagittarius.png') }}" /></span>
+                        <span class="sec5text">Sagittarius</span>
+                    </a>
                 </div>
                 <div class="col-sm-6 col-lg-2">
-                    <div class="sec5Box {{ $sign === 'capricorn' ? 'active' : '' }}">
-                        <a href="{{ route('horoscope.daily', 'capricorn') }}">
-                            <span class="sec5icon"><img src="{{ asset('frontend/images/capricorn.png') }}" /></span>
-                            <span class="sec5text">Capricorn</span>
-                        </a>
-                    </div>
+                    <a href="{{ route('horoscope.daily', 'capricorn') }}"
+                        class="sec5Box {{ $sign === 'capricorn' ? 'active' : '' }}">
+                        <span class="sec5icon"><img src="{{ asset('frontend/images/capricorn.png') }}" /></span>
+                        <span class="sec5text">Capricorn</span>
+                    </a>
                 </div>
                 <div class="col-sm-6 col-lg-2">
-                    <div class="sec5Box {{ $sign === 'aquarius' ? 'active' : '' }}">
-                        <a href="{{ route('horoscope.daily', 'aquarius') }}">
-                            <span class="sec5icon"><img src="{{ asset('frontend/images/aquarius.png') }}" /></span>
-                            <span class="sec5text">Aquarius</span>
-                        </a>
-                    </div>
+                    <a href="{{ route('horoscope.daily', 'aquarius') }}"
+                        class="sec5Box {{ $sign === 'aquarius' ? 'active' : '' }}">
+                        <span class="sec5icon"><img src="{{ asset('frontend/images/aquarius.png') }}" /></span>
+                        <span class="sec5text">Aquarius</span>
+                    </a>
                 </div>
                 <div class="col-sm-6 col-lg-2">
-                    <div class="sec5Box {{ $sign === 'pisces' ? 'active' : '' }}">
-                        <a href="{{ route('horoscope.daily', 'pisces') }}">
-                            <span class="sec5icon"><img src="{{ asset('frontend/images/pisces.png') }}" /></span>
-                            <span class="sec5text">Pisces</span>
-                        </a>
-                    </div>
+                    <a href="{{ route('horoscope.daily', 'pisces') }}"
+                        class="sec5Box {{ $sign === 'pisces' ? 'active' : '' }}">
+                        <span class="sec5icon"><img src="{{ asset('frontend/images/pisces.png') }}" /></span>
+                        <span class="sec5text">Pisces</span>
+                    </a>
                 </div>
             </div>
 
@@ -226,11 +213,12 @@
                                                 <div class="aspect-card">
                                                     <div class="aspect-planets">
                                                         <span class="planet-name">{{ $aspect['planet_one']['name'] ?? 'N/A' }}</span>
-                                                        <span class="aspect-type 
-                                                                                            @if(isset($aspect['aspect']['name']) && ($aspect['aspect']['name'] === 'Trine' || $aspect['aspect']['name'] === 'Sextile')) text-success
-                                                                                            @elseif(isset($aspect['aspect']['name']) && ($aspect['aspect']['name'] === 'Square' || $aspect['aspect']['name'] === 'Opposition')) text-danger
-                                                                                            @else text-warning
-                                                                                            @endif">
+                                                        <span
+                                                            class="aspect-type 
+                                                                                                                                                                            @if(isset($aspect['aspect']['name']) && ($aspect['aspect']['name'] === 'Trine' || $aspect['aspect']['name'] === 'Sextile')) text-success
+                                                                                                                                                                            @elseif(isset($aspect['aspect']['name']) && ($aspect['aspect']['name'] === 'Square' || $aspect['aspect']['name'] === 'Opposition')) text-danger
+                                                                                                                                                                            @else text-warning
+                                                                                                                                                                            @endif">
                                                             {{ $aspect['aspect']['name'] ?? 'N/A' }}
                                                         </span>
                                                         <span
@@ -299,164 +287,8 @@
             @endif
         </div>
     </div>
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('frontend/css/horoscope.css') }}">
+    @endpush
 
-    <style>
-        .horoscope-sign-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
-        }
-
-        .horoscope-date {
-            color: #7f8c8d;
-            font-size: 1.1rem;
-        }
-
-        .sign-info-badges .badge {
-            margin: 0 0.25rem;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-        }
-
-        .horoscope-tabs {
-            border-bottom: 2px solid #e9ecef;
-        }
-
-        .horoscope-tabs .nav-link {
-            color: #6c757d;
-            font-weight: 500;
-            padding: 1rem 1.5rem;
-            border: none;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .horoscope-tabs .nav-link:hover {
-            color: #495057;
-            border-bottom-color: #dee2e6;
-        }
-
-        .horoscope-tabs .nav-link.active {
-            color: #007bff;
-            border-bottom-color: #007bff;
-            background-color: transparent;
-        }
-
-        .prediction-content {
-            min-height: 200px;
-        }
-
-        .prediction-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #495057;
-            text-align: justify;
-        }
-
-        .insight-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 10px;
-            padding: 1.5rem;
-            height: 100%;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .insight-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .seek-card {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-        }
-
-        .challenge-card {
-            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-        }
-
-        .insight-card-main {
-            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
-        }
-
-        .insight-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: #495057;
-        }
-
-        .insight-title {
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 0.75rem;
-            font-size: 1rem;
-        }
-
-        .insight-text {
-            color: #495057;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 0;
-        }
-
-        .aspect-card {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 1rem;
-            border-left: 4px solid #007bff;
-        }
-
-        .aspect-planets {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
-        }
-
-        .planet-name {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        .aspect-type {
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .bg-gradient-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .bg-gradient-info {
-            background: linear-gradient(135deg, #0093E9 0%, #80D0C7 100%);
-        }
-
-        .sec5Box.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            transform: scale(1.05);
-        }
-
-        .sec5Box.active a {
-            color: white;
-        }
-
-        .sec5Box.active .sec5text {
-            color: white;
-        }
-
-        @media (max-width: 768px) {
-            .horoscope-tabs .nav-link {
-                padding: 0.75rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            .horoscope-sign-title {
-                font-size: 2rem;
-            }
-
-            .prediction-text {
-                font-size: 1rem;
-            }
-        }
-    </style>
 @endsection

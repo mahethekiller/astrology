@@ -17,45 +17,6 @@
             background: #f8f9fc;
         }
 
-        .stat-card {
-            border: none;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-card.primary {
-            background: var(--primary-gradient);
-        }
-
-        .stat-card.success {
-            background: var(--success-gradient);
-        }
-
-        .stat-card.info {
-            background: var(--info-gradient);
-        }
-
-        .stat-card.warning {
-            background: var(--warning-gradient);
-        }
-
-        .stat-card i.icon-bg {
-            position: absolute;
-            right: -10px;
-            bottom: -10px;
-            font-size: 4.5rem;
-            opacity: 0.2;
-        }
-
         .glass-card {
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
@@ -90,7 +51,7 @@
     <div class="dashboard-container">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800 fw-bold">Executive Overview</h1>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm rounded-pill px-3">
+            <a href="#" class="d-none d-sm-inline-block btn btn-primary shadow-sm rounded-pill px-4 py-2">
                 <i class="fas fa-download fa-sm text-white-50 me-2"></i> Generate Report
             </a>
         </div>
@@ -98,32 +59,52 @@
         <!-- Stats Row -->
         <div class="row g-4 mb-4">
             <div class="col-xl-3 col-md-6">
-                <div class="stat-card primary">
-                    <div class="text-xs font-weight-bold text-uppercase mb-1 opacity-75">Platform Revenue</div>
-                    <div class="h3 mb-0 fw-bold">₹{{ number_format($stats['total_revenue'], 2) }}</div>
-                    <i class="fas fa-coins icon-bg"></i>
-                </div>
+                <a href="{{ route('admin.revenue.index') }}" class="stats-card card-primary">
+                    <div class="stats-icon">
+                        <i class="bi bi-currency-rupee"></i>
+                    </div>
+                    <div class="stats-label">Platform Revenue</div>
+                    <h2 class="stats-value">₹{{ number_format($stats['total_revenue'], 2) }}</h2>
+                    <div class="stats-meta">
+                        <small>Total accumulation</small>
+                    </div>
+                </a>
             </div>
             <div class="col-xl-3 col-md-6">
-                <div class="stat-card success">
-                    <div class="text-xs font-weight-bold text-uppercase mb-1 opacity-75">Active Customers</div>
-                    <div class="h3 mb-0 fw-bold">{{ number_format($stats['total_users']) }}</div>
-                    <i class="fas fa-users icon-bg"></i>
-                </div>
+                <a href="{{ route('admin.users.index') }}" class="stats-card card-success">
+                    <div class="stats-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="stats-label">Active Customers</div>
+                    <h2 class="stats-value">{{ number_format($stats['total_users']) }}</h2>
+                    <div class="stats-meta">
+                        <small>Registered seekers</small>
+                    </div>
+                </a>
             </div>
             <div class="col-xl-3 col-md-6">
-                <div class="stat-card info">
-                    <div class="text-xs font-weight-bold text-uppercase mb-1 opacity-75">Verified Astrologers</div>
-                    <div class="h3 mb-0 fw-bold">{{ number_format($stats['total_astrologers']) }}</div>
-                    <i class="fas fa-user-tie icon-bg"></i>
-                </div>
+                <a href="{{ route('admin.astrologer-profiles.index') }}" class="stats-card card-info">
+                    <div class="stats-icon">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+                    <div class="stats-label">Verified Astrologers</div>
+                    <h2 class="stats-value">{{ number_format($stats['total_astrologers']) }}</h2>
+                    <div class="stats-meta">
+                        <small>Onboarded experts</small>
+                    </div>
+                </a>
             </div>
             <div class="col-xl-3 col-md-6">
-                <div class="stat-card warning">
-                    <div class="text-xs font-weight-bold text-uppercase mb-1 opacity-75">Pending Reviews</div>
-                    <div class="h3 mb-0 fw-bold">{{ $stats['pending_verifications'] }}</div>
-                    <i class="fas fa-clock icon-bg"></i>
-                </div>
+                <a href="{{ route('admin.astrologer-profiles.index', ['status' => 'pending']) }}" class="stats-card card-warning">
+                    <div class="stats-icon">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <div class="stats-label">Pending Reviews</div>
+                    <h2 class="stats-value">{{ $stats['pending_verifications'] }}</h2>
+                    <div class="stats-meta">
+                        <small>Waiting for approval</small>
+                    </div>
+                </a>
             </div>
         </div>
 

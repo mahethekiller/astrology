@@ -1,0 +1,107 @@
+/* Daily Horoscope Page */
+.horoscope-sign-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.horoscope-date {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+.sign-info-badges .badge {
+    margin: 0 0.25rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.horoscope-tabs {
+    border-bottom: 2px solid #e9ecef;
+}
+
+.horoscope-tabs .nav-link {
+    color: #6c757d;
+    font-weight: 500;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.horoscope-tabs .nav-link:hover {
+    color: #495057;
+    border-bottom-color: #dee2e6;
+}
+
+.horoscope-tabs .nav-link.active {
+    color: #007bff;
+    border-bottom-color: #007bff;
+    background-color: transparent;
+}
+
+.prediction-content {
+    min-height: 200px;
+}
+
+.prediction-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #495057;
+    text-align: justify;
+}
+
+.insight-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+    padding: 1.5rem;
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.insight-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.seek-card {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+}
+
+.challenge-card {
+    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+}
+
+.insight-card-main {
+    background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+}
+
+.bg-gradient-info {
+    background: linear-gradient(135deg, #0093E9 0%, #80D0C7 100%);
+}
+
+.sec5Box.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transform: scale(1.05);
+    color: white !important;
+}
+
+.sec5Box.active .sec5text {
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .horoscope-tabs .nav-link {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .horoscope-sign-title {
+        font-size: 2rem;
+    }
+
+    .prediction-text {
+        font-size: 1rem;
+    }
+}

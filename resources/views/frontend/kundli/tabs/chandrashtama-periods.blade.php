@@ -10,7 +10,7 @@
     <div class="card-body p-0">
         @if(!empty($timings))
             <div class="table-responsive">
-                <table class="table table-bordered table-striped mb-0 text-center small">
+                <table class="table kundli-report-table table-bordered table-striped mb-0 text-center small">
                     <thead class="table-dark">
                         <tr>
                             <th>Period Start</th>
@@ -26,7 +26,7 @@
                                 <td class="align-middle fw-bold">
                                     {{ \Carbon\Carbon::parse($period['end'])->format('d M Y, h:i A') }}</td>
                                 <td class="text-start p-0">
-                                    <table class="table table-sm table-borderless mb-0">
+                                    <table class="table kundli-report-table table-sm table-borderless mb-0">
                                         @foreach($period['nakshatra_timings'] as $nt)
                                             <tr class="{{ $nt['is_peak'] ? 'table-danger' : '' }}">
                                                 <td style="width: 30%">

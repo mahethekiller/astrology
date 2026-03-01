@@ -3,68 +3,7 @@
 @section('title', 'Astrologer Registration')
 
 @push('styles')
-    <style>
-        .registration-section {
-            padding: 60px 0;
-            background: #f8f9fa;
-        }
-
-        .registration-card {
-            background: #fff;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            border-bottom: 2px solid #fbd91a;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-            font-weight: 700;
-            color: #333;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #555;
-        }
-
-        .form-control:focus {
-            border-color: #fbd91a;
-            box-shadow: 0 0 0 0.2rem rgba(251, 217, 26, 0.25);
-        }
-
-        .btn-register {
-            background: #fbd91a;
-            color: #000;
-            border: none;
-            padding: 12px 30px;
-            font-weight: 700;
-            border-radius: 50px;
-            transition: all 0.3s;
-        }
-
-        .btn-register:hover {
-            background: #000;
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        .image-preview {
-            max-width: 150px;
-            max-height: 150px;
-            margin-top: 10px;
-            border-radius: 10px;
-            display: none;
-            border: 2px dashed #ddd;
-            padding: 5px;
-        }
-
-        .select-multiple {
-            min-height: 150px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('frontend/css/astrologer-pages.css') }}">
 @endpush
 
 @section('content')

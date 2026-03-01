@@ -6,9 +6,9 @@
     <div class="auth-logo">
         <img src="{{ asset('images/loginLogo.png') }}" alt="Logo">
     </div>
-    <div>
-        <!--  <h2 class="auth-title">Welcome Back</h2>
-                                <p class="auth-subtitle">Please sign in to your account</p>-->
+    <div class="text-center mt-3">
+        <h4 class="fw-bold text-primary">User Login</h4>
+        <p class="text-muted small">Sign in to consult with top astrologers</p>
     </div>
 @endsection
 
@@ -71,48 +71,33 @@
             </label>
         </div>
 
-        <button type="submit" class="auth-btn">
+        <button type="submit" class="auth-btn w-100 py-2 fw-bold"
+            style="background-color: rgba(253, 219, 24, 1); border: none; color: #111827;">
             <i class="bi bi-box-arrow-in-right me-2"></i>
             LOGIN
         </button>
     </form>
-
-    <!-- <div class="auth-divider">
-                        <span>Or continue with</span>
-                    </div> -->
-
-    <!-- <div class="social-auth">
-                                <button type="button" class="social-btn google">
-                                    <i class="bi bi-google"></i>
-                                    Google
-                                </button>
-                                <button type="button" class="social-btn github">
-                                    <i class="bi bi-github"></i>
-                                    GitHub
-                                </button>
-                            </div>-->
 @endsection
 
 @section('auth-footer')
-    <div class="auth-links">
+    <div class="auth-links text-center mt-3">
         @if (Route::has('password.request'))
-            <a href="{{ route('password.request') }}" class="auth-link">
+            <a href="{{ route('password.request') }}" class="auth-link small text-decoration-none">
                 <i class="bi bi-key me-1"></i>
                 Forgot password?
             </a>
         @endif
 
-        <!-- @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="auth-link">
-                                    <i class="bi bi-person-plus me-1"></i>
-                                    Create account
-                                </a>
-                            @endif -->
+        <div class="mt-2">
+            <a href="{{ route('register') }}" class="small text-muted text-decoration-none">
+                New to Astroaura? <span class="text-primary fw-bold">Sign Up Free</span>
+            </a>
+        </div>
     </div>
 
-    <div style="text-align: center;">
+    <div class="text-center mt-4">
         <small class="text-muted">
-            &copy; {{ date('Y') }} Astroauraa All rights reserved.
+            &copy; {{ date('Y') }} Astroaura. All rights reserved.
         </small>
     </div>
 @endsection

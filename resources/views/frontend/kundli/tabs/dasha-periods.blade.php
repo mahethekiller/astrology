@@ -38,7 +38,7 @@
                                                 {{-- Pratyantardasha Table --}}
                                                 @if(isset($antar['pratyantardasha']))
                                                     <div class="table-responsive">
-                                                        <table class="table table-sm table-bordered mb-0 small">
+                                                        <table class="table kundli-report-table table-sm table-bordered mb-0 small">
                                                             <thead class="table-light">
                                                                 <tr>
                                                                     <th>Pratyantardasha</th>

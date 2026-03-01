@@ -14,8 +14,10 @@
             <i class="bi bi-moon"></i>
         </button>
         <div class="user-profile dropdown">
-            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
-                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=4361ee&color=fff" alt="User">
+            <a href="#" class="mk d-flex align-items-center text-decoration-none dropdown-toggle"
+                data-bs-toggle="dropdown">
+                <img src="{{ auth()->user()->profile_image ? asset('uploads/admin/' . auth()->user()->profile_image) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=4361ee&color=fff' }}"
+                    alt="User" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
                 <div>
                     <div class="fw-bold">{{ auth()->user()->name }}</div>
                     <small class="text-muted">
@@ -28,12 +30,16 @@
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="bi bi-person me-2"></i>Profile</a></li>
-                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i
+                            class="bi bi-person me-2"></i>Profile</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}" id="logout-form">
                         @csrf
-                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <a class="dropdown-item" href="#"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="bi bi-box-arrow-right me-2"></i>Logout
                         </a>
                     </form>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use App\Models\BlogCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -18,13 +19,15 @@ class BlogController extends Controller
 
     public function create()
     {
-        return view('admin.blogs.create');
+        $categories = BlogCategory::where('status', true)->get();
+        return view('admin.blogs.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'category_id' => 'nullable|exists:blog_categories,id',
             'content' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'image_alt' => 'nullable|string|max:255',
@@ -62,13 +65,15 @@ class BlogController extends Controller
 
     public function edit(Blog $blog)
     {
-        return view('admin.blogs.edit', compact('blog'));
+        $categories = BlogCategory::where('status', true)->get();
+        return view('admin.blogs.edit', compact('blog', 'categories'));
     }
 
     public function update(Request $request, Blog $blog)
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'category_id' => 'nullable|exists:blog_categories,id',
             'content' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'image_alt' => 'nullable|string|max:255',

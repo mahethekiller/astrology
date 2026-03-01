@@ -9,7 +9,7 @@
                         <div class="alert alert-success" style="color: green; margin-bottom: 10px;">{{ session('success') }}
                         </div>
                     @endif
-                    @error('email')
+                    @error('email', 'newsletter')
                         <div class="alert alert-danger" style="color: red; margin-bottom: 10px;">{{ $message }}</div>
                     @enderror
                     <input type="email" name="email" placeholder="Enter Email Address" required>

@@ -1,0 +1,99 @@
+/* Dashboard Icon-Based Panels Shared Styles */
+
+.stats-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    height: 100%;
+    border: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none !important;
+}
+
+.stats-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Color Variants */
+.stats-card.card-primary {
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    color: white;
+}
+
+.stats-card.card-success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    color: white;
+}
+
+.stats-card.card-warning {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    color: white;
+}
+
+.stats-card.card-info {
+    background: linear-gradient(135deg, #00bcd4 0%, #00acc1 100%);
+    color: white;
+}
+
+.stats-card.card-danger {
+    background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+    color: white;
+}
+
+.stats-card.card-dark {
+    background: linear-gradient(135deg, #232526 0%, #414345 100%);
+    color: white;
+}
+
+.stats-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    flex-shrink: 0;
+}
+
+/* Icon style for non-gradient cards */
+.stats-card:not([class*="card-"]) .stats-icon {
+    background: rgba(67, 97, 238, 0.1);
+    color: #4361ee;
+}
+
+.stats-label {
+    opacity: 0.9;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.stats-value {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+.stats-meta {
+    margin-top: auto;
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+/* Animation for the icon box */
+.stats-card:hover .stats-icon {
+    transform: scale(1.1) rotate(5deg);
+    transition: transform 0.3s ease;
+}

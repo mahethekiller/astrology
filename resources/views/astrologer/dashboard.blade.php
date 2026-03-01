@@ -29,42 +29,6 @@
         transform: translateY(-5px);
     }
 
-    .stat-card {
-        padding: 1.5rem;
-        border-radius: 1.25rem;
-        color: white;
-        position: relative;
-        overflow: hidden;
-        border: none;
-    }
-
-    .stat-card.primary { background: var(--primary-gradient); }
-    .stat-card.success { background: var(--success-gradient); }
-    .stat-card.info { background: var(--info-gradient); }
-    .stat-card.warning { background: var(--warning-gradient); }
-
-    .stat-card .icon-bg {
-        position: absolute;
-        right: -10px;
-        bottom: -10px;
-        font-size: 5rem;
-        opacity: 0.15;
-        transform: rotate(-15deg);
-    }
-
-    .stat-value {
-        font-size: 2.25rem;
-        font-weight: 800;
-        margin-bottom: 0;
-    }
-
-    .stat-label {
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        opacity: 0.9;
-    }
-
     .section-title {
         font-weight: 700;
         color: #2d3748;
@@ -155,32 +119,52 @@
     <!-- Quick Stats -->
     <div class="row g-4 mb-4">
         <div class="col-xl-3 col-md-6">
-            <div class="stat-card primary glass-card">
-                <div class="stat-label">Today's Earnings</div>
-                <div class="stat-value">₹{{ number_format($stats['today_earnings'], 2) }}</div>
-                <i class="fas fa-wallet icon-bg"></i>
-            </div>
+            <a href="{{ route('astrologer.revenue.index') }}" class="stats-card card-primary">
+                <div class="stats-icon">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+                <div class="stats-label">Today's Earnings</div>
+                <h2 class="stats-value">₹{{ number_format($stats['today_earnings'], 2) }}</h2>
+                <div class="stats-meta">
+                    <small>Daily Performance</small>
+                </div>
+            </a>
         </div>
         <div class="col-xl-3 col-md-6">
-            <div class="stat-card success glass-card">
-                <div class="stat-label">Total Consultations</div>
-                <div class="stat-value">{{ $stats['total_consultations'] }}</div>
-                <i class="fas fa-user-friends icon-bg"></i>
-            </div>
+            <a href="{{ route('astrologer.revenue.index') }}" class="stats-card card-success">
+                <div class="stats-icon">
+                    <i class="bi bi-chat-dots"></i>
+                </div>
+                <div class="stats-label">Total Consultations</div>
+                <h2 class="stats-value">{{ $stats['total_consultations'] }}</h2>
+                <div class="stats-meta">
+                    <small>Sessions Handled</small>
+                </div>
+            </a>
         </div>
         <div class="col-xl-3 col-md-6">
-            <div class="stat-card info glass-card">
-                <div class="stat-label">Lifetime Revenue</div>
-                <div class="stat-value">₹{{ number_format($stats['total_earnings'], 0) }}</div>
-                <i class="fas fa-chart-line icon-bg"></i>
-            </div>
+            <a href="{{ route('astrologer.revenue.index') }}" class="stats-card card-info">
+                <div class="stats-icon">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+                <div class="stats-label">Lifetime Revenue</div>
+                <h2 class="stats-value">₹{{ number_format($stats['total_earnings'], 0) }}</h2>
+                <div class="stats-meta">
+                    <small>Gross Earnings</small>
+                </div>
+            </a>
         </div>
         <div class="col-xl-3 col-md-6">
-            <div class="stat-card warning glass-card">
-                <div class="stat-label">Experience</div>
-                <div class="stat-value">{{ Auth::user()->astrologerProfile->experience_years ?? 0 }} Years</div>
-                <i class="fas fa-award icon-bg"></i>
-            </div>
+            <a href="#" class="stats-card card-warning">
+                <div class="stats-icon">
+                    <i class="bi bi-award"></i>
+                </div>
+                <div class="stats-label">Experience</div>
+                <h2 class="stats-value">{{ Auth::user()->astrologerProfile->experience_years ?? 0 }} Years</h2>
+                <div class="stats-meta">
+                    <small>Professional Standing</small>
+                </div>
+            </a>
         </div>
     </div>
 

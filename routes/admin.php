@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -45,6 +46,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('testimonials', TestimonialController::class);
 
     // Blogs
+    Route::resource('blog-categories', BlogCategoryController::class);
     Route::resource('blogs', BlogController::class);
 
     // Menus

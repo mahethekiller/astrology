@@ -53,9 +53,9 @@ class AstrologerController extends Controller
         return view('frontend.astrologer.index', compact('specializations', 'astrologers'));
     }
 
-    public function show(int $id): View
+    public function show(string $slug): View
     {
-        $astrologer = AstrologerProfile::with(['specializations', 'languages'])->findOrFail($id);
+        $astrologer = AstrologerProfile::with(['specializations', 'languages'])->where('slug', $slug)->firstOrFail();
         return view('frontend.astrologer.show', compact('astrologer'));
     }
 }

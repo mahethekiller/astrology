@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dark-mode.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dashboard-panels.css') }}">
 
 
     @stack('styles')

@@ -19,7 +19,8 @@
     <div class="section7">
         <div class="container">
             <div class="row">
-                <div class="col-lg-10 offset-lg-1">
+                <!-- Blog Content Column -->
+                <div class="col-lg-8">
                     <div class="blog-details">
                         <div class="blog-image mb-4">
                             @if($blog->image)
@@ -37,9 +38,14 @@
                                 {{ $blog->author }}</div>
                         </div>
                         <div class="blog-content">
-                            {!! nl2br(e($blog->content)) !!}
+                            {!! $blog->content !!}
                         </div>
                     </div>
+                </div>
+
+                <!-- Sidebar Column -->
+                <div class="col-lg-4">
+                    @include('frontend.partials.blog-sidebar')
                 </div>
             </div>
         </div>

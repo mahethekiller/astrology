@@ -140,4 +140,37 @@ class RegisteredUserController extends Controller
             return redirect()->intended(route('user.dashboard'));
         }
     }
+
+    /**
+     * Resend registration OTP.
+     */
+    public function resendOtp(Request $request)
+    {
+        $regData = session('reg_data');
+
+        if (!$regData) {
+            return response()->json(['message' => 'Registration session expired.'], 422);
+        }
+
+        $email = $regData['email'];
+        $name = $regData['name'];
+
+        // Generate new OTP
+        $otp = rand(100000, 999999);
+
+        // Store OTP in Cache (10 minutes)
+        Cache::put('reg_otp_' . $email, $otp, 600);
+
+        // Send Email
+        \App\Services\BrevoService::sendEmail(
+            ['email' => $email, 'name' => $name],
+            'Your Registration OTP (Resent)',
+            view('emails.registration-otp', ['otp' => $otp])->render()
+        );
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'OTP has been resent to your email.'
+        ]);
+    }
 }

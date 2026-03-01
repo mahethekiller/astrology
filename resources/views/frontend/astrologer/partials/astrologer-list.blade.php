@@ -15,7 +15,7 @@
                     @endif
                 </div>
                 <div class="topAstroBoxImg">
-                    <a href="{{ route('astrologer.show', $astrologer->id) }}">
+                    <a href="{{ route('astrologer.show', $astrologer->slug) }}">
                         <img class="img-responsive" width="100" height="100" style="border-radius:50%; object-fit:cover;"
                             src="{{ asset('uploads/astrologers/' . $astrologer->profile_image) }}" />
                     </a>
@@ -23,7 +23,7 @@
                 <div class="astroDetails">
                     <div class="topAstroName text-truncate" title="{{ $astrologer->display_name }}">
 
-                        <a href="{{ route('astrologer.show', $astrologer->id) }}">{{ $astrologer->display_name }}</a>
+                        <a href="{{ route('astrologer.show', $astrologer->slug) }}">{{ $astrologer->display_name }}</a>
                     </div>
 
                     <div class="astroLang text-truncate" title="{{ $astrologer->languages->pluck('name')->join(', ') }}">

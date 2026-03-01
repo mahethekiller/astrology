@@ -206,6 +206,12 @@
             </button>
           </form>
           <div class="mt-3 text-center">
+            <p class="mb-2 text-muted small">OTP is valid for 10 minutes.</p>
+            <p class="mb-2 text-muted">
+              Didn't receive the code?
+              <a href="#" id="resend-otp-link" class="auth-link">Resend OTP</a>
+              <span id="modal-resend-timer" class="d-none">Resend in <span id="modal-timer-seconds">60</span>s</span>
+            </p>
             <p><a href="#" id="back-to-register" class="auth-link">Back to Register</a></p>
           </div>
         </div>
@@ -365,6 +371,59 @@
         .finally(function () {
           registerBtn.disabled = false;
           registerBtn.textContent = 'Register';
+        });
+    });
+
+    const resendOtpLink = document.getElementById('resend-otp-link');
+    const modalResendTimer = document.getElementById('modal-resend-timer');
+    const modalTimerSeconds = document.getElementById('modal-timer-seconds');
+    let modalTimerOn = false;
+
+    function startModalTimer(remaining) {
+      modalTimerOn = true;
+      resendOtpLink.classList.add('d-none');
+      modalResendTimer.classList.remove('d-none');
+      modalTimerSeconds.innerHTML = remaining;
+
+      let interval = setInterval(function () {
+        remaining -= 1;
+        modalTimerSeconds.innerHTML = remaining;
+        if (remaining <= 0) {
+          clearInterval(interval);
+          resendOtpLink.classList.remove('d-none');
+          modalResendTimer.classList.add('d-none');
+          modalTimerOn = false;
+        }
+      }, 1000);
+    }
+
+    resendOtpLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (modalTimerOn) return;
+
+      resendOtpLink.textContent = 'Sending...';
+      clearAlerts();
+
+      axios.post('{{ route("register.resend-otp") }}', {}, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json'
+        }
+      })
+        .then(function (response) {
+          showSuccess(response.data.message);
+          startModalTimer(60);
+        })
+        .catch(function (error) {
+          console.error(error);
+          let msg = 'Failed to resend OTP.';
+          if (error.response && error.response.data && error.response.data.message) {
+            msg = error.response.data.message;
+          }
+          showError(msg);
+        })
+        .finally(function () {
+          resendOtpLink.textContent = 'Resend OTP';
         });
     });
 

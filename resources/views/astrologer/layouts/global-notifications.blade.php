@@ -41,8 +41,8 @@
 </div>
 
 <!-- Notification Audio -->
-<audio id="notificationSound" preload="auto">
-    <source src="https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3" type="audio/mpeg">
+<audio id="notificationSound" preload="auto" loop>
+    <source src="{{ asset('sounds/ring.mp3') }}" type="audio/mpeg">
 </audio>
 
 <script>
@@ -98,11 +98,18 @@
 
             // Play notification sound
             try {
+                notificationSound.currentTime = 0;
                 notificationSound.play();
             } catch (e) {
                 console.warn('Audio play blocked by browser policies');
             }
         }
+
+        // Stop sound when modal is hidden
+        document.getElementById('globalChatRequestModal').addEventListener('hidden.bs.modal', function () {
+            notificationSound.pause();
+            notificationSound.currentTime = 0;
+        });
 
         // Start polling every 5 seconds
         setInterval(pollRequests, 5000);

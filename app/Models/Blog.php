@@ -10,6 +10,7 @@ class Blog extends Model
 {
     protected $appends = ['image_url'];
     protected $fillable = [
+        'category_id',
         'title',
         'slug',
         'content',
@@ -20,6 +21,11 @@ class Blog extends Model
         'meta_title',
         'meta_description'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(BlogCategory::class, 'category_id');
+    }
 
     protected $casts = [
         'published_at' => 'datetime',

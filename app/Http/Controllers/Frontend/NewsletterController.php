@@ -10,9 +10,13 @@ class NewsletterController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'email' => 'required|email|unique:newsletters,email',
         ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator, 'newsletter')->withInput();
+        }
 
         Newsletter::create([
             'email' => $request->email,

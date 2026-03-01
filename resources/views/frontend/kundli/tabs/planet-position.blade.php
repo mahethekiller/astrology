@@ -1,6 +1,6 @@
 @if(isset($data['data']))
     <div class="table-responsive">
-        <table class="table table-striped table-hover shadow-sm rounded border">
+        <table class="table kundli-report-table table-striped table-hover shadow-sm rounded border">
             <thead class="bg-dark text-white">
                 <tr>
                     <th>Planet</th>

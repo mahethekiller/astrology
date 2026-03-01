@@ -22,7 +22,7 @@
     <div class="tab-pane fade show active" id="sarva-prastara" role="tabpanel">
         <div class="table-responsive">
             <p class="text-muted small">Sarvashtakavarga Table</p>
-            <table class="table table-bordered table-sm text-center small">
+            <table class="table kundli-report-table table-bordered table-sm text-center small">
                 <thead class="table-light">
                     <tr>
                         <th>House</th>
@@ -84,7 +84,7 @@
     <div class="tab-pane fade" id="sarva-trikona" role="tabpanel">
          <div class="table-responsive">
             <p class="text-muted small">Trikona Shodhana Points</p>
-            <table class="table table-bordered table-sm text-center">
+            <table class="table kundli-report-table table-bordered table-sm text-center">
                 <thead class="table-light">
                     <tr>
                         <th>House</th>
@@ -109,7 +109,7 @@
     <div class="tab-pane fade" id="sarva-ekaadhipatya" role="tabpanel">
          <div class="table-responsive">
             <p class="text-muted small">Ekaadhipatya Shodhana Points</p>
-            <table class="table table-bordered table-sm text-center">
+            <table class="table kundli-report-table table-bordered table-sm text-center">
                 <thead class="table-light">
                     <tr>
                         <th>House</th>

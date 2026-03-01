@@ -14,8 +14,13 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        if ($request->routeIs('admin.login')) {
+            return view('admin.auth.login');
+        } elseif ($request->routeIs('astrologer.login')) {
+            return view('astrologer.auth.login');
+        }
 
         return view('auth.login');
     }

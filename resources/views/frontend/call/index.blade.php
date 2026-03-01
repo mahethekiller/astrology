@@ -13,9 +13,16 @@
                             <p class="text-muted">Voice Call</p>
                         </div>
 
-                        <!-- Call Status -->
+                        <!-- Call Status & Wallet -->
+                        <div class="d-flex justify-content-center gap-2 mb-3">
+                            <span class="badge bg-success shadow-sm p-2 px-3" id="wallet-balance">
+                                <i class="bi bi-wallet2 me-1"></i>
+                                ₹{{ number_format(Auth::user()->wallet->balance ?? 0, 2) }}
+                            </span>
+                        </div>
+
                         <div id="call-status"
-                            class="alert alert-info d-flex align-items-center justify-content-center gap-2">
+                            class="alert alert-info d-flex align-items-center justify-content-center gap-2 mb-4">
                             <div class="spinner-grow spinner-grow-sm" role="status"></div>
                             <span>Initializing call...</span>
                         </div>
@@ -45,17 +52,19 @@
         let connection;
         let timerInterval;
         let seconds = 0;
+        let billingInterval;
         const astrologerId = "{{ $astrologer->id }}";
         console.log(astrologerId);
         const statusDiv = document.getElementById('call-status');
         const timerDisplay = document.getElementById('call-timer');
         const timerContainer = document.getElementById('timer-container');
         const hangupBtn = document.getElementById('hangup-btn');
+        const walletDisplay = document.getElementById('wallet-balance');
         const statusText = statusDiv.querySelector('span');
 
         function updateStatus(msg, type = 'info') {
             statusText.textContent = msg;
-            statusDiv.className = `alert alert-${type} d-flex align-items-center justify-content-center gap-2`;
+            statusDiv.className = `alert alert-${type} d-flex align-items-center justify-content-center gap-2 mb-4`;
             if (type !== 'info') {
                 statusDiv.querySelector('.spinner-grow')?.remove();
             }
@@ -77,6 +86,26 @@
 
         function stopTimer() {
             clearInterval(timerInterval);
+            clearInterval(billingInterval);
+        }
+
+        function startBillingPing(sid) {
+            // Ping every 60 seconds
+            billingInterval = setInterval(async () => {
+                try {
+                    const response = await axios.post('{{ route("call.billing.ping") }}', { sid: sid });
+                    if (response.data.remaining_balance !== undefined) {
+                        const balance = parseFloat(response.data.remaining_balance).toFixed(2);
+                        walletDisplay.innerHTML = `<i class="bi bi-wallet2 me-1"></i> ₹${balance}`;
+                    }
+                } catch (error) {
+                    console.error("Billing Ping Failed", error);
+                    if (error.response && error.response.status === 402) {
+                        alert("Low Balance! Call ending.");
+                        if (device) device.disconnectAll();
+                    }
+                }
+            }, 60000);
         }
 
         async function initCall() {
@@ -125,8 +154,9 @@
 
             conn.on('accept', function () {
                 updateStatus('Connected', 'success');
-                debugger
                 startTimer();
+                // Start billing ping using the CallSid
+                startBillingPing(conn.parameters.CallSid);
             });
 
             conn.on('disconnect', function () {
@@ -134,7 +164,7 @@
                 stopTimer();
                 hangupBtn.disabled = true;
                 setTimeout(() => {
-                    window.location.href = "{{ route('astrologer.show', $astrologer->id) }}";
+                    window.location.href = "{{ route('astrologer.show', $astrologer->slug) }}";
                 }, 2000);
             });
 

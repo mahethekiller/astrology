@@ -156,10 +156,13 @@ body {
   position: relative;
   padding: 15px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding-top: 80px;
   border-bottom: 4px solid rgba(251, 217, 26, 1);
+  text-decoration: none;
+  color: #000;
 }
 
 .sec5icon {
@@ -182,13 +185,8 @@ body {
   font-weight: 700;
 }
 
-.sec5Box a {
-  text-decoration: none;
-  color: #000;
-  display: block;
-}
-
 .sec5Box:hover {
+  text-decoration: none;
   color: #000;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   background: rgba(251, 217, 26, 1);
@@ -1056,4 +1054,8 @@ a.ourAstrobtn {
   .mpt50 {
     padding-top: 50px;
   }
-}.topAstroBoxactive.offline { background-color: gray !important; }
+}
+
+.topAstroBoxactive.offline {
+  background-color: gray !important;
+}
