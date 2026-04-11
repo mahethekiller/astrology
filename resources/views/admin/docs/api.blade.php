@@ -26,7 +26,7 @@
                         <a class="nav-link" href="#ep-logout">Logout</a>
                         <a class="nav-link" href="#ep-profile">Profile / User</a>
                         <a class="nav-link" href="#ep-wallet">Wallet Transactions</a>
-                        <a class="nav-link" href="#ep-consultations">End Consultations</a>
+                        <a class="nav-link" href="#ep-consultations">Consultation Sessions</a>
 
                         <h6 class="text-uppercase text-muted fw-bold mb-2 mt-4 px-3" style="font-size: 0.75rem;">Core
                             Features</h6>
