@@ -53,7 +53,8 @@
                                         <option value="">Select Target Placement</option>
                                         @foreach($groups as $group)
                                             <option value="{{ $group }}" {{ old('group') == $group ? 'selected' : '' }}>
-                                                {{ ucfirst($group) }} Section</option>
+                                                {{ ucfirst($group) }} Section
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -66,7 +67,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6 mb-4">
+                                <div class="col-md-4 mb-4">
                                     <div class="preview-container h-100">
                                         <label class="form-label fw-bold text-primary mb-1">
                                             <i class="bi bi-laptop me-1"></i> Desktop Visual
@@ -78,12 +79,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-4">
+                                <div class="col-md-4 mb-4">
                                     <div class="preview-container h-100">
                                         <label class="form-label fw-bold text-info mb-1">
                                             <i class="bi bi-phone me-1"></i> Mobile Visual (Optional)
                                         </label>
                                         <input type="file" name="mobile_image" class="form-control shadow-sm mb-2"
+                                            accept="image/*">
+                                        <div class="font-size-11 text-muted">
+                                            <i class="bi bi-info-circle"></i> Recommended: <strong>600x800 px</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <div class="preview-container h-100">
+                                        <label class="form-label fw-bold text-success mb-1">
+                                            <i class="bi bi-app-indicator me-1"></i> App Visual (Optional)
+                                        </label>
+                                        <input type="file" name="app_image" class="form-control shadow-sm mb-2"
                                             accept="image/*">
                                         <div class="font-size-11 text-muted">
                                             <i class="bi bi-info-circle"></i> Recommended: <strong>600x800 px</strong>
@@ -130,7 +143,8 @@
 
                             <hr>
 
-                            <button type="submit" class="btn btn-primary bg-gradient w-100 py-3 fw-bold shadow-sm animate-hover">
+                            <button type="submit"
+                                class="btn btn-primary bg-gradient w-100 py-3 fw-bold shadow-sm animate-hover">
                                 <i class="bi bi-cloud-upload me-2"></i> Launch Slider
                             </button>
                             <a href="{{ route('admin.sliders.index') }}"

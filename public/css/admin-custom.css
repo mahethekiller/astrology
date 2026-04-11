@@ -157,3 +157,103 @@
     border-radius: 12px;
     border: 1px dashed #e2e8f0;
 }
+
+/* API Documentation Styles */
+.api-sidebar {
+    position: sticky;
+    top: 80px;
+    height: calc(100vh - 100px);
+    overflow-y: auto;
+}
+
+.api-sidebar .nav-link {
+    color: #4a5568;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.api-sidebar .nav-link:hover,
+.api-sidebar .nav-link.active {
+    background-color: #f7fafc;
+    color: var(--primary-color, #4361ee);
+    font-weight: 600;
+}
+
+.api-section {
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid #edf2f7;
+}
+
+.api-section h4 {
+    border-bottom: 2px solid #edf2f7;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    color: #2d3748;
+}
+
+.endpoint-badge {
+    font-family: monospace;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.endpoint-badge .method {
+    font-weight: 700;
+    margin-right: 0.5rem;
+}
+
+.method-get {
+    color: #38a169;
+}
+
+.method-post {
+    color: #3182ce;
+}
+
+.api-code {
+    background: #2d3748;
+    color: #e2e8f0;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    font-family: monospace;
+    font-size: 0.85rem;
+    overflow-x: auto;
+}
+
+[data-theme="dark"] .api-section {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .api-section h4 {
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .endpoint-badge {
+    background: #2d3748;
+    border-color: #4a5568;
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .api-sidebar .nav-link {
+    color: #a0aec0;
+}
+
+[data-theme="dark"] .api-sidebar .nav-link:hover,
+[data-theme="dark"] .api-sidebar .nav-link.active {
+    background-color: #2d3748;
+    color: #fff;
+}

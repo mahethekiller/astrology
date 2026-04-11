@@ -50,7 +50,7 @@ class AstrologerController extends Controller
         try {
             $astrologer = AstrologerProfile::active()
                 ->approved()
-                ->with(['specializations', 'languages'])
+                ->with(['specializations', 'languages', 'ratings.user:id,name,profile_image'])
                 ->findOrFail($id);
 
             return response()->json([

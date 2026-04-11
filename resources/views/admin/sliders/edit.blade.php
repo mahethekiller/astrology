@@ -67,7 +67,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6 mb-4">
+                                <div class="col-md-4 mb-4">
                                     <div class="preview-container h-100">
                                         <label class="form-label fw-bold text-primary mb-1">
                                             <i class="bi bi-laptop me-1"></i> Desktop Visual
@@ -86,7 +86,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-4">
+                                <div class="col-md-4 mb-4">
                                     <div class="preview-container h-100">
                                         <label class="form-label fw-bold text-info mb-1">
                                             <i class="bi bi-phone me-1"></i> Mobile Visual
@@ -106,6 +106,32 @@
                                             </div>
                                         @endif
                                         <input type="file" name="mobile_image" class="form-control shadow-sm mb-2"
+                                            accept="image/*">
+                                        <div class="font-size-11 text-muted">
+                                            <i class="bi bi-info-circle"></i> Recommended: 600x800 px
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <div class="preview-container h-100">
+                                        <label class="form-label fw-bold text-success mb-1">
+                                            <i class="bi bi-app-indicator me-1"></i> App Visual
+                                        </label>
+                                        @if($slider->app_image)
+                                            <div class="mb-3 text-center">
+                                                <img src="{{ Storage::url($slider->app_image) }}" alt="App Preview"
+                                                    class="img-fluid rounded-3 shadow-sm border" style="max-height: 150px; width: auto;">
+                                                <div class="small text-muted mt-1 font-monospace">Current App Asset</div>
+                                            </div>
+                                        @else
+                                            <div class="mb-3 d-flex align-items-center justify-content-center bg-white rounded-3 border" style="height: 150px;">
+                                                <div class="text-center opacity-25">
+                                                    <i class="bi bi-app-indicator display-6 d-block"></i>
+                                                    <span class="small">No App Asset</span>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        <input type="file" name="app_image" class="form-control shadow-sm mb-2"
                                             accept="image/*">
                                         <div class="font-size-11 text-muted">
                                             <i class="bi bi-info-circle"></i> Recommended: 600x800 px
