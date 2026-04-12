@@ -155,7 +155,7 @@
               <div class="sec6textArea">
                 <div><img src="{{ asset('frontend/images/total-astro.png') }}" /></div>
                 <div class="pl15">
-                  <div class="figcap1">50000+</div>
+                  <div class="figcap1">{{ \App\Models\Setting::getValue('stat_total_astrologers', '50000+') }}</div>
                   <div class="figcap2">Total Astrologers</div>
                 </div>
               </div>
@@ -164,7 +164,7 @@
               <div class="sec6textArea">
                 <div><img src="{{ asset('frontend/images/yearofex.png') }}" /></div>
                 <div class="pl15">
-                  <div class="figcap1">11+</div>
+                  <div class="figcap1">{{ \App\Models\Setting::getValue('stat_years_excellence', '11+') }}</div>
                   <div class="figcap2">Years Of Excellence</div>
                 </div>
               </div>
@@ -173,7 +173,7 @@
               <div class="sec6textArea">
                 <div><img src="{{ asset('frontend/images/happycustomer.png') }}" /></div>
                 <div class="pl15">
-                  <div class="figcap1">500+</div>
+                  <div class="figcap1">{{ \App\Models\Setting::getValue('stat_happy_customers', '500+') }}</div>
                   <div class="figcap2">Happy Customers</div>
                 </div>
               </div>

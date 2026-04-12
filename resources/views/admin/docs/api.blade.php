@@ -37,6 +37,7 @@
                             Config</h6>
                         <a class="nav-link" href="#ep-sliders">Sliders</a>
                         <a class="nav-link" href="#ep-zodiac-signs">Zodiac Signs</a>
+                        <a class="nav-link" href="#ep-statistics">Platform Statistics</a>
                         <a class="nav-link" href="#ep-search">Global Search</a>
                     </nav>
                 </div>
@@ -58,6 +59,7 @@
                     @include('admin.docs.partials.blogs')
                     @include('admin.docs.partials.sliders')
                     @include('admin.docs.partials.zodiac-signs')
+                    @include('admin.docs.partials.statistics')
                     @include('admin.docs.partials.search')
 
                 </div>

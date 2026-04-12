@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\WalletController;
 use App\Http\Controllers\Api\ConsultationController;
 use App\Http\Controllers\Api\ZodiacSignController;
+use App\Http\Controllers\Api\StatisticsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,7 @@ Route::get('/search', [SearchController::class, 'index']);
 Route::get('/blogs', [BlogController::class, 'index']);
 Route::get('/blogs/{slug}', [BlogController::class, 'show']);
 Route::get('/zodiac-signs', [ZodiacSignController::class, 'index']);
+Route::get('/statistics', [StatisticsController::class, 'index']);
 
 // Protected Routes
 Route::middleware('auth:sanctum')->group(function () {

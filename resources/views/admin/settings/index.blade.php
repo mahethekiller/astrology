@@ -57,6 +57,38 @@
                     </div>
                 </div>
             </div>
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Homepage Statistics (Section 6)</h4>
+
+                        <form action="{{ route('admin.settings.update') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="global_chat_commission" value="{{ $chatCommission }}">
+                            <input type="hidden" name="global_voice_commission" value="{{ $callCommission }}">
+
+                            <div class="mb-3">
+                                <label for="stat_total_astrologers" class="form-label">Total Astrologers (e.g. 50000+)</label>
+                                <input type="text" class="form-control" id="stat_total_astrologers"
+                                    name="stat_total_astrologers" value="{{ $statTotalAstrologers }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="stat_years_excellence" class="form-label">Years of Excellence (e.g. 11+)</label>
+                                <input type="text" class="form-control" id="stat_years_excellence"
+                                    name="stat_years_excellence" value="{{ $statYearsExcellence }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="stat_happy_customers" class="form-label">Happy Customers (e.g. 500+)</label>
+                                <input type="text" class="form-control" id="stat_happy_customers"
+                                    name="stat_happy_customers" value="{{ $statHappyCustomers }}" required>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary w-md">Save Statistics</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
