@@ -36,6 +36,7 @@
                         <h6 class="text-uppercase text-muted fw-bold mb-2 mt-4 px-3" style="font-size: 0.75rem;">Global &
                             Config</h6>
                         <a class="nav-link" href="#ep-sliders">Sliders</a>
+                        <a class="nav-link" href="#ep-zodiac-signs">Zodiac Signs</a>
                         <a class="nav-link" href="#ep-search">Global Search</a>
                     </nav>
                 </div>
@@ -56,6 +57,7 @@
                     @include('admin.docs.partials.astrologers')
                     @include('admin.docs.partials.blogs')
                     @include('admin.docs.partials.sliders')
+                    @include('admin.docs.partials.zodiac-signs')
                     @include('admin.docs.partials.search')
 
                 </div>

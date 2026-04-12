@@ -133,78 +133,14 @@
     <h2 class="title2 "> Today's Astrology Prediction </h2>
     <div class="headingDeign"><img src="{{ asset('frontend/images/headingDesign.png') }}" /></div>
     <div class="row">
+      @foreach($zodiacSigns as $zSign)
       <div class="col-sm-6 col-lg-2">
-        <a href="{{ route('horoscope.daily', 'aries') }}" class="sec5Box">
-          <span class="sec5icon"><img src="{{ asset('frontend/images/aries.png') }}" /></span>
-          <span class="sec5text">Aries</span>
+        <a href="{{ route('horoscope.daily', $zSign->slug) }}" class="sec5Box">
+          <span class="sec5icon"><img src="{{ str_contains($zSign->icon, 'frontend/') ? asset($zSign->icon) : asset($zSign->icon) }}" /></span>
+          <span class="sec5text">{{ $zSign->name }}</span>
         </a>
       </div>
-      <div class="col-sm-6 col-lg-2">
-        <a href="{{ route('horoscope.daily', 'taurus') }}" class="sec5Box">
-          <span class="sec5icon"><img src="{{ asset('frontend/images/taurus.png') }}" /></span>
-          <span class="sec5text">Taurus</span>
-        </a>
-      </div>
-      <div class="col-sm-6 col-lg-2">
-        <a href="{{ route('horoscope.daily', 'gemini') }}" class="sec5Box">
-          <span class="sec5icon"><img src="{{ asset('frontend/images/gemini.png') }}" /></span>
-          <span class="sec5text">Gemini</span>
-        </a>
-      </div>
-      <div class="col-sm-6 col-lg-2">
-        <a href="{{ route('horoscope.daily', 'cancer') }}" class="sec5Box">
-          <span class="sec5icon"><img src="{{ asset('frontend/images/cancer.png') }}" /></span>
-          <span class="sec5text">Cancer</span>
-        </a>
-      </div>
-      <div class="col-sm-6 col-lg-2">
-        <a href="{{ route('horoscope.daily', 'leo') }}" class="sec5Box">
-          <span class="sec5icon"><img src="{{ asset('frontend/images/leo.png') }}" /></span>
-          <span class="sec5text">Leo</span>
-        </a>
-      </div>
-      <div class="col-sm-6 col-lg-2">
-        <a href="{{ route('horoscope.daily', 'virgo') }}" class="sec5Box">
-          <span class="sec5icon"><img src="{{ asset('frontend/images/virgo.png') }}" /></span>
-          <span class="sec5text">Virgo</span>
-        </a>
-      </div>
-      <div class="col-sm-6 col-lg-2">
-        <a href="{{ route('horoscope.daily', 'libra') }}" class="sec5Box">
-          <span class="sec5icon"><img src="{{ asset('frontend/images/libra.png') }}" /></span>
-          <span class="sec5text">Libra</span>
-        </a>
-      </div>
-      <div class="col-sm-6 col-lg-2">
-        <a href="{{ route('horoscope.daily', 'scorpio') }}" class="sec5Box">
-          <span class="sec5icon"><img src="{{ asset('frontend/images/scorpio.png') }}" /></span>
-          <span class="sec5text">Scorpio</span>
-        </a>
-      </div>
-      <div class="col-sm-6 col-lg-2">
-        <a href="{{ route('horoscope.daily', 'sagittarius') }}" class="sec5Box">
-          <span class="sec5icon"><img src="{{ asset('frontend/images/sagittarius.png') }}" /></span>
-          <span class="sec5text">Sagittarius</span>
-        </a>
-      </div>
-      <div class="col-sm-6 col-lg-2">
-        <a href="{{ route('horoscope.daily', 'capricorn') }}" class="sec5Box">
-          <span class="sec5icon"><img src="{{ asset('frontend/images/capricorn.png') }}" /></span>
-          <span class="sec5text">Capricorn</span>
-        </a>
-      </div>
-      <div class="col-sm-6 col-lg-2">
-        <a href="{{ route('horoscope.daily', 'aquarius') }}" class="sec5Box">
-          <span class="sec5icon"><img src="{{ asset('frontend/images/aquarius.png') }}" /></span>
-          <span class="sec5text">Aquarius</span>
-        </a>
-      </div>
-      <div class="col-sm-6 col-lg-2">
-        <a href="{{ route('horoscope.daily', 'pisces') }}" class="sec5Box">
-          <span class="sec5icon"><img src="{{ asset('frontend/images/pisces.png') }}" /></span>
-          <span class="sec5text">Pisces </span>
-        </a>
-      </div>
+      @endforeach
     </div>
   </div>
 </div>

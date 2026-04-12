@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\ApiTokenController;
+use App\Http\Controllers\Admin\ZodiacSignController;
 
 
 
@@ -38,6 +39,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // sliders
     Route::resource('sliders', SliderController::class);
     Route::patch('sliders/{slider}/toggle-status', [SliderController::class, 'toggleStatus'])->name('sliders.toggle-status');
+
+    // Zodiac Signs
+    Route::resource('zodiac-signs', ZodiacSignController::class);
 
     // Newsletters
     Route::resource('newsletters', NewsletterController::class)->only(['index', 'destroy']);

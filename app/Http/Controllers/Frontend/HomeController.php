@@ -17,7 +17,8 @@ class HomeController extends Controller
         $blogs = Blog::latest()->take(6)->get();
 
         $topAstrologers = AstrologerProfile::active()->approved()->latest()->take(6)->get();
+        $zodiacSigns = \App\Models\ZodiacSign::where('is_active', true)->orderBy('sort_order', 'asc')->get();
 
-        return view('frontend.pages.home', compact('testimonials', 'blogs', 'topAstrologers'));
+        return view('frontend.pages.home', compact('testimonials', 'blogs', 'topAstrologers', 'zodiacSigns'));
     }
 }

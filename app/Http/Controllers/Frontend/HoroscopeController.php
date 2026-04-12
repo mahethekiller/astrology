@@ -17,20 +17,10 @@ class HoroscopeController extends Controller
 
     public function daily($sign = null)
     {
-        $signs = [
-            'aries' => 'Aries',
-            'taurus' => 'Taurus',
-            'gemini' => 'Gemini',
-            'cancer' => 'Cancer',
-            'leo' => 'Leo',
-            'virgo' => 'Virgo',
-            'libra' => 'Libra',
-            'scorpio' => 'Scorpio',
-            'sagittarius' => 'Sagittarius',
-            'capricorn' => 'Capricorn',
-            'aquarius' => 'Aquarius',
-            'pisces' => 'Pisces'
-        ];
+        $zodiacSigns = \App\Models\ZodiacSign::where('is_active', true)->orderBy('sort_order', 'asc')->get();
+        $signs = $zodiacSigns->pluck('name', 'slug')->mapWithKeys(function ($name, $slug) {
+            return [strtolower($slug) => $name];
+        })->toArray();
 
         $prediction = null;
         if ($sign) {
@@ -42,7 +32,7 @@ class HoroscopeController extends Controller
             $prediction = $this->prokeralaService->getAdvancedDailyHoroscope($sign, now(), 'all');
         }
 
-        return view('frontend.horoscope.daily', compact('signs', 'sign', 'prediction'));
+        return view('frontend.horoscope.daily', compact('signs', 'zodiacSigns', 'sign', 'prediction'));
     }
 
 }
