@@ -32,6 +32,7 @@
                             Features</h6>
                         <a class="nav-link" href="#ep-astrologers">Astrologers</a>
                         <a class="nav-link" href="#ep-blogs">Blogs</a>
+                        <a class="nav-link" href="#ep-ratings">Ratings</a>
 
                         <h6 class="text-uppercase text-muted fw-bold mb-2 mt-4 px-3" style="font-size: 0.75rem;">Global &
                             Config</h6>
@@ -57,6 +58,7 @@
                     @include('admin.docs.partials.consultations')
                     @include('admin.docs.partials.astrologers')
                     @include('admin.docs.partials.blogs')
+                    @include('admin.docs.partials.ratings')
                     @include('admin.docs.partials.sliders')
                     @include('admin.docs.partials.zodiac-signs')
                     @include('admin.docs.partials.statistics')

@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\WalletController;
 use App\Http\Controllers\Api\ConsultationController;
 use App\Http\Controllers\Api\ZodiacSignController;
 use App\Http\Controllers\Api\StatisticsController;
+use App\Http\Controllers\Api\RatingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/consultations/request-call', [ConsultationController::class, 'requestCall']);
     Route::post('/consultations/end-chat', [ConsultationController::class, 'endChat']);
     Route::post('/consultations/end-call', [ConsultationController::class, 'endCall']);
+
+    // Ratings
+    Route::post('/ratings', [RatingController::class, 'store']);
 
     Route::get('/user', function (Request $request) {
         return $request->user();
