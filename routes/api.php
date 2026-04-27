@@ -24,6 +24,7 @@ Route::get('/blogs', [BlogController::class, 'index']);
 Route::get('/blogs/{slug}', [BlogController::class, 'show']);
 Route::get('/zodiac-signs', [ZodiacSignController::class, 'index']);
 Route::get('/statistics', [StatisticsController::class, 'index']);
+Route::get('/ratings', [RatingController::class, 'index']);
 
 // Protected Routes
 Route::middleware('auth:sanctum')->group(function () {

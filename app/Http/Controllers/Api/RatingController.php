@@ -13,6 +13,23 @@ use Illuminate\Support\Facades\DB;
 
 class RatingController extends Controller
 {
+    public function index(Request $request)
+    {
+        $request->validate([
+            'astrologer_profile_id' => 'required|exists:astrologer_profiles,id',
+        ]);
+
+        $ratings = Rating::with('user:id,name,image')->where('astrologer_profile_id', $request->astrologer_profile_id)
+            ->where('status', 'approved')
+            ->latest()
+            ->paginate($request->get('per_page', 15));
+
+        return response()->json([
+            'success' => true,
+            'data' => $ratings
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
