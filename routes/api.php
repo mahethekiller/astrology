@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\ConsultationController;
 use App\Http\Controllers\Api\ZodiacSignController;
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\RatingController;
+use App\Http\Controllers\Api\TwilioTokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +44,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Ratings
     Route::post('/ratings', [RatingController::class, 'store']);
+
+    // Twilio Tokens
+    Route::get('/twilio/chat-token', [TwilioTokenController::class, 'chatToken']);
+    Route::get('/twilio/voice-token', [TwilioTokenController::class, 'voiceToken']);
 
     Route::get('/user', function (Request $request) {
         return $request->user();

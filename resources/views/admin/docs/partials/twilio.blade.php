@@ -1,0 +1,36 @@
+<!-- Twilio Tokens -->
+<div id="ep-twilio" class="api-section">
+    <h4>Generate Chat Token</h4>
+    <div class="endpoint-badge">
+        <span class="method method-get">GET</span> /api/twilio/chat-token
+    </div>
+    <div class="mb-4 mt-n2">
+        <span class="badge bg-warning text-dark border border-warning px-2 py-1"><i class="bi bi-lock-fill me-1"></i>
+            Requires Authentication</span>
+    </div>
+    <p class="mb-4">Generate a Twilio Access Token equipped with a Chat Grant for connecting to the Twilio Conversations SDK in the mobile app.</p>
+
+    <h6 class="fw-bold">Response Example (200 OK)</h6>
+    <pre class="api-code">{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI...",
+    "identity": "user_1"
+}</pre>
+
+    <hr class="my-5 border-light">
+
+    <h4>Generate Voice Token</h4>
+    <div class="endpoint-badge">
+        <span class="method method-get">GET</span> /api/twilio/voice-token
+    </div>
+    <div class="mb-4 mt-n2">
+        <span class="badge bg-warning text-dark border border-warning px-2 py-1"><i class="bi bi-lock-fill me-1"></i>
+            Requires Authentication</span>
+    </div>
+    <p class="mb-4">Generate a Twilio Access Token equipped with a Voice Grant for connecting to the Twilio Voice SDK in the mobile app.</p>
+
+    <h6 class="fw-bold">Response Example (200 OK)</h6>
+    <pre class="api-code">{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI...",
+    "identity": "user_1"
+}</pre>
+</div>

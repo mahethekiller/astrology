@@ -27,6 +27,7 @@
                         <a class="nav-link" href="#ep-profile">Profile / User</a>
                         <a class="nav-link" href="#ep-wallet">Wallet Transactions</a>
                         <a class="nav-link" href="#ep-consultations">Consultation Sessions</a>
+                        <a class="nav-link" href="#ep-twilio">Twilio Tokens</a>
 
                         <h6 class="text-uppercase text-muted fw-bold mb-2 mt-4 px-3" style="font-size: 0.75rem;">Core
                             Features</h6>
@@ -56,6 +57,7 @@
                     @include('admin.docs.partials.profile')
                     @include('admin.docs.partials.wallet')
                     @include('admin.docs.partials.consultations')
+                    @include('admin.docs.partials.twilio')
                     @include('admin.docs.partials.astrologers')
                     @include('admin.docs.partials.blogs')
                     @include('admin.docs.partials.ratings')
