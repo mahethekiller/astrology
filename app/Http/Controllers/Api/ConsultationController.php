@@ -59,7 +59,7 @@ class ConsultationController extends Controller
 
         $duration = $request->duration_minutes;
         $pricePerMinute = $chat->astrologer->chat_price ?? 0;
-        $commissionPercent = $chat->astrologer->chat_commission_percentage ?? 0;
+        $commissionPercent = $chat->astrologer->chat_commission_percentage ?? \App\Models\Setting::getValue('global_chat_commission', 0);
 
         $totalCost = $duration * $pricePerMinute;
         $commission = $totalCost * ($commissionPercent / 100);
@@ -181,7 +181,7 @@ class ConsultationController extends Controller
 
         $duration = $request->duration_minutes;
         $pricePerMinute = $call->astrologer->call_price ?? 0;
-        $commissionPercent = $call->astrologer->call_commission_percentage ?? 0;
+        $commissionPercent = $call->astrologer->call_commission_percentage ?? \App\Models\Setting::getValue('global_voice_commission', 0);
 
         $totalCost = $duration * $pricePerMinute;
         $commission = $totalCost * ($commissionPercent / 100);
