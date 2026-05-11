@@ -24,7 +24,7 @@ class ConsultationController extends Controller
         $chat = ChatRequest::create([
             'user_id' => $request->user()->id,
             'astrologer_id' => $request->astrologer_id,
-            'status' => 'active',
+            'status' => 'pending',
             'twilio_sid' => $request->twilio_sid,
         ]);
 
@@ -144,7 +144,7 @@ class ConsultationController extends Controller
         $call = CallRequest::create([
             'user_id' => $request->user()->id,
             'astrologer_id' => $request->astrologer_id,
-            'call_status' => 'active',
+            'call_status' => 'initiated',
             'twilio_sid' => $request->twilio_sid,
             'start_time' => now()
         ]);
