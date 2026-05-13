@@ -1,6 +1,9 @@
 @extends('admin.layouts.app')
 
 @section('content')
+@php
+    $activeTab = request()->has('chats_page') ? 'chats' : 'calls';
+@endphp
     <div class="container-fluid">
 
         <!-- Page Title -->
@@ -15,12 +18,12 @@
             <div class="col-md-3">
                 <div class="card">
                     <div class="list-group list-group-flush">
-                        <a href="javascript:void(0)" class="list-group-item list-group-item-action active" id="menu-calls"
+                        <a href="javascript:void(0)" class="list-group-item list-group-item-action {{ $activeTab == 'calls' ? 'active' : '' }}" id="menu-calls"
                             onclick="showAdminSection('calls')">
                             📞 Voice Calls
                         </a>
 
-                        <a href="javascript:void(0)" class="list-group-item list-group-item-action" id="menu-chats"
+                        <a href="javascript:void(0)" class="list-group-item list-group-item-action {{ $activeTab == 'chats' ? 'active' : '' }}" id="menu-chats"
                             onclick="showAdminSection('chats')">
                             💬 Chats
                         </a>
@@ -34,7 +37,7 @@
                     <div class="card-body">
 
                         <!-- CALLS -->
-                        <div id="section-calls">
+                        <div id="section-calls" class="{{ $activeTab == 'calls' ? '' : 'd-none' }}">
                             <h5 class="mb-3">Voice Call History</h5>
 
                             <div class="table-responsive">
@@ -84,7 +87,7 @@
                         </div>
 
                         <!-- CHATS -->
-                        <div id="section-chats" class="d-none">
+                        <div id="section-chats" class="{{ $activeTab == 'chats' ? '' : 'd-none' }}">
                             <h5 class="mb-3">Chat History</h5>
 
                             <div class="table-responsive">
