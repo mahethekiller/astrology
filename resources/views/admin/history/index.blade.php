@@ -78,6 +78,9 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="mt-3">
+                                {{ $calls->appends(request()->except('calls_page'))->links('pagination::bootstrap-5') }}
+                            </div>
                         </div>
 
                         <!-- CHATS -->
@@ -124,6 +127,9 @@
                                         @endforelse
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="mt-3">
+                                {{ $chats->appends(request()->except('chats_page'))->links('pagination::bootstrap-5') }}
                             </div>
                         </div>
 

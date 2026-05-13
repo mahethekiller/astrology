@@ -11,8 +11,8 @@ class HistoryController extends Controller
 {
     public function index()
     {
-        $calls = CallRequest::with(['user', 'astrologer'])->latest()->get();
-        $chats = ChatRequest::with(['user', 'astrologer'])->latest()->get();
+        $calls = CallRequest::with(['user', 'astrologer'])->latest()->paginate(10, ['*'], 'calls_page');
+        $chats = ChatRequest::with(['user', 'astrologer'])->latest()->paginate(10, ['*'], 'chats_page');
 
         return view('admin.history.index', compact('calls', 'chats'));
     }
