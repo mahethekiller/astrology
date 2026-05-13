@@ -21,8 +21,28 @@ class ConsultationController extends Controller
             'twilio_sid' => 'nullable|string|max:255'
         ]);
 
+        $user = $request->user();
+
+        if ($user->isAstrologer()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Astrologers cannot request consultations.'
+            ], 403);
+        }
+
+        $astrologer = \App\Models\AstrologerProfile::findOrFail($request->astrologer_id);
+        $chatPrice = $astrologer->chat_price ?? 0;
+        $userWallet = $user->wallet;
+
+        if (!$userWallet || $userWallet->balance < $chatPrice) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Insufficient wallet balance.'
+            ], 400);
+        }
+
         $chat = ChatRequest::create([
-            'user_id' => $request->user()->id,
+            'user_id' => $user->id,
             'astrologer_id' => $request->astrologer_id,
             'status' => 'pending',
             'twilio_sid' => $request->twilio_sid,
@@ -141,8 +161,28 @@ class ConsultationController extends Controller
             'twilio_sid' => 'nullable|string|max:255'
         ]);
 
+        $user = $request->user();
+
+        if ($user->isAstrologer()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Astrologers cannot request consultations.'
+            ], 403);
+        }
+
+        $astrologer = \App\Models\AstrologerProfile::findOrFail($request->astrologer_id);
+        $callPrice = $astrologer->call_price ?? 0;
+        $userWallet = $user->wallet;
+
+        if (!$userWallet || $userWallet->balance < $callPrice) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Insufficient wallet balance.'
+            ], 400);
+        }
+
         $call = CallRequest::create([
-            'user_id' => $request->user()->id,
+            'user_id' => $user->id,
             'astrologer_id' => $request->astrologer_id,
             'call_status' => 'initiated',
             'twilio_sid' => $request->twilio_sid,
