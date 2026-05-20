@@ -27,6 +27,18 @@
                 <td>Filter slug (e.g. vedic-astrology)</td>
             </tr>
             <tr>
+                <td><code>is_online</code></td>
+                <td>Boolean (1 or 0) to filter by online presence</td>
+            </tr>
+            <tr>
+                <td><code>is_chat_online</code></td>
+                <td>Boolean (1 or 0) to filter by chat availability</td>
+            </tr>
+            <tr>
+                <td><code>is_call_online</code></td>
+                <td>Boolean (1 or 0) to filter by call availability</td>
+            </tr>
+            <tr>
                 <td><code>page</code></td>
                 <td>List page index</td>
             </tr>

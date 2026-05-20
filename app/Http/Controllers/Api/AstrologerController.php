@@ -34,6 +34,19 @@ class AstrologerController extends Controller
             });
         }
 
+        // Filter by online status
+        if ($request->has('is_online')) {
+            $query->where('is_online', filter_var($request->is_online, FILTER_VALIDATE_BOOLEAN));
+        }
+
+        if ($request->has('is_chat_online')) {
+            $query->where('is_chat_online', filter_var($request->is_chat_online, FILTER_VALIDATE_BOOLEAN));
+        }
+
+        if ($request->has('is_call_online')) {
+            $query->where('is_call_online', filter_var($request->is_call_online, FILTER_VALIDATE_BOOLEAN));
+        }
+
         $astrologers = $query->paginate($request->get('limit', 12));
 
         return response()->json([
