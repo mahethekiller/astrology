@@ -41,4 +41,39 @@
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI...",
     "identity": "user_1"
 }</pre>
+
+    <hr class="my-5 border-light">
+
+    <h4>Twilio Voice Webhook</h4>
+    <div class="endpoint-badge">
+        <span class="method method-post">POST</span> /api/twilio/voice-webhook
+    </div>
+    <div class="mb-4 mt-n2">
+        <span class="badge bg-secondary text-white border border-secondary px-2 py-1"><i class="bi bi-globe me-1"></i> Public Webhook</span>
+    </div>
+    <p class="mb-4">Configure this endpoint in your Twilio Console as the <strong>Status Callback URL</strong> for your TwiML App. Twilio will automatically ping this endpoint when a voice call drops or completes to ensure accurate wallet deduction even if the mobile app disconnects.</p>
+
+    <h6 class="fw-bold">Body Parameters (Sent by Twilio)</h6>
+    <table class="table table-sm table-bordered mt-2 mb-4">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>CallSid</code></td>
+                <td>Twilio's unique identifier for the call</td>
+            </tr>
+            <tr>
+                <td><code>CallStatus</code></td>
+                <td>e.g., <code>completed</code>, <code>failed</code>, <code>busy</code>, <code>no-answer</code>, <code>canceled</code></td>
+            </tr>
+            <tr>
+                <td><code>CallDuration</code></td>
+                <td>Total duration of the call in seconds</td>
+            </tr>
+        </tbody>
+    </table>
 </div>

@@ -46,6 +46,7 @@ return [
         ],
         'voice' => [
             'app_sid' => env('TWILIO_VOICE_APP_SID'),
+            'push_credential_sid' => env('TWILIO_PUSH_CREDENTIAL_SID'),
         ],
     ],
 

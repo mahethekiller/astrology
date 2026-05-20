@@ -73,6 +73,13 @@ class TwilioTokenController extends Controller
 
         $voiceGrant = new VoiceGrant();
         $voiceGrant->setOutgoingApplicationSid($appSid);
+        
+        // Optional: Support for push notifications on APK
+        $pushCredentialSid = config('services.twilio.voice.push_credential_sid');
+        if ($pushCredentialSid) {
+            $voiceGrant->setPushCredentialSid($pushCredentialSid);
+        }
+        
         $voiceGrant->setIncomingAllow(true);
         $token->addGrant($voiceGrant);
 

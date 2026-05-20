@@ -31,6 +31,14 @@ class ConsultationController extends Controller
         }
 
         $astrologer = \App\Models\AstrologerProfile::findOrFail($request->astrologer_id);
+
+        if (!$astrologer->is_online || !$astrologer->is_chat_online) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Astrologer is currently offline for chat.'
+            ], 400);
+        }
+
         $chatPrice = $astrologer->chat_price ?? 0;
         $userWallet = $user->wallet;
 
@@ -54,6 +62,28 @@ class ConsultationController extends Controller
             'data' => [
                 'chat_request_id' => $chat->id,
                 'status' => $chat->status
+            ]
+        ]);
+    }
+
+    /**
+     * Check the status of a chat request.
+     */
+    public function checkChatStatus(Request $request, $id)
+    {
+        $chat = ChatRequest::findOrFail($id);
+
+        // Ensure user is authorized
+        if ($chat->user_id !== $request->user()->id && $chat->astrologer->user_id !== $request->user()->id) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized.'], 403);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'chat_request_id' => $chat->id,
+                'status' => $chat->status,
+                'twilio_sid' => $chat->twilio_sid,
             ]
         ]);
     }
@@ -171,6 +201,14 @@ class ConsultationController extends Controller
         }
 
         $astrologer = \App\Models\AstrologerProfile::findOrFail($request->astrologer_id);
+
+        if (!$astrologer->is_online || !$astrologer->is_call_online) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Astrologer is currently offline for calls.'
+            ], 400);
+        }
+
         $callPrice = $astrologer->call_price ?? 0;
         $userWallet = $user->wallet;
 
@@ -196,6 +234,28 @@ class ConsultationController extends Controller
                 'call_request_id' => $call->id,
                 'call_status' => $call->call_status,
                 'start_time' => $call->start_time
+            ]
+        ]);
+    }
+
+    /**
+     * Check the status of a call request.
+     */
+    public function checkCallStatus(Request $request, $id)
+    {
+        $call = CallRequest::findOrFail($id);
+
+        // Ensure user is authorized
+        if ($call->user_id !== $request->user()->id && $call->astrologer->user_id !== $request->user()->id) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized.'], 403);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'call_request_id' => $call->id,
+                'status' => $call->call_status,
+                'twilio_sid' => $call->twilio_sid,
             ]
         ]);
     }

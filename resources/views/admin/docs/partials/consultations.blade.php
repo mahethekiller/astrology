@@ -14,9 +14,10 @@
                 Request ID.</li>
             <li class="mb-1"><strong>Start Action:</strong> App launches the Twilio SDK utilizing their native
                 connections. A stopwatch starts ticking locally inside the app.</li>
-            <li><strong>End Interaction:</strong> On hangup, take the total elapsed stopwatch minutes and push the exact
+            <li class="mb-1"><strong>End Interaction:</strong> On hangup, take the total elapsed stopwatch minutes and push the exact
                 duration into <code>/api/consultations/end-chat</code> (or end-call) using your Request ID to formally
                 deduct wallet funds natively and close the session!</li>
+            <li><strong>Automated Cleanup (Fail-safe):</strong> If an active chat or call disconnects and the app fails to send the <code>end-chat</code> or <code>end-call</code> API requests, the system automatically uses a Twilio Voice Webhook and a background scheduled task (Cron Job running every minute) to finalize the session and securely process the wallet transaction automatically.</li>
         </ol>
     </div>
 
@@ -69,6 +70,28 @@
 
     <hr class="my-5 border-light">
 
+    <h4>Check Chat Status</h4>
+    <div class="endpoint-badge">
+        <span class="method method-get">GET</span> /api/consultations/chat-status/{id}
+    </div>
+    <div class="mb-4 mt-n2">
+        <span class="badge bg-warning text-dark border border-warning px-2 py-1"><i class="bi bi-lock-fill me-1"></i>
+            Requires Authentication</span>
+    </div>
+    <p class="mb-4">Poll this endpoint to check if the astrologer has accepted or rejected the chat request.</p>
+
+    <h6 class="fw-bold">Response Example (200 OK)</h6>
+    <pre class="api-code">{
+"status": "success",
+"data": {
+    "chat_request_id": 142,
+    "status": "accepted",
+    "twilio_sid": "CHXXXXXXXXXXXXXXXXX"
+}
+}</pre>
+
+    <hr class="my-5 border-light">
+
     <h4>Initiate Voice Call Request</h4>
     <div class="endpoint-badge">
         <span class="method method-post">POST</span> /api/consultations/request-call
@@ -114,6 +137,28 @@
     "call_request_id": 98,
     "call_status": "active",
     "start_time": "2026-04-12T10:00:00.000000Z"
+}
+}</pre>
+
+    <hr class="my-5 border-light">
+
+    <h4>Check Call Status</h4>
+    <div class="endpoint-badge">
+        <span class="method method-get">GET</span> /api/consultations/call-status/{id}
+    </div>
+    <div class="mb-4 mt-n2">
+        <span class="badge bg-warning text-dark border border-warning px-2 py-1"><i class="bi bi-lock-fill me-1"></i>
+            Requires Authentication</span>
+    </div>
+    <p class="mb-4">Poll this endpoint to check if the astrologer has accepted or rejected the call request.</p>
+
+    <h6 class="fw-bold">Response Example (200 OK)</h6>
+    <pre class="api-code">{
+"status": "success",
+"data": {
+    "call_request_id": 98,
+    "status": "accepted",
+    "twilio_sid": "CAXXXXXXXXXXXXXXXXX"
 }
 }</pre>
 

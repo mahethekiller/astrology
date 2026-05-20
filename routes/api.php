@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\ZodiacSignController;
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\TwilioTokenController;
+use App\Http\Controllers\Api\TwilioWebhookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,9 @@ Route::get('/zodiac-signs', [ZodiacSignController::class, 'index']);
 Route::get('/statistics', [StatisticsController::class, 'index']);
 Route::get('/ratings', [RatingController::class, 'index']);
 
+// Twilio Webhooks
+Route::post('/twilio/voice-webhook', [TwilioWebhookController::class, 'voiceWebhook']);
+
 // Protected Routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -39,6 +43,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Consultation Completions & Requests
     Route::post('/consultations/request-chat', [ConsultationController::class, 'requestChat']);
     Route::post('/consultations/request-call', [ConsultationController::class, 'requestCall']);
+    Route::get('/consultations/chat-status/{id}', [ConsultationController::class, 'checkChatStatus']);
+    Route::get('/consultations/call-status/{id}', [ConsultationController::class, 'checkCallStatus']);
     Route::post('/consultations/end-chat', [ConsultationController::class, 'endChat']);
     Route::post('/consultations/end-call', [ConsultationController::class, 'endCall']);
 
