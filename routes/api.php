@@ -35,6 +35,7 @@ Route::post('/twilio/voice-webhook', [TwilioWebhookController::class, 'voiceWebh
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/profile', [AuthController::class, 'userData']);
+    Route::post('/profile/update', [AuthController::class, 'updateProfile']);
     Route::get('/wallet/balance', [WalletController::class, 'balance']);
     Route::get('/wallet/transactions', [WalletController::class, 'transactions']);
     Route::post('/wallet/add', [WalletController::class, 'addFunds']);

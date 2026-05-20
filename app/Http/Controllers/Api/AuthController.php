@@ -118,6 +118,55 @@ class AuthController extends Controller
     }
 
     /**
+     * Update user profile.
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
+            'phone_number' => 'sometimes|string|max:20|unique:users,phone_number,' . $user->id,
+            'bio' => 'nullable|string',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        if ($request->hasFile('profile_image')) {
+            $image = $request->file('profile_image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads/users'), $imageName);
+            
+            // Delete old image if needed (optional for this scope)
+            
+            $user->profile_image = $imageName;
+        }
+
+        if ($request->has('name')) $user->name = $request->name;
+        if ($request->has('email')) $user->email = $request->email;
+        if ($request->has('phone_number')) $user->phone_number = $request->phone_number;
+        if ($request->has('bio')) $user->bio = $request->bio;
+
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Profile updated successfully',
+            'data' => [
+                'user' => $user
+            ]
+        ]);
+    }
+
+    /**
      * Logout user (Revoke token).
      */
     public function logout(Request $request)
