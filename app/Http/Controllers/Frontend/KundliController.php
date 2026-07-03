@@ -41,7 +41,7 @@ class KundliController extends Controller
         } catch (\Exception $e) {
             $tz = new \DateTimeZone('Asia/Kolkata');
         }
-        $datetime = Carbon::createFromFormat('Y-m-d H:i', $request->date . ' ' . $request->time, $tz)->toIso8601String();
+        $datetime = Carbon::parse($request->date . ' ' . $request->time, $tz)->toIso8601String();
 
         $advanced = $request->input('result_type') === 'advanced';
 
@@ -90,7 +90,7 @@ class KundliController extends Controller
         } catch (\Exception $e) {
             $tz = new \DateTimeZone('Asia/Kolkata');
         }
-        $datetime = Carbon::createFromFormat('Y-m-d H:i', $request->date . ' ' . $request->time, $tz)->toIso8601String();
+        $datetime = Carbon::parse($request->date . ' ' . $request->time, $tz)->toIso8601String();
 
         $apiData = null;
 

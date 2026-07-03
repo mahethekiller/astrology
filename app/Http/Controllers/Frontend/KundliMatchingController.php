@@ -40,15 +40,13 @@ class KundliMatchingController extends Controller
         ]);
 
         // Format datetime for boy
-        $boyDateTime = Carbon::createFromFormat(
-            'Y-m-d H:i',
+        $boyDateTime = Carbon::parse(
             $validated['boy_date'] . ' ' . $validated['boy_time'],
             $validated['boy_timezone']
         );
 
         // Format datetime for girl
-        $girlDateTime = Carbon::createFromFormat(
-            'Y-m-d H:i',
+        $girlDateTime = Carbon::parse(
             $validated['girl_date'] . ' ' . $validated['girl_time'],
             $validated['girl_timezone']
         );

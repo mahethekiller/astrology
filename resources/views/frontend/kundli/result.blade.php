@@ -2,7 +2,6 @@
 
 @section('title', 'Your Kundli')
 
-@section('content')
 @push('styles')
     <link href="{{ asset('css/dashboard-panels.css') }}" rel="stylesheet">
     <style>
@@ -174,13 +173,6 @@
                 <h2 class="fw-bold">Report Generation Failed</h2>
                 <p class="text-muted">We couldn't generate your Kundli at this time. Please ensure your birth details are accurate.</p>
                 <a href="{{ route('kundli.index') }}" class="btn btn-primary px-5 py-3 rounded-pill fw-bold mt-3">Try Again</a>
-            </div>
-        @endif
-    </div>
-@endsection
-        @else
-            <div class="alert alert-danger">
-                Unable to generate Kundli. Please check your inputs and try again.
             </div>
         @endif
     </div>

@@ -10,10 +10,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Run UserSeeder
-        // $this->call(UserSeeder::class);
-        $this->call(SpatiePermissionSeeder::class);
-        // You can add more seeders here if needed
-        // $this->call(OtherSeeder::class);
+        $this->call([
+            SpatiePermissionSeeder::class,
+            ZodiacSignSeeder::class,
+            MenuSeeder::class,
+            PageSeeder::class,
+        ]);
     }
 }
