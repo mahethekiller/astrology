@@ -48,6 +48,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/consultations/call-status/{id}', [ConsultationController::class, 'checkCallStatus']);
     Route::post('/consultations/end-chat', [ConsultationController::class, 'endChat']);
     Route::post('/consultations/end-call', [ConsultationController::class, 'endCall']);
+    Route::get('/consultations/chat/{id}/messages', [ConsultationController::class, 'getMessages']);
+    Route::post('/consultations/chat/{id}/messages', [ConsultationController::class, 'sendMessage']);
 
     // Ratings
     Route::post('/ratings', [RatingController::class, 'store']);

@@ -19,6 +19,7 @@ class CallController extends Controller
     private $twilioApiKey;
     private $twilioApiSecret;
     private $twilioVoiceAppSid;
+    private $twilioTrial;
 
     public function __construct()
     {
@@ -26,6 +27,7 @@ class CallController extends Controller
         $this->twilioApiKey = config('services.twilio.chat.api_key'); // Reusing Chat API Key if valid, else need separate
         $this->twilioApiSecret = config('services.twilio.chat.api_secret');
         $this->twilioVoiceAppSid = config('services.twilio.voice.app_sid'); // Must be set in config
+        $this->twilioTrial = config('services.twilio.trial', false);
     }
 
     public function token(Request $request)
@@ -139,9 +141,11 @@ class CallController extends Controller
             // Log price and balance
             Log::info("Price: $pricePerMin, Balance: " . $user->wallet->balance);
 
+            $maxTwilioLimit = $this->twilioTrial ? 600 : 14400;
+
             if ($pricePerMin <= 0) {
                 // Free call? Or not allowed? Assuming allowed.
-                $timeLimit = 3600; // 1 hour cap
+                $timeLimit = min(3600, $maxTwilioLimit); // cap by trial limit
             } else {
                 $balance = $user->wallet->balance;
                 // Safeguard against division by zero (already checked <=0 but good to cover)
@@ -151,8 +155,8 @@ class CallController extends Controller
                     $response->say('You have insufficient balance for this call.');
                     return response($response->asXML())->header('Content-Type', 'text/xml');
                 }
-                // Twilio max timeLimit is 4 hours (14400s). Ensure reasonable int.
-                $timeLimit = (int) min($maxDuration, 14400);
+                // Twilio max timeLimit is 4 hours (14400s) or 10 mins (600s) for trial. Ensure reasonable int.
+                $timeLimit = (int) min($maxDuration, $maxTwilioLimit);
             }
 
             // Create DB Record

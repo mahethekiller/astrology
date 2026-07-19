@@ -25,3 +25,9 @@ Homestead.yaml
 Thumbs.db
 .git.zip
 .htaccess
+
+.agents/
+.stitch/
+astro-app/
+astro-native-app/
+public/astro-app/

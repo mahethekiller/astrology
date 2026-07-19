@@ -39,6 +39,7 @@ return [
         'sid' => env('TWILIO_SID'),
         'token' => env('TWILIO_TOKEN'),
         'from' => env('TWILIO_FROM'),
+        'trial' => env('TWILIO_TRIAL', false),
         'chat' => [
             'service_sid' => env('TWILIO_SERVICE_SID'),
             'api_key' => env('TWILIO_API_KEY'),

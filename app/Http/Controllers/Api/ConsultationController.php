@@ -352,4 +352,82 @@ class ConsultationController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Get messages for a chat request.
+     */
+    public function getMessages($id)
+    {
+        $user = auth()->user();
+        $chatRequest = \App\Models\ChatRequest::where('id', $id)
+            ->where(function($q) use ($user) {
+                $q->where('user_id', $user->id)
+                  ->orWhereHas('astrologer', function($astroQ) use ($user) {
+                      $astroQ->where('user_id', $user->id);
+                  });
+            })
+            ->firstOrFail();
+
+        $messages = \App\Models\ChatMessage::where('chat_request_id', $id)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $messages
+        ]);
+    }
+
+    /**
+     * Send a message for a chat request.
+     */
+    public function sendMessage(Request $request, $id)
+    {
+        $request->validate([
+            'body' => 'required|string'
+        ]);
+
+        $user = auth()->user();
+        $chatRequest = \App\Models\ChatRequest::where('id', $id)
+            ->where(function($q) use ($user) {
+                $q->where('user_id', $user->id)
+                  ->orWhereHas('astrologer', function($astroQ) use ($user) {
+                      $astroQ->where('user_id', $user->id);
+                  });
+            })
+            ->firstOrFail();
+
+        $senderIdentity = 'user_' . $user->id;
+        if ($chatRequest->astrologer && $chatRequest->astrologer->user_id == $user->id) {
+            $senderIdentity = 'astrologer_' . $chatRequest->astrologer->id;
+        }
+
+        $message = \App\Models\ChatMessage::create([
+            'chat_request_id' => $id,
+            'sender_identity' => $senderIdentity,
+            'body' => $request->body
+        ]);
+
+        // Auto-reply for simulated testing purposes (if the user is chatting)
+        if (str_starts_with($senderIdentity, 'user_')) {
+            $responses = [
+                "Namaste. I am looking at your birth chart. I see Jupiter transiting your 10th house, indicating positive changes in career soon.",
+                "Let me analyze your planetary alignments. What is your primary question regarding love or career?",
+                "The Saturn transit suggests some patience is needed right now. Performing daily meditation will help.",
+                "The cosmic energies will align in your favor soon. Trust the timing of your life."
+            ];
+            $replyText = $responses[array_rand($responses)];
+
+            \App\Models\ChatMessage::create([
+                'chat_request_id' => $id,
+                'sender_identity' => 'astrologer_' . $chatRequest->astrologer_id,
+                'body' => $replyText
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $message
+        ]);
+    }
 }
