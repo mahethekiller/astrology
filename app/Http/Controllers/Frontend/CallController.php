@@ -56,6 +56,8 @@ class CallController extends Controller
 
         $identity = $identityPrefix . '_' . $user->id;
 
+        Log::channel('calls')->info("Web Voice Token requested: User {$user->id}, Identity generated: {$identity}");
+
         if (empty($this->twilioVoiceAppSid)) {
             return response()->json(['error' => 'Twilio Voice App SID not configured.'], 500);
         }
