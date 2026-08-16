@@ -8,6 +8,7 @@ use Twilio\Jwt\AccessToken;
 use Twilio\Jwt\Grants\ChatGrant;
 use Twilio\Jwt\Grants\VoiceGrant;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TwilioTokenController extends Controller
 {
@@ -18,6 +19,8 @@ class TwilioTokenController extends Controller
     {
         $user = Auth::user();
         $identity = 'user_' . $user->id;
+
+        Log::channel('calls')->info("Chat Token requested: User {$user->id}, Identity generated: {$identity}");
 
         $twilioAccountSid = config('services.twilio.sid');
         $twilioApiKey = config('services.twilio.chat.api_key');
@@ -57,6 +60,8 @@ class TwilioTokenController extends Controller
         if ($user->isAstrologer()) {
             $identity = 'astrologer_' . $user->id;
         }
+
+        Log::channel('calls')->info("Voice Token requested: User {$user->id}, Identity generated: {$identity}");
 
         $twilioAccountSid = config('services.twilio.sid');
         $twilioApiKey = config('services.twilio.chat.api_key');
