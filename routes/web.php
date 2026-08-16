@@ -143,6 +143,7 @@ Route::middleware(['auth'])->group(function () {
 // Twilio Webhooks - Must be PUBLIC (No Auth Middleware)
 Route::post('/call/connect', [App\Http\Controllers\Frontend\CallController::class, 'voiceCallback'])->name('call.connect');
 Route::post('/call/status', [App\Http\Controllers\Frontend\CallController::class, 'callStatusCallback'])->name('call.status');
+Route::post('/call/client-status-callback', [App\Http\Controllers\Frontend\CallController::class, 'clientStatusCallback'])->name('call.client-status');
 
 // API Routes
 Route::get('/api/location/search', [App\Http\Controllers\Api\LocationController::class, 'search'])->name('api.location.search');

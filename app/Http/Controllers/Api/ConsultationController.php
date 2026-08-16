@@ -227,12 +227,18 @@ class ConsultationController extends Controller
             'start_time' => now()
         ]);
 
+        $status = $call->call_status;
+        if ($status === 'in-progress') {
+            $status = 'accepted';
+        }
+
         return response()->json([
             'status' => 'success',
             'message' => 'Call request successfully logged.',
             'data' => [
                 'call_request_id' => $call->id,
                 'call_status' => $call->call_status,
+                'status' => $status,
                 'start_time' => $call->start_time
             ]
         ]);
@@ -250,11 +256,17 @@ class ConsultationController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Unauthorized.'], 403);
         }
 
+        $status = $call->call_status;
+        if ($status === 'in-progress') {
+            $status = 'accepted';
+        }
+
         return response()->json([
             'status' => 'success',
             'data' => [
                 'call_request_id' => $call->id,
-                'status' => $call->call_status,
+                'call_status' => $call->call_status,
+                'status' => $status,
                 'twilio_sid' => $call->twilio_sid,
             ]
         ]);

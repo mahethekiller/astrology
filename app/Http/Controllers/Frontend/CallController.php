@@ -85,12 +85,22 @@ class CallController extends Controller
 
         try {
             // request header 'From' -> client:user_{id}
-            // request body 'astrologer_id' -> passed from client
+            // request body 'astrologer_id' or 'call_request_id' -> passed from client
 
             $from = $request->input('From'); // e.g., client:user_1 or client:astrologer_2
             $toAstrologerId = $request->input('astrologer_id');
+            $callRequestId = $request->input('call_request_id');
 
-            Log::info("Voice Callback - Raw From: $from, Raw Astrologer ID: $toAstrologerId");
+            Log::info("Voice Callback - Raw From: $from, Raw Astrologer ID: $toAstrologerId, Call Request ID: $callRequestId");
+
+            $callRequest = null;
+            if ($callRequestId) {
+                $callRequest = CallRequest::find($callRequestId);
+                if ($callRequest) {
+                    $toAstrologerId = $callRequest->astrologer_id;
+                    Log::info("Voice Callback - Resolved Astrologer ID: $toAstrologerId from CallRequest ID: $callRequestId");
+                }
+            }
 
             if (!$toAstrologerId) {
                 Log::error('Voice Callback - No Astrologer ID provided in request');
@@ -159,16 +169,25 @@ class CallController extends Controller
                 $timeLimit = (int) min($maxDuration, $maxTwilioLimit);
             }
 
-            // Create DB Record
-            Log::info("Creating CallRequest for User $userId and Astrologer $toAstrologerId");
-            $callRequest = CallRequest::create([
-                'user_id' => $user->id,
-                'astrologer_id' => $astrologer->id,
-                'twilio_sid' => $request->input('CallSid'),
-                'call_status' => 'initiated',
-                'start_time' => now(),
-                'call_cost' => 0 // Calculated at end
-            ]);
+            // Create or Update DB Record
+            if ($callRequest) {
+                Log::info("Updating existing CallRequest ID $callRequestId with Twilio SID and status");
+                $callRequest->update([
+                    'twilio_sid' => $request->input('CallSid'),
+                    'call_status' => 'initiated',
+                    'start_time' => now()
+                ]);
+            } else {
+                Log::info("Creating CallRequest for User $userId and Astrologer $toAstrologerId");
+                $callRequest = CallRequest::create([
+                    'user_id' => $user->id,
+                    'astrologer_id' => $astrologer->id,
+                    'twilio_sid' => $request->input('CallSid'),
+                    'call_status' => 'initiated',
+                    'start_time' => now(),
+                    'call_cost' => 0 // Calculated at end
+                ]);
+            }
 
             $dial = $response->dial('', [
                 'timeLimit' => $timeLimit,
@@ -181,7 +200,11 @@ class CallController extends Controller
             $astrologerIdentity = 'astrologer_' . $astrologer->user_id;
             Log::info("Dialing client identity: $astrologerIdentity");
 
-            $dial->client($astrologerIdentity);
+            $dial->client($astrologerIdentity, [
+                'statusCallbackEvent' => 'ringing answered completed',
+                'statusCallback' => route('call.client-status'),
+                'statusCallbackMethod' => 'POST'
+            ]);
 
             return response($response->asXML())->header('Content-Type', 'text/xml');
 
@@ -192,6 +215,37 @@ class CallController extends Controller
             $response->say('An internal error occurred: ' . $e->getMessage());
             return response($response->asXML())->header('Content-Type', 'text/xml');
         }
+    }
+
+    public function clientStatusCallback(Request $request)
+    {
+        Log::info('Twilio Client Status Callback Hit', $request->all());
+
+        $callSid = $request->input('CallSid');
+        $parentCallSid = $request->input('ParentCallSid');
+        $callStatus = $request->input('CallStatus');
+
+        $sidToFind = $parentCallSid ?: $callSid;
+
+        if ($sidToFind) {
+            $callRequest = CallRequest::where('twilio_sid', $sidToFind)->first();
+            if ($callRequest) {
+                // Map Twilio CallStatus ('ringing', 'answered', 'completed') to db call_status
+                $newStatus = $callStatus;
+                if ($callStatus === 'answered') {
+                    $newStatus = 'in-progress';
+                }
+
+                $callRequest->update([
+                    'call_status' => $newStatus
+                ]);
+                Log::info("Updated CallRequest ID {$callRequest->id} status to {$newStatus}");
+            } else {
+                Log::warning("No CallRequest found for Twilio SID: $sidToFind");
+            }
+        }
+
+        return response('<Response></Response>')->header('Content-Type', 'text/xml');
     }
 
     public function toggleOnlineStatus(Request $request)

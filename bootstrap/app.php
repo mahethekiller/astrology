@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             '/call/connect',
             '/call/status',
+            '/call/client-status-callback',
         ]);
 
         $middleware->alias([
