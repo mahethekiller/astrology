@@ -54,6 +54,10 @@ class TwilioTokenController extends Controller
         $user = Auth::user();
         $identity = 'user_' . $user->id;
 
+        if ($user->isAstrologer()) {
+            $identity = 'astrologer_' . $user->id;
+        }
+
         $twilioAccountSid = config('services.twilio.sid');
         $twilioApiKey = config('services.twilio.chat.api_key');
         $twilioApiSecret = config('services.twilio.chat.api_secret');
