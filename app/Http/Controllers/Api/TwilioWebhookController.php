@@ -21,7 +21,7 @@ class TwilioWebhookController extends Controller
         $callStatus = $request->input('CallStatus');
         $callDuration = $request->input('CallDuration', 0); // in seconds
 
-        Log::info('Twilio Voice Webhook Received', ['CallSid' => $callSid, 'Status' => $callStatus, 'Duration' => $callDuration]);
+        Log::channel('calls')->info('Twilio Voice Webhook Received', ['CallSid' => $callSid, 'Status' => $callStatus, 'Duration' => $callDuration]);
 
         if (!$callSid) {
             return response('Missing CallSid', 400);
@@ -113,7 +113,7 @@ class TwilioWebhookController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Twilio Voice Webhook Processing Error: ' . $e->getMessage());
+            Log::channel('calls')->error('Twilio Voice Webhook Processing Error: ' . $e->getMessage());
             return response('Internal Server Error', 500);
         }
     }

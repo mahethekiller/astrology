@@ -79,7 +79,7 @@ class CallController extends Controller
 
     public function voiceCallback(Request $request)
     {
-        Log::info('Twilio Voice Callback Hit', $request->all());
+        Log::channel('calls')->info('Twilio Voice Callback Hit', $request->all());
 
         $response = new VoiceResponse();
 
@@ -91,19 +91,19 @@ class CallController extends Controller
             $toAstrologerId = $request->input('astrologer_id');
             $callRequestId = $request->input('call_request_id');
 
-            Log::info("Voice Callback - Raw From: $from, Raw Astrologer ID: $toAstrologerId, Call Request ID: $callRequestId");
+            Log::channel('calls')->info("Voice Callback - Raw From: $from, Raw Astrologer ID: $toAstrologerId, Call Request ID: $callRequestId");
 
             $callRequest = null;
             if ($callRequestId) {
                 $callRequest = CallRequest::find($callRequestId);
                 if ($callRequest) {
                     $toAstrologerId = $callRequest->astrologer_id;
-                    Log::info("Voice Callback - Resolved Astrologer ID: $toAstrologerId from CallRequest ID: $callRequestId");
+                    Log::channel('calls')->info("Voice Callback - Resolved Astrologer ID: $toAstrologerId from CallRequest ID: $callRequestId");
                 }
             }
 
             if (!$toAstrologerId) {
-                Log::error('Voice Callback - No Astrologer ID provided in request');
+                Log::channel('calls')->error('Voice Callback - No Astrologer ID provided in request');
                 $response->say('Invalid request. No Astrologer ID provided.');
                 return response($response->asXML())->header('Content-Type', 'text/xml');
             }
@@ -114,7 +114,7 @@ class CallController extends Controller
             $cleanFrom = preg_replace('/^(client:)?(user_|astrologer_)?/', '', $from);
             $userId = $cleanFrom;
 
-            Log::info("Voice Callback - Parsed User ID: $userId, To Astrologer ID: $toAstrologerId");
+            Log::channel('calls')->info("Voice Callback - Parsed User ID: $userId, To Astrologer ID: $toAstrologerId");
 
             $user = User::find($userId);
 
@@ -123,7 +123,7 @@ class CallController extends Controller
 
             // Fallback: If not found, check if the ID passed was actually the USER ID of the astrologer
             if (!$astrologer) {
-                Log::warning("Astrologer not found by ID ($toAstrologerId), trying as user_id");
+                Log::channel('calls')->warning("Astrologer not found by ID ($toAstrologerId), trying as user_id");
                 $astrologer = AstrologerProfile::where('user_id', $toAstrologerId)->first();
             }
 
@@ -132,7 +132,7 @@ class CallController extends Controller
                 if (!$user && !$astrologer)
                     $missing = 'User and Astrologer';
 
-                Log::error("Voice Callback - $missing not found. UserID: $userId, AstrologerID: $toAstrologerId");
+                Log::channel('calls')->error("Voice Callback - $missing not found. UserID: $userId, AstrologerID: $toAstrologerId");
 
                 $response->say("Sorry, your profile or the astrologer could not be identified. Please try again.");
                 return response($response->asXML())->header('Content-Type', 'text/xml');
@@ -141,7 +141,7 @@ class CallController extends Controller
             // Check Balance
             // 1. Ensure wallet
             if (!$user->wallet) {
-                Log::error("User $userId has no wallet");
+                Log::channel('calls')->error("User $userId has no wallet");
                 $response->say('Insufficient balance.');
                 return response($response->asXML())->header('Content-Type', 'text/xml');
             }
@@ -149,7 +149,7 @@ class CallController extends Controller
             $pricePerMin = $astrologer->call_price;
 
             // Log price and balance
-            Log::info("Price: $pricePerMin, Balance: " . $user->wallet->balance);
+            Log::channel('calls')->info("Price: $pricePerMin, Balance: " . $user->wallet->balance);
 
             $maxTwilioLimit = $this->twilioTrial ? 600 : 14400;
 
@@ -171,14 +171,14 @@ class CallController extends Controller
 
             // Create or Update DB Record
             if ($callRequest) {
-                Log::info("Updating existing CallRequest ID $callRequestId with Twilio SID and status");
+                Log::channel('calls')->info("Updating existing CallRequest ID $callRequestId with Twilio SID and status");
                 $callRequest->update([
                     'twilio_sid' => $request->input('CallSid'),
                     'call_status' => 'initiated',
                     'start_time' => now()
                 ]);
             } else {
-                Log::info("Creating CallRequest for User $userId and Astrologer $toAstrologerId");
+                Log::channel('calls')->info("Creating CallRequest for User $userId and Astrologer $toAstrologerId");
                 $callRequest = CallRequest::create([
                     'user_id' => $user->id,
                     'astrologer_id' => $astrologer->id,
@@ -198,7 +198,7 @@ class CallController extends Controller
             // Client identity: astrologer_{user_id_of_astrologer}
             // Wait, AstrologerProfile has user_id.
             $astrologerIdentity = 'astrologer_' . $astrologer->user_id;
-            Log::info("Dialing client identity: $astrologerIdentity");
+            Log::channel('calls')->info("Dialing client identity: $astrologerIdentity");
 
             $dial->client($astrologerIdentity, [
                 'statusCallbackEvent' => 'ringing answered completed',
@@ -209,8 +209,8 @@ class CallController extends Controller
             return response($response->asXML())->header('Content-Type', 'text/xml');
 
         } catch (\Exception $e) {
-            Log::error('Voice Callback Error: ' . $e->getMessage());
-            Log::error($e->getTraceAsString());
+            Log::channel('calls')->error('Voice Callback Error: ' . $e->getMessage());
+            Log::channel('calls')->error($e->getTraceAsString());
             $response = new VoiceResponse(); // Reset response to say error
             $response->say('An internal error occurred: ' . $e->getMessage());
             return response($response->asXML())->header('Content-Type', 'text/xml');
@@ -219,7 +219,7 @@ class CallController extends Controller
 
     public function clientStatusCallback(Request $request)
     {
-        Log::info('Twilio Client Status Callback Hit', $request->all());
+        Log::channel('calls')->info('Twilio Client Status Callback Hit', $request->all());
 
         $callSid = $request->input('CallSid');
         $parentCallSid = $request->input('ParentCallSid');
@@ -239,9 +239,9 @@ class CallController extends Controller
                 $callRequest->update([
                     'call_status' => $newStatus
                 ]);
-                Log::info("Updated CallRequest ID {$callRequest->id} status to {$newStatus}");
+                Log::channel('calls')->info("Updated CallRequest ID {$callRequest->id} status to {$newStatus}");
             } else {
-                Log::warning("No CallRequest found for Twilio SID: $sidToFind");
+                Log::channel('calls')->warning("No CallRequest found for Twilio SID: $sidToFind");
             }
         }
 

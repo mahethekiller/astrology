@@ -8,6 +8,7 @@ use App\Models\ChatRequest;
 use App\Models\CallRequest;
 use App\Models\WalletTransaction;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ConsultationController extends Controller
 {
@@ -227,6 +228,8 @@ class ConsultationController extends Controller
             'start_time' => now()
         ]);
 
+        Log::channel('calls')->info("Call Request Initiated via API: Call ID {$call->id}, User {$user->id}, Astrologer {$request->astrologer_id}, Twilio SID: " . ($request->twilio_sid ?? 'none'));
+
         $status = $call->call_status;
         if ($status === 'in-progress') {
             $status = 'accepted';
@@ -346,6 +349,8 @@ class ConsultationController extends Controller
 
             DB::commit();
 
+            Log::channel('calls')->info("Call Request Completed via API: Call ID {$call->id}, Duration {$duration} mins, Cost {$totalCost}, User Balance remaining: {$userWallet->balance}");
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Call consultation completed successfully.',
@@ -358,6 +363,9 @@ class ConsultationController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+
+            Log::channel('calls')->error("Error completing call via API: Call ID {$call->id}, Error: " . $e->getMessage());
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'Could not process call completion. ' . $e->getMessage()
