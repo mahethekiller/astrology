@@ -1,0 +1,28 @@
+{
+  "name": "astro-voice-app",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "dependencies": {
+    "expo": "~57.0.13",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-native": "0.86.2",
+    "@twilio/voice-react-native-sdk": "^1.1.0",
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "axios": "^1.18.1",
+    "lucide-react-native": "^1.23.0",
+    "expo-dev-client": "~5.0.3",
+    "expo-build-properties": "~0.13.2"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web"
+  },
+  "private": true
+}
